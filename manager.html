@@ -641,6 +641,111 @@
   #hud-top .brand { color: #ffd2b8 !important; }
   #minimap-wrap, #controls-legend, #aery-say, #route-hint { background: rgba(22,56,112,0.88) !important; border-color: rgba(124,200,255,0.6) !important; }
   #tutorial { background: rgba(22,56,112,0.94) !important; border-color: #7cc8ff !important; }
+
+  /* =====================================================================
+     手機版介面（body.mobile：觸控裝置且螢幕短邊 < 600px）——電腦版不受影響
+     ===================================================================== */
+  body.mobile #hud-top { top: calc(env(safe-area-inset-top, 0px) + 8px) !important; left: 10px !important; right: 10px !important; align-items: center !important; }
+  body.mobile #hud-top > div:first-child { padding: 6px 12px !important; border-radius: 12px !important; }
+  body.mobile #hud-top .brand { display: none !important; }
+  body.mobile #hud-top .title { font-size: 15px !important; letter-spacing: 0 !important; white-space: nowrap; }
+  body.mobile #hud-top > div:last-child { gap: 6px !important; }
+  body.mobile #hud-top button { width: 36px !important; height: 36px !important; font-size: 16px !important; padding: 0 !important; }
+  body.mobile #floor-badge { display: none !important; }
+  body.mobile #map-btn { display: inline-flex !important; }
+  #map-btn { display: none; align-items: center; justify-content: center; }
+
+  /* 目標提示：標題列下方整排，最多兩行 */
+  body.mobile #objective { top: calc(env(safe-area-inset-top, 0px) + 56px) !important; left: 10px !important; right: 10px !important; bottom: auto !important;
+    transform: none !important; max-width: none !important; white-space: normal !important; font-size: 13px !important; padding: 8px 12px !important;
+    border-radius: 14px !important; line-height: 1.45 !important; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+  body.mobile #objective.below-tut { display: none !important; }
+  body.mobile #objective.pulse { animation: none !important; }
+
+  /* 新手教學：只顯示目前這一步 */
+  body.mobile #tutorial { top: calc(env(safe-area-inset-top, 0px) + 56px) !important; left: 10px !important; right: 10px !important; bottom: auto !important;
+    transform: none !important; width: auto !important; max-width: none !important; padding: 9px 12px !important; border-radius: 14px !important; }
+  body.mobile #tutorial .tut-title { font-size: 12px !important; margin-bottom: 4px !important; }
+  body.mobile #tutorial .tut-step.done, body.mobile #tutorial .tut-step.locked { display: none !important; }
+  body.mobile #tutorial .tut-step { font-size: 13.5px !important; padding: 6px 8px !important; }
+
+  /* 小地圖：平常收起來，按 🗺️ 才打開 */
+  body.mobile #minimap-wrap { display: none !important; }
+  body.mobile.map-open #minimap-wrap { display: block !important; position: fixed !important; left: 50% !important; top: 50% !important; right: auto !important; bottom: auto !important;
+    transform: translate(-50%, -50%) scale(1.8); transform-origin: center; z-index: 40 !important; }
+  @media (orientation: landscape) { body.mobile.map-open #minimap-wrap { transform: translate(-50%, -50%) scale(1.15); } }
+  #map-backdrop { display: none; }
+  body.mobile.map-open #map-backdrop { display: block; position: fixed; inset: 0; z-index: 39; background: rgba(10,14,30,0.55); }
+  body.mobile.map-open #map-backdrop::after { content: '點空白處關閉地圖'; position: absolute; left: 0; right: 0; bottom: calc(env(safe-area-inset-bottom, 0px) + 28px); text-align: center; color: #fff; font: 700 13px "PingFang TC","Microsoft JhengHei",sans-serif; }
+
+  /* Aery 說話：改成畫面下方的提示條，不擋視線 */
+  body.mobile #aery-say { top: auto !important; bottom: calc(env(safe-area-inset-bottom, 0px) + 128px) !important; left: 10px !important; right: 10px !important;
+    max-width: none !important; width: auto !important; padding: 8px 12px !important; border-radius: 14px !important; gap: 8px !important; }
+  body.mobile #aery-say .aery-face { font-size: 20px !important; }
+  body.mobile #aery-say b { font-size: 11px !important; }
+  body.mobile #aery-say-text { font-size: 13px !important; line-height: 1.5 !important; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+  body.mobile #route-hint { display: none !important; }
+
+  /* 對準提示：一行就好 */
+  body.mobile #interact-prompt, body.mobile #aim-hint { top: calc(50% + 50px) !important; max-width: calc(100vw - 40px) !important; white-space: nowrap !important;
+    overflow: hidden; text-overflow: ellipsis; font-size: 13px !important; padding: 7px 12px !important; }
+  body.mobile #interact-prompt .ip-key { min-width: 26px !important; height: 26px !important; font-size: 14px !important; }
+
+  /* 右下角「查看」按鈕：更大、更明顯 */
+  body.mobile #interact-btn-mobile { right: 16px !important; bottom: calc(env(safe-area-inset-bottom, 0px) + 28px) !important; width: 82px !important; height: 82px !important;
+    font-size: 16px !important; font-weight: 900 !important; background: rgba(255,255,255,0.18) !important; border: 2.5px solid rgba(255,255,255,0.7) !important; color: #fff !important;
+    text-shadow: 0 1px 4px rgba(0,0,0,0.5); box-shadow: 0 4px 16px rgba(0,0,0,0.25); }
+  body.mobile #interact-btn-mobile.active { background: #ffd23f !important; border-color: #fff !important; color: #2a1d00 !important; text-shadow: none; }
+  /* 左下角搖桿：平常就畫出位置，讓人知道可以拖曳 */
+  body.mobile #joy-zone::before { content: '拖曳移動'; position: absolute; left: 30px; bottom: calc(env(safe-area-inset-bottom, 0px) + 32px); width: 88px; height: 88px; border-radius: 50%;
+    border: 2px dashed rgba(255,255,255,0.65); background: rgba(255,255,255,0.12); color: #fff; font: 800 12px "PingFang TC","Microsoft JhengHei",sans-serif;
+    display: flex; align-items: center; justify-content: center; text-shadow: 0 1px 4px rgba(0,0,0,0.5); pointer-events: none; }
+  body.mobile.joy-active #joy-zone::before { opacity: 0; }
+
+  /* 指路箭頭、目標標籤縮小 */
+  body.mobile #guide-edge .ge-arrow { width: 42px !important; height: 42px !important; font-size: 22px !important; }
+  body.mobile #guide-edge .ge-label, body.mobile #guide-pin .gp-label { font-size: 11px !important; padding: 3px 8px !important; max-width: 44vw; overflow: hidden; text-overflow: ellipsis; }
+  body.mobile #hint-card { top: calc(env(safe-area-inset-top, 0px) + 104px) !important; width: calc(100vw - 20px) !important; padding: 12px 14px !important; font-size: 13px !important; }
+  body.mobile #hint-card .hc-title { font-size: 15px !important; }
+
+  /* 任務／對話面板：手機上改成全螢幕，按鈕固定在最下面 */
+  body.mobile #panel-overlay { padding: 0 !important; align-items: stretch !important; }
+  body.mobile #panel-box { width: 100% !important; max-width: none !important; height: 100% !important; max-height: none !important; border-radius: 0 !important; border: none !important;
+    padding: calc(env(safe-area-inset-top, 0px) + 14px) 14px 0 !important; overflow-y: auto !important; display: flex; flex-direction: column; }
+  body.mobile #panel-title { font-size: 19px !important; }
+  body.mobile #panel-desc { font-size: 13.5px !important; line-height: 1.65 !important; }
+  body.mobile .hint-tip, body.mobile .assist-tip { font-size: 12px !important; padding: 6px 10px !important; }
+  body.mobile #mission-block { flex: 0 0 auto; }
+  body.mobile #panel-actions { position: sticky; bottom: 0; margin-top: auto !important; padding: 10px 0 calc(env(safe-area-inset-bottom, 0px) + 12px) !important;
+    background: linear-gradient(180deg, rgba(0,0,0,0), rgba(20,30,60,0.95) 30%); display: flex !important; flex-wrap: wrap; gap: 8px !important; }
+  body.mobile #panel-actions .panel-btn { flex: 1 1 40%; min-height: 46px; font-size: 14.5px !important; margin: 0 !important; }
+  body.mobile .choice-btn { font-size: 14px !important; padding: 12px !important; }
+  body.mobile .quiz-q { font-size: 16px !important; }
+  body.mobile #game-hint { left: 0 !important; top: 0 !important; transform: none !important; width: 100vw !important; height: 100% !important; max-height: none !important; border-radius: 0 !important;
+    padding: calc(env(safe-area-inset-top, 0px) + 18px) 16px calc(env(safe-area-inset-bottom, 0px) + 16px) !important; }
+
+  /* 說明會：對話框貼底、字小一點 */
+  body.mobile #brief-ui { bottom: calc(env(safe-area-inset-bottom, 0px) + 10px) !important; padding: 10px 12px !important; gap: 10px !important; }
+  body.mobile #brief-ui .bu-face { width: 42px !important; height: 42px !important; font-size: 20px !important; }
+  body.mobile #brief-text { font-size: 14px !important; min-height: 0 !important; }
+
+  /* 橫放手機：上下空間很少，提示條改到中間下方、變窄 */
+  @media (orientation: landscape) {
+    body.mobile #objective, body.mobile #tutorial { left: 50% !important; right: auto !important; transform: translateX(-50%) !important; width: min(520px, 60vw) !important; top: calc(env(safe-area-inset-top, 0px) + 8px) !important; }
+    body.mobile #hud-top > div:first-child { display: none !important; }
+    body.mobile #aery-say { left: 50% !important; right: auto !important; transform: translateX(-50%); width: min(460px, 52vw) !important; bottom: 12px !important; }
+    body.mobile #aery-say-text { -webkit-line-clamp: 2; }
+    body.mobile #interact-prompt, body.mobile #aim-hint { top: calc(50% + 40px) !important; }
+    body.mobile #hint-card { top: 56px !important; width: min(520px, 70vw) !important; }
+    /* 任務面板：左邊說明＋按鈕、右邊遊戲畫面 */
+    body.mobile #panel-box { display: grid !important; grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.25fr); grid-auto-rows: min-content; column-gap: 14px;
+      padding: calc(env(safe-area-inset-top, 0px) + 10px) calc(env(safe-area-inset-right, 0px) + 12px) 10px calc(env(safe-area-inset-left, 0px) + 12px) !important; align-content: start; }
+    body.mobile #panel-box > * { grid-column: 1; }
+    body.mobile #mission-block { grid-column: 2 !important; grid-row: 1 / span 8; align-self: start; }
+    body.mobile #panel-actions { position: static !important; background: none !important; padding: 10px 0 0 !important; }
+    body.mobile #panel-actions .panel-btn { flex: 1 1 100%; min-height: 42px; }
+    body.mobile #panel-title { font-size: 17px !important; }
+  }
 </style>
 </head>
 <body class="pregame">
@@ -4896,7 +5001,7 @@ console.warn( 'Scripts "build/three.js" and "build/three.min.js" are deprecated 
       else if (obj.kind === 'seat') label = '💺 ' + obj.title;
       else if (obj.kind === 'final') label = LEVEL.finalOpen ? '🏁 ' + obj.title : '🔒 ' + obj.title + '（通過 3 關後開放）';
       else label = (obj.kind === 'wrong' ? '❌ 常見錯誤 — ' : '✓ 正確做法 — ') + obj.room.name;
-      interactPrompt.innerHTML = (isTouch ? '<span class="ip-key">👆</span>點右下角「查看」' : '<span class="ip-key">E</span>按 E 或左鍵') + '　' + escHtml(label);
+      interactPrompt.innerHTML = (isTouch ? '<span class="ip-key">👆</span>點「查看」' : '<span class="ip-key">E</span>按 E 或左鍵') + '　' + escHtml(label);
       interactPrompt.classList.add('show');
       interactBtnMobile.classList.add('active');
     } else {
@@ -6201,8 +6306,9 @@ console.warn( 'Scripts "build/three.js" and "build/three.min.js" are deprecated 
       const s = Math.min(mx / Math.abs(Math.cos(ang) || 1e-6), my / Math.abs(Math.sin(ang) || 1e-6));
       const ex = W / 2 + Math.cos(ang) * s, ey = H / 2 - Math.sin(ang) * s;
       const bw = guideEdge.offsetWidth || 200, bh = guideEdge.offsetHeight || 80;
-      const cx2 = Math.min(Math.max(ex, bw / 2 + 10), W - bw / 2 - 10); let cy2 = Math.min(Math.max(ey, 96 + bh / 2), H - 130 - bh / 2);
-      { const mm = document.getElementById('minimap-wrap').getBoundingClientRect(); if (cx2 + bw / 2 > mm.left - 6 && cy2 - bh / 2 < mm.bottom + 6) cy2 = Math.min(H - 130 - bh / 2, mm.bottom + 12 + bh / 2); }   // 不要蓋住小地圖
+      const cx2 = Math.min(Math.max(ex, bw / 2 + 10), W - bw / 2 - 10); const phone = document.body.classList.contains('mobile'), topM = phone ? (W > H ? 70 : 118) : 96, botM = phone ? (W > H ? 120 : 250) : 130;
+      let cy2 = Math.min(Math.max(ey, topM + bh / 2), H - botM - bh / 2);
+      { const mm = document.getElementById('minimap-wrap').getBoundingClientRect(); if (!phone && cx2 + bw / 2 > mm.left - 6 && cy2 - bh / 2 < mm.bottom + 6) cy2 = Math.min(H - 130 - bh / 2, mm.bottom + 12 + bh / 2); }   // 不要蓋住小地圖
       guideEdge.style.transform = 'translate(' + cx2 + 'px,' + cy2 + 'px) translate(-50%, -50%)';
       guideEdgeArrow.style.transform = 'rotate(' + (-ang) + 'rad)';
       guideEdgeLabel.textContent = (behind && Math.abs(_v.x) < Math.abs(_v.z) ? '↩ 轉身　' : '') + tg.icon + ' ' + tg.name + dtxt;
@@ -6211,7 +6317,9 @@ console.warn( 'Scripts "build/three.js" and "build/three.min.js" are deprecated 
     const aimed = isLookingAtTarget(tg);
     const nearObj = tg.kind !== 'door' && dist < 4.2;
     aimHint.classList.toggle('show', nearObj && !aimed);
-    if (nearObj && !aimed) aimHint.innerHTML = '🎯 ' + (isTouch ? '在右半邊拖曳' : '移動滑鼠') + '，把 <b>中間的小球</b> 對準「' + escHtml(tg.name.replace(/^線索：|^任務：/, '')) + '」';
+    if (nearObj && !aimed) aimHint.innerHTML = document.body.classList.contains('mobile')
+      ? '🎯 拖曳畫面，用<b>小球</b>對準「' + escHtml(tg.name.replace(/^線索：|^任務：/, '')) + '」'
+      : '🎯 ' + (isTouch ? '在右半邊拖曳' : '移動滑鼠') + '，把 <b>中間的小球</b> 對準「' + escHtml(tg.name.replace(/^線索：|^任務：/, '')) + '」';
     aimRing.className = lookedAt ? 'locked' : (nearObj ? 'seek' : '');
     // 閒置主動提示：18 秒 → Aery 說明；38 秒 → 大提示卡；之後每 30 秒再提醒
     const idle = t - Math.max(guideRefT, lastProgressT);
@@ -6580,6 +6688,40 @@ console.warn( 'Scripts "build/three.js" and "build/three.min.js" are deprecated 
     ensureTutDoor();
   }
 
+
+  // =====================================================================
+  // ============ 手機版介面：版面切換、🗺️ 地圖按鈕、說明會鏡頭 ============
+  // =====================================================================
+  const isPhone = () => isTouch && Math.min(window.innerWidth, window.innerHeight) < 600;
+  function applyMobileClass() { document.body.classList.toggle('mobile', isPhone()); }
+  applyMobileClass();
+  window.addEventListener('resize', applyMobileClass);
+  window.addEventListener('orientationchange', () => setTimeout(applyMobileClass, 200));
+  {
+    const mapBtn = document.createElement('button'); mapBtn.id = 'map-btn'; mapBtn.title = '地圖'; mapBtn.textContent = '🗺️';
+    const helpBtnEl = document.getElementById('help-btn'); helpBtnEl.parentNode.insertBefore(mapBtn, helpBtnEl);
+    const back = document.createElement('div'); back.id = 'map-backdrop'; document.body.appendChild(back);
+    const toggle = e => { if (e) { e.preventDefault(); e.stopPropagation(); } document.body.classList.toggle('map-open'); };
+    mapBtn.addEventListener('click', toggle); mapBtn.addEventListener('touchstart', e => e.stopPropagation(), { passive: true });
+    back.addEventListener('click', toggle); back.addEventListener('touchstart', e => { e.stopPropagation(); }, { passive: true });
+    // 地圖上的「回大廳 / 重置」按下後也收起地圖
+    ['btn-lobby', 'btn-reset'].forEach(id => { const b = document.getElementById(id); if (b) b.addEventListener('click', () => document.body.classList.remove('map-open')); });
+    // 搖桿使用中：隱藏「拖曳移動」提示圈
+    const jz = document.getElementById('joy-zone');
+    if (jz) {
+      jz.addEventListener('touchstart', () => document.body.classList.add('joy-active'), { passive: true });
+      ['touchend', 'touchcancel'].forEach(ev => jz.addEventListener(ev, () => document.body.classList.remove('joy-active'), { passive: true }));
+    }
+  }
+  // 直式手機看說明會：自動往後退，讓整個投影幕都在畫面裡
+  function fitBriefingCamera() {
+    if (!BRIEF.active || camera.aspect >= 1) return;
+    const hfov = 2 * Math.atan(Math.tan(THREE.MathUtils.degToRad(camera.fov) / 2) * camera.aspect);
+    const d = Math.min(7.4, Math.max(3.65, (SCR.w / 2 + 0.25) / Math.tan(hfov / 2)));
+    camera.position.set(SCR.x + d, 1.75, SCR.z);
+    camera.rotation.set(0, Math.PI / 2, 0);
+  }
+
   // ============ Main loop ============
   const clock = new THREE.Clock();
   let gameStarted = false;
@@ -6653,6 +6795,7 @@ console.warn( 'Scripts "build/three.js" and "build/three.min.js" are deprecated 
       camera.position.set(Math.sin(t * 0.11) * 1.3, 2.05, cz);
       camera.lookAt(Math.sin(t * 0.09) * 2.2, 1.35, cz + 7);
     }
+    fitBriefingCamera();
 
     // Aery idle animation
     aeryMesh.rotation.y = t * 0.3;
