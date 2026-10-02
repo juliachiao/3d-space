@@ -252,10 +252,6 @@
   }
   .panel-btn:hover { background: rgba(120,150,220,0.3); }
   .panel-btn.primary { background: linear-gradient(135deg,#4a5e80,#b04060); border: none; color: #fff; font-weight: 600; }
-  .ex-row { text-align: left; padding: 10px 14px; border-radius: 10px; margin-bottom: 8px; line-height: 1.75; }
-  .ex-row b { display: block; font-size: 13px; margin-bottom: 2px; }
-  .ex-row.bad { background: rgba(214,69,63,0.14); border-left: 3px solid #d6453f; } .ex-row.bad b { color: #f08a80; }
-  .ex-row.good { background: rgba(63,181,115,0.14); border-left: 3px solid #3fb573; } .ex-row.good b { color: #7be3ab; }
 
   /* ===== Dialogue (prop interaction) ===== */
   #dialogue-text {
@@ -400,7 +396,6 @@
     border-radius: 12px; background: rgba(10,15,32,0.72); border: 1px solid rgba(140,165,225,0.2); color: #b7c4e0;
     font: 12px/1.4 "Microsoft JhengHei", sans-serif; pointer-events: none; }
   #controls-legend kbd { min-width: 20px; height: 20px; font-size: 10.5px; }
-  body.legend-mini #controls-legend > div:not(:last-child) { display: none; }
   #help-overlay { position: absolute; inset: 0; z-index: 130; display: none; align-items: center; justify-content: center; padding: 20px; background: rgba(4,7,18,0.8); }
   #help-overlay.show { display: flex; }
   .help-card { width: 100%; max-width: 720px; max-height: 92vh; overflow-y: auto; padding: 26px 28px; border-radius: 18px; background: #0f1530;
@@ -578,18 +573,18 @@
   @media (max-width: 700px) { #hint-card { top: 110px; } #aim-hint { white-space: normal; width: calc(100vw - 40px); text-align: center; font-size: 13px; } }
 
   /* ===================== 新版開始畫面 + 新人說明會 + 馬卡龍配色 ===================== */
-  html, body { background: linear-gradient(180deg, #e6dccf 0%, #c9d0c9 100%) !important; }
-  #vignette { background: radial-gradient(ellipse at center, rgba(0,0,0,0) 45%, rgba(40,30,20,0.4) 100%) !important; }
+  html, body { background: linear-gradient(180deg, #ffe9f3 0%, #e7f1ff 100%) !important; }
+  #vignette { background: radial-gradient(ellipse at center, rgba(0,0,0,0) 50%, rgba(70,40,110,0.32) 100%) !important; }
   #start-overlay { background: none !important; padding: 0 !important; display: flex; align-items: center; justify-content: center; }
   #start-overlay .st-bg { position: absolute; inset: 0; background:
-      radial-gradient(circle at 20% 25%, rgba(232,160,130,0.45), transparent 42%),
-      radial-gradient(circle at 80% 30%, rgba(130,160,190,0.4), transparent 44%),
-      radial-gradient(circle at 60% 85%, rgba(140,175,150,0.4), transparent 42%),
-      linear-gradient(180deg, rgba(239,229,216,0.5), rgba(220,211,198,0.68)); }
-  #start-overlay .st-bubble { position: absolute; border-radius: 50%; background: rgba(255,250,240,0.4); animation: stFloat linear infinite; }
+      radial-gradient(circle at 20% 25%, rgba(255,158,199,0.55), transparent 40%),
+      radial-gradient(circle at 80% 30%, rgba(124,200,255,0.5), transparent 42%),
+      radial-gradient(circle at 60% 85%, rgba(126,224,181,0.45), transparent 40%),
+      linear-gradient(180deg, rgba(255,240,248,0.55), rgba(236,228,255,0.7)); }
+  #start-overlay .st-bubble { position: absolute; border-radius: 50%; background: rgba(255,255,255,0.55); animation: stFloat linear infinite; }
   @keyframes stFloat { from { transform: translateY(110vh); } to { transform: translateY(-20vh); } }
-  #start-overlay .st-box { position: relative; text-align: center; padding: 34px 44px 30px; border-radius: 34px; background: rgba(251,246,238,0.8);
-    box-shadow: 0 20px 60px rgba(90,70,50,0.25), inset 0 0 0 3px rgba(255,250,242,0.9); backdrop-filter: blur(8px); max-width: min(560px, 92vw); }
+  #start-overlay .st-box { position: relative; text-align: center; padding: 34px 44px 30px; border-radius: 34px; background: rgba(255,255,255,0.72);
+    box-shadow: 0 20px 60px rgba(140,90,200,0.3), inset 0 0 0 3px rgba(255,255,255,0.9); backdrop-filter: blur(8px); max-width: min(560px, 92vw); }
   #start-overlay .st-orb { width: 110px; height: 110px; margin: -90px auto 10px; border-radius: 50%;
     background: radial-gradient(circle at 35% 30%, #fff 0%, #9fd0ff 35%, #4f7fe8 100%); box-shadow: 0 0 0 10px rgba(255,255,255,0.6), 0 12px 30px rgba(79,127,232,0.45);
     position: relative; animation: stBob 2.4s ease-in-out infinite; }
@@ -597,51 +592,51 @@
   #start-overlay .st-orb::before { left: 34px; } #start-overlay .st-orb::after { right: 34px; }
   #start-overlay .st-smile { position: absolute; left: 35px; top: 56px; width: 40px; height: 22px; border-bottom: 5px solid #fff; border-radius: 0 0 30px 30px; }
   @keyframes stBob { 0%,100% { transform: translateY(0) rotate(-3deg); } 50% { transform: translateY(-10px) rotate(3deg); } }
-  #start-overlay .st-brand { color: #6f8a80; font: 800 14px "PingFang TC","Microsoft JhengHei",sans-serif; letter-spacing: 3px; }
+  #start-overlay .st-brand { color: #8a6cc8; font: 800 14px "PingFang TC","Microsoft JhengHei",sans-serif; letter-spacing: 3px; }
   #start-overlay h1 { font: 900 clamp(38px, 7vw, 60px)/1.15 "PingFang TC","Microsoft JhengHei",sans-serif !important; margin: 8px 0 4px !important;
-    background: linear-gradient(90deg, #d9694f, #e39a3b, #4f8f86); -webkit-background-clip: text; background-clip: text; color: transparent !important; }
-  #start-overlay .st-sub { color: #4a4640; font: 800 19px "PingFang TC","Microsoft JhengHei",sans-serif; margin-bottom: 22px; }
+    background: linear-gradient(90deg, #ff4fa0, #ff9f1c, #8b5cf6); -webkit-background-clip: text; background-clip: text; color: transparent !important; }
+  #start-overlay .st-sub { color: #5a4a80; font: 800 19px "PingFang TC","Microsoft JhengHei",sans-serif; margin-bottom: 22px; }
   #start-btn { display: inline-block !important; padding: 17px 54px; border: none; border-radius: 50px; cursor: pointer;
     font: 900 24px "PingFang TC","Microsoft JhengHei",sans-serif; color: #fff; letter-spacing: 3px;
-    background: linear-gradient(135deg, #e8826a, #f0b060); box-shadow: 0 6px 0 #b25e4b, 0 12px 26px rgba(178,94,75,0.3); transition: transform .12s; animation: stPulse 1.8s ease-in-out infinite; }
+    background: linear-gradient(135deg, #ff4fa0, #ff9f1c); box-shadow: 0 8px 0 #c93a7c, 0 14px 30px rgba(255,79,160,0.45); transition: transform .12s; animation: stPulse 1.8s ease-in-out infinite; }
   #start-btn:hover { transform: translateY(-2px) scale(1.04); }
-  #start-btn:active { transform: translateY(5px); box-shadow: 0 3px 0 #b25e4b; }
+  #start-btn:active { transform: translateY(5px); box-shadow: 0 3px 0 #c93a7c; }
   @keyframes stPulse { 0%,100% { filter: brightness(1); } 50% { filter: brightness(1.12); } }
-  #start-overlay .st-note { margin-top: 18px; color: #7a7068; font: 600 13px "PingFang TC","Microsoft JhengHei",sans-serif; }
+  #start-overlay .st-note { margin-top: 18px; color: #7a6aa0; font: 600 13px "PingFang TC","Microsoft JhengHei",sans-serif; }
 
   #brief-ui { position: fixed; left: 50%; bottom: 22px; transform: translate(-50%, 30px); width: min(880px, calc(100vw - 24px)); z-index: 30; opacity: 0; pointer-events: none;
     transition: opacity .4s, transform .4s; display: flex; gap: 14px; align-items: center; padding: 14px 18px; border-radius: 22px;
-    background: rgba(251,246,238,0.97); box-shadow: 0 12px 40px rgba(40,30,20,0.3), inset 0 0 0 3px #f3c9a8; font-family: "PingFang TC","Microsoft JhengHei",sans-serif; }
+    background: rgba(255,255,255,0.95); box-shadow: 0 12px 40px rgba(90,40,140,0.35), inset 0 0 0 3px #ffc2dc; font-family: "PingFang TC","Microsoft JhengHei",sans-serif; }
   #brief-ui.show { opacity: 1; transform: translate(-50%, 0); pointer-events: auto; }
   #brief-ui .bu-face { flex-shrink: 0; width: 58px; height: 58px; border-radius: 50%; background: radial-gradient(circle at 35% 30%, #fff 0%, #9fd0ff 35%, #4f7fe8 100%);
     display: flex; align-items: center; justify-content: center; font-size: 26px; animation: stBob 2s ease-in-out infinite; }
   #brief-ui .bu-main { flex: 1; min-width: 0; }
-  #brief-ui .bu-name { color: #e8826a; font-weight: 900; font-size: 14px; }
-  #brief-text { color: #3b3430; font-size: 16.5px; line-height: 1.65; font-weight: 700; min-height: 54px; }
+  #brief-ui .bu-name { color: #ff4fa0; font-weight: 900; font-size: 14px; }
+  #brief-text { color: #3a2a5a; font-size: 16.5px; line-height: 1.65; font-weight: 700; min-height: 54px; }
   #brief-dots { display: flex; gap: 6px; margin-top: 6px; }
-  #brief-dots span { width: 22px; height: 6px; border-radius: 3px; background: #e9dfd2; }
-  #brief-dots span.on { background: #e8826a; } #brief-dots span.done { background: #f2c3b2; }
+  #brief-dots span { width: 22px; height: 6px; border-radius: 3px; background: #e6dcff; }
+  #brief-dots span.on { background: #ff4fa0; } #brief-dots span.done { background: #ffb3d1; }
   #brief-ui .bu-btns { display: flex; flex-direction: column; gap: 8px; flex-shrink: 0; }
   #brief-ui button { padding: 10px 18px; border-radius: 30px; border: none; cursor: pointer; font: 900 14.5px "PingFang TC","Microsoft JhengHei",sans-serif; }
-  #brief-next { color: #fff; background: linear-gradient(135deg, #e8826a, #f0b060); box-shadow: 0 4px 0 #b25e4b; }
-  #brief-skip { color: #6f8a80; background: #efe7dc; }
+  #brief-next { color: #fff; background: linear-gradient(135deg, #ff4fa0, #ff9f1c); box-shadow: 0 4px 0 #c93a7c; }
+  #brief-skip { color: #8a6cc8; background: #f1eaff; }
   @media (max-width: 640px) { #brief-ui { flex-wrap: wrap; } #brief-ui .bu-btns { flex-direction: row; width: 100%; justify-content: flex-end; } #brief-text { font-size: 14.5px; } }
 
   body.pregame #hud-top, body.pregame #minimap-wrap, body.pregame #controls-legend, body.pregame #aery-say,
   body.briefing #minimap-wrap, body.briefing #controls-legend, body.briefing #objective, body.briefing #guide-pin, body.briefing #guide-edge, body.briefing #aim-ring { display: none !important; }
   /* 介面：粉嫩背景上的鮮豔按鈕 */
-  #panel-box { background: linear-gradient(160deg, rgba(46,56,70,0.97), rgba(32,39,50,0.97)) !important; border: 2px solid #e9a27f !important; }
-  .panel-btn { background: rgba(255,255,255,0.12) !important; border: 1px solid rgba(243,201,168,0.45) !important; color: #fff !important; border-radius: 12px !important; }
+  #panel-box { background: linear-gradient(160deg, rgba(62,38,118,0.97), rgba(38,28,86,0.97)) !important; border: 2px solid #ff8fc7 !important; }
+  .panel-btn { background: rgba(255,255,255,0.12) !important; border: 1px solid rgba(255,190,230,0.55) !important; color: #fff !important; border-radius: 12px !important; }
   .panel-btn:hover { background: rgba(255,255,255,0.22) !important; }
-  .panel-btn.primary { background: linear-gradient(135deg, #e8826a, #f0b060) !important; border: none !important; font-weight: 800 !important; box-shadow: 0 4px 0 #b25e4b; }
+  .panel-btn.primary { background: linear-gradient(135deg, #ff4fa0, #ff9f1c) !important; border: none !important; font-weight: 800 !important; box-shadow: 0 4px 0 #b8336f; }
   .panel-btn.hint-btn { background: rgba(255,210,63,0.2) !important; border-color: #ffd23f !important; color: #ffe27a !important; }
   .panel-btn.hint-btn.lv3 { background: #ffd23f !important; color: #3a2a00 !important; }
-  #objective { background: rgba(38,46,58,0.92) !important; border: 2px solid #e8826a !important; box-shadow: 0 6px 24px rgba(20,24,30,0.35), 0 0 18px rgba(232,130,106,0.3) !important; }
+  #objective { background: rgba(62,38,118,0.92) !important; border: 2px solid #ff4fa0 !important; box-shadow: 0 6px 24px rgba(120,60,170,0.35), 0 0 18px rgba(255,79,160,0.35) !important; }
   #objective .ob-lv { color: #ffd23f !important; }
-  #hud-top > div:first-child { background: rgba(38,46,58,0.85); padding: 8px 16px 10px; border-radius: 16px; box-shadow: 0 6px 20px rgba(20,24,30,0.3); }
-  #hud-top .brand { color: #f3c9a8 !important; }
-  #minimap-wrap, #controls-legend, #aery-say, #route-hint { background: rgba(38,46,58,0.88) !important; border-color: rgba(233,162,127,0.45) !important; }
-  #tutorial { background: rgba(38,46,58,0.94) !important; border-color: #e9a27f !important; }
+  #hud-top > div:first-child { background: rgba(62,38,118,0.85); padding: 8px 16px 10px; border-radius: 16px; box-shadow: 0 6px 20px rgba(120,60,170,0.3); }
+  #hud-top .brand { color: #ffc2dc !important; }
+  #minimap-wrap, #controls-legend, #aery-say, #route-hint { background: rgba(62,38,118,0.88) !important; border-color: rgba(255,158,199,0.6) !important; }
+  #tutorial { background: rgba(62,38,118,0.94) !important; border-color: #ff8fc7 !important; }
 </style>
 </head>
 <body class="pregame">
@@ -701,7 +696,7 @@
 <div id="lock-hint"><div class="lock-card"><div class="lock-icon">🖱️</div><div><b>點一下畫面，繼續探索</b><br><small>滑鼠會用來轉動視角・隨時按 <kbd>Esc</kbd> 叫回游標</small></div></div></div>
 <div id="tutorial" role="status" aria-live="polite"></div>
 <div id="elev-prompt" role="button" tabindex="0"></div>
-<div id="tut-celebrate" aria-live="assertive"><div class="tc-burst">🎉</div><div class="tc-title">新手教學完成！</div><div class="tc-sub">走廊的門打開了，<b>第 1 關</b>在走廊右手邊，出發吧！</div></div>
+<div id="tut-celebrate" aria-live="assertive"><div class="tc-burst">🎉</div><div class="tc-title">新手教學完成！</div><div class="tc-sub">訓練區的門已經打開，<b>第 1 關</b>在走廊右手邊，出發吧！</div></div>
 <div id="controls-legend">
   <div><kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd> 移動</div>
   <div>🖱️ 轉視角</div>
@@ -1010,7 +1005,7 @@ console.warn( 'Scripts "build/three.js" and "build/three.min.js" are deprecated 
 
   // ============ Three.js setup ============
   const scene = new THREE.Scene();
-  scene.fog = new THREE.FogExp2(0xcfc4b6, 0.014);
+  scene.fog = new THREE.FogExp2(0xe9dcf7, 0.01);
 
   const camera = new THREE.PerspectiveCamera(72, window.innerWidth / window.innerHeight, 0.1, 200);
   const EYE_HEIGHT = 1.65;
@@ -1025,8 +1020,6 @@ console.warn( 'Scripts "build/three.js" and "build/three.min.js" are deprecated 
   renderer.setPixelRatio(currentPixelRatio);
 
   // 材質：MeshStandardMaterial (PBR) 對每盞點光源的計算量很大，改用 MeshLambertMaterial，外觀接近但快很多。
-  const SIGN_FONT = '"PingFang TC","Microsoft JhengHei","Noto Sans CJK TC",sans-serif';
-  const SIGN_ICON_RE = /^([\u2713\u2714\u2715\u2716\u2605\u2606]|\p{Extended_Pictographic})[\uFE0F\u200D\p{Extended_Pictographic}]*\s*/u;
   function litMat(opts) {
     const o = Object.assign({}, opts);
     delete o.roughness; delete o.metalness;
@@ -1035,9 +1028,9 @@ console.warn( 'Scripts "build/three.js" and "build/three.min.js" are deprecated 
   renderer.setClearColor(0x000000, 0);
   container.appendChild(renderer.domElement);
 
-  const ambientLight = new THREE.AmbientLight(0xfff3e6, 0.36);
+  const ambientLight = new THREE.AmbientLight(0xffffff, 0.42);
   scene.add(ambientLight);
-  const hemiLight = new THREE.HemisphereLight(0xffeedd, 0x7d8a84, 0.34);
+  const hemiLight = new THREE.HemisphereLight(0xfff0f8, 0xc9b6ff, 0.3);
   scene.add(hemiLight);
 
   // ============ Building data ============
@@ -1053,7 +1046,7 @@ console.warn( 'Scripts "build/three.js" and "build/three.min.js" are deprecated 
     const upstairs = y0 >= FLOOR2_Y - 0.01;
     const wtex = (upstairs ? getWoodWallTexture() : getWallTexture()).clone(); wtex.needsUpdate = true;
     wtex.repeat.set(Math.max(1, len / (upstairs ? 2.0 : 2.4)), 1);
-    const wcol = upstairs ? new THREE.Color(0xb3a08a) : new THREE.Color(color === 0x1c2340 ? 0xcfc3b3 : 0xdcc6aa);   // 房間：暖灰；走廊：燕麥色
+    const wcol = upstairs ? new THREE.Color(0xb3a08a) : new THREE.Color(color === 0x1c2340 ? 0xd6caf5 : 0xf6d3e3);   // 房間：薰衣草白；走廊：櫻花白
     const mesh = new THREE.Mesh(
       new THREE.BoxGeometry(len, h, 0.25),
       litMat({ color: wcol, map: wtex })
@@ -1077,9 +1070,9 @@ console.warn( 'Scripts "build/three.js" and "build/three.min.js" are deprecated 
     const cnv = document.createElement('canvas'); cnv.width = 256; cnv.height = 256;
     const c = cnv.getContext('2d');
     c.fillStyle = '#ffffff'; c.fillRect(0, 0, 256, 256);
-    c.fillStyle = '#a9b8ad'; c.fillRect(0, 180, 256, 76);                   // 下半部護牆板
-    c.fillStyle = '#86968b'; c.fillRect(0, 176, 256, 5);                    // 腰線
-    c.fillStyle = '#5e6b63'; c.fillRect(0, 250, 256, 6);
+    c.fillStyle = '#c9cde0'; c.fillRect(0, 180, 256, 76);                   // 下半部護牆板
+    c.fillStyle = '#9aa0bd'; c.fillRect(0, 176, 256, 5);                    // 腰線
+    c.fillStyle = '#7a809c'; c.fillRect(0, 250, 256, 6);
     c.fillStyle = 'rgba(0,0,0,0.10)'; c.fillRect(126, 0, 3, 176);           // 上半部接縫
     c.fillStyle = 'rgba(0,0,0,0.10)'; c.fillRect(0, 180, 256, 2);
     for (let x = 0; x < 256; x += 64) { c.fillStyle = 'rgba(0,0,0,0.08)'; c.fillRect(x, 184, 2, 64); }
@@ -1158,7 +1151,7 @@ console.warn( 'Scripts "build/three.js" and "build/three.min.js" are deprecated 
     const cnv = document.createElement('canvas'); cnv.width = 256; cnv.height = 256;
     const c = cnv.getContext('2d');
     c.fillStyle = '#ffffff'; c.fillRect(0, 0, 256, 256);
-    c.strokeStyle = 'rgba(60,40,20,0.2)'; c.lineWidth = 2;
+    c.strokeStyle = 'rgba(0,0,0,0.35)'; c.lineWidth = 2;
     const tile = 64;
     for (let i = 0; i <= 256 / tile; i++) {
       c.beginPath(); c.moveTo(i * tile, 0); c.lineTo(i * tile, 256); c.stroke();
@@ -1181,7 +1174,7 @@ console.warn( 'Scripts "build/three.js" and "build/three.min.js" are deprecated 
     const tex = (carpet ? getCarpetTexture() : parquet ? getParquetTexture() : getFloorTileTexture()).clone();
     tex.needsUpdate = true;
     tex.repeat.set(w / (carpet ? 1.6 : parquet ? 1.4 : 2.2), d / (carpet ? 1.6 : parquet ? 1.4 : 2.2));
-    const fcol = carpet ? (upstairs ? new THREE.Color(0x2a1d14).lerp(new THREE.Color(emissiveColor), 0.24) : new THREE.Color(0xd6cdc2).lerp(new THREE.Color(emissiveColor), 0.38)) : parquet ? new THREE.Color(0x9a7a5c) : color;
+    const fcol = carpet ? (upstairs ? new THREE.Color(0x2a1d14).lerp(new THREE.Color(emissiveColor), 0.24) : new THREE.Color(0xf4ecff).lerp(new THREE.Color(emissiveColor), 0.45)) : parquet ? new THREE.Color(0x9a7a5c) : color;
     const mesh = new THREE.Mesh(
       new THREE.PlaneGeometry(w, d),
       litMat({ color: fcol, map: tex, emissive: parquet ? 0x2a1a0c : (emissiveColor || 0x000000), emissiveIntensity: carpet ? 0.07 : parquet ? 0.25 : 0.15 })
@@ -1191,7 +1184,7 @@ console.warn( 'Scripts "build/three.js" and "build/three.min.js" are deprecated 
     scene.add(mesh);
 
     // 踢腳板 (沿四邊，僅視覺用不影響碰撞)
-    const baseColor = 0x8a7866;
+    const baseColor = 0xc8b6ee;
     const baseH = 0.14;
     const baseMat = litMat({ color: baseColor, roughness: 0.7 });
     const baseTop = new THREE.Mesh(new THREE.BoxGeometry(w, baseH, 0.05), baseMat);
@@ -1233,17 +1226,17 @@ console.warn( 'Scripts "build/three.js" and "build/three.min.js" are deprecated 
 
   // ============ Floors (ground plane) ============
   // Lobby floor
-  addFloor(CORR_X1, LOBBY_Z1, CORR_X2, LOBBY_Z2, 0, 0xa4b2aa, 0x000000);
-  addCeiling(CORR_X1, LOBBY_Z1, CORR_X2, LOBBY_Z2, WALL_H1, 0xe2d9cc);
+  addFloor(CORR_X1, LOBBY_Z1, CORR_X2, LOBBY_Z2, 0, 0xb9d3f5, 0x000000);
+  addCeiling(CORR_X1, LOBBY_Z1, CORR_X2, LOBBY_Z2, WALL_H1, 0xeee4fa);
 
   // --- 大廳天窗效果 ---
   {
     const cnv = document.createElement('canvas'); cnv.width = 256; cnv.height = 256;
     const c = cnv.getContext('2d');
     const grad = c.createRadialGradient(128, 128, 10, 128, 128, 128);
-    grad.addColorStop(0, 'rgba(255,226,190,0.7)');
-    grad.addColorStop(0.5, 'rgba(240,200,160,0.28)');
-    grad.addColorStop(1, 'rgba(240,200,160,0)');
+    grad.addColorStop(0, 'rgba(180,200,255,0.9)');
+    grad.addColorStop(0.5, 'rgba(120,150,220,0.35)');
+    grad.addColorStop(1, 'rgba(120,150,220,0)');
     c.fillStyle = grad; c.fillRect(0, 0, 256, 256);
     const tex = new THREE.CanvasTexture(cnv);
     const skylight = new THREE.Mesh(
@@ -1259,24 +1252,24 @@ console.warn( 'Scripts "build/three.js" and "build/three.min.js" are deprecated 
   }
 
   // Corridor 1F floor (z LOBBY_Z2 to RAMP_Z1)
-  addFloor(CORR_X1, LOBBY_Z2, CORR_X2, RAMP_Z1, 0, 0xc4ae94, 0x000000);
-  addCeiling(CORR_X1, LOBBY_Z2, CORR_X2, RAMP_Z1, WALL_H1, 0xe2d9cc);
+  addFloor(CORR_X1, LOBBY_Z2, CORR_X2, RAMP_Z1, 0, 0xcdbff0, 0x000000);
+  addCeiling(CORR_X1, LOBBY_Z2, CORR_X2, RAMP_Z1, WALL_H1, 0xeee4fa);
 
   // ============ Room definitions ============
   const ROOMS = [
-    { id: 'pdpa', name: '個資管理與實務', role: '新進人員', side: 'left', floor: 1, x1: -ROOM_OUT, x2: CORR_X1, z1: R1_Z1, z2: R1_Z2, color: 0x8391d4,
+    { id: 'pdpa', name: '個資管理與實務', role: '新進人員', side: 'left', floor: 1, x1: -ROOM_OUT, x2: CORR_X1, z1: R1_Z1, z2: R1_Z2, color: 0x7c8cff,
       desc: '認識一般個資與特種個資的差異，掌握蒐集、處理、利用、銷毀四階段合規要點。',
       wrong: '小強把加密檔案的密碼寫在同一封信裡寄出，等於完全沒加密效果。',
       good: '密碼透過另一個管道（如訊息、電話）告知收件者，避免密碼與檔案一起外洩。' },
-    { id: 'osh', name: '職業安全衛生', role: '新進人員', side: 'right', floor: 1, x1: CORR_X2, x2: ROOM_OUT, z1: R1_Z1, z2: R1_Z2, color: 0x4ea893,
+    { id: 'osh', name: '職業安全衛生', role: '新進人員', side: 'right', floor: 1, x1: CORR_X2, x2: ROOM_OUT, z1: R1_Z1, z2: R1_Z2, color: 0x2ec4a0,
       desc: '認識常見職場物理性安全風險，掌握「看、避、報」原則與正確通報流程。',
       wrong: '看到同事站在椅子上拿高處物品，選擇視而不見，繼續做自己的事。',
       good: '主動提醒並協助找安全工具（如合適的踏梯），必要時通報總務單位。' },
-    { id: 'ai_policy', name: 'AI 使用管理辦法', role: '新進人員', side: 'left', floor: 1, x1: -ROOM_OUT, x2: CORR_X1, z1: R2_Z1, z2: R2_Z2, color: 0xe3a449,
+    { id: 'ai_policy', name: 'AI 使用管理辦法', role: '新進人員', side: 'left', floor: 1, x1: -ROOM_OUT, x2: CORR_X1, z1: R2_Z1, z2: R2_Z2, color: 0xffb020,
       desc: '說明企業內部使用生成式 AI 工具的規範與資料去識別化原則。',
       wrong: '直接把完整客戶名單貼進 AI 工具，方便它幫忙整理分析。',
       good: '先將敏感資料去識別化，只保留分析必要的欄位再交給 AI 處理。' },
-    { id: 'infosec', name: '資訊安全通識', role: '新進人員', side: 'right', floor: 1, x1: CORR_X2, x2: ROOM_OUT, z1: R2_Z1, z2: R2_Z2, color: 0xd98397,
+    { id: 'infosec', name: '資訊安全通識', role: '新進人員', side: 'right', floor: 1, x1: CORR_X2, x2: ROOM_OUT, z1: R2_Z1, z2: R2_Z2, color: 0xff6fa5,
       desc: '透過情境認識釣魚郵件與社交工程手法，掌握「疑、查、報」應變流程。',
       wrong: '收到「帳戶異常」信件，立即點擊連結並輸入帳號密碼重設。',
       good: '核對寄件者網域，有疑慮先通報資安窗口，絕不點擊不明連結。' },
@@ -1313,9 +1306,15 @@ console.warn( 'Scripts "build/three.js" and "build/three.min.js" are deprecated 
     });
     if (cursor < end) addWall(xLine, cursor, xLine, end, floor);
   }
-  const ROOMS_1F_Z = IS_EMP ? [[R1_Z1, R1_Z2], [R2_Z1, R2_Z2]] : [];
-  corridorWallSegments(CORR_X1, 1, (IS_EMP ? [[MR_DOOR_Z1, MR_DOOR_Z2]] : []).concat(ROOMS_1F_Z));
+  const DOOR_HALF = 1.1;   // 房間門寬 2.2 公尺
+  const doorGap = (z1, z2) => [(z1 + z2) / 2 - DOOR_HALF, (z1 + z2) / 2 + DOOR_HALF];
+  const ROOMS_1F_Z = [doorGap(R1_Z1, R1_Z2), doorGap(R2_Z1, R2_Z2)];
+  corridorWallSegments(CORR_X1, 1, [[MR_DOOR_Z1, MR_DOOR_Z2]].concat(ROOMS_1F_Z));
   corridorWallSegments(CORR_X2, 1, ROOMS_1F_Z);
+  // 門上方的牆（門高 2.3 公尺）
+  const DOOR_H = 2.3;
+  [[CORR_X1, MR_DOOR_Z1, MR_DOOR_Z2]].concat(ROOMS_1F_Z.map(g => [CORR_X1, g[0], g[1]]), ROOMS_1F_Z.map(g => [CORR_X2, g[0], g[1]]))
+    .forEach(([x, z1, z2]) => addWallMesh(x, z1, x, z2, DOOR_H, WALL_H1 - DOOR_H));
   if (IS_MGR) {
     corridorWallSegments(CORR_X1, 2, [[R3_Z1, R3_Z2]]);
     corridorWallSegments(CORR_X2, 2, [[R3_Z1, R3_Z2]]);
@@ -1366,7 +1365,7 @@ console.warn( 'Scripts "build/three.js" and "build/three.min.js" are deprecated 
   });
   // Corridor lights
   (IS_EMP ? [LOBBY_Z2 - 1, R1_Z1 + 2, (R1_Z2+R2_Z1)/2, R2_Z2 + 2] : [LOBBY_Z2 + 1.5]).forEach(z => {
-    const l = new THREE.PointLight(0xffe6cc, 0.55, 10);
+    const l = new THREE.PointLight(0xfff0f6, 0.6, 10);
     l.position.set(0, 2.6, z);
     scene.add(l);
   });
@@ -1506,7 +1505,7 @@ console.warn( 'Scripts "build/three.js" and "build/three.min.js" are deprecated 
     }
     figure(-0.55, 0x5a80b8);
     figure(0.55, 0xb08a5a);
-    const barrier = new THREE.Mesh(new THREE.PlaneGeometry(0.5, 1.0), new THREE.MeshBasicMaterial({ color: 0xc9776a, transparent: true, opacity: 0.35, side: THREE.DoubleSide }));
+    const barrier = new THREE.Mesh(new THREE.PlaneGeometry(0.5, 1.0), new THREE.MeshBasicMaterial({ color: 0xd06090, transparent: true, opacity: 0.35, side: THREE.DoubleSide }));
     barrier.position.set(0, 0.5, 0);
     g.add(barrier);
     const hit = addHitBox(g, 1.7, 1.1, 0.6, 0.5);
@@ -1666,7 +1665,7 @@ console.warn( 'Scripts "build/three.js" and "build/three.min.js" are deprecated 
     dustPhase[i] = Math.random() * Math.PI * 2;
   }
   dustGeo.setAttribute('position', new THREE.BufferAttribute(dustPos, 3));
-  const dustMat = new THREE.PointsMaterial({ color: 0xe6d6bd, size: 0.03, transparent: true, opacity: 0.45, depthWrite: false });
+  const dustMat = new THREE.PointsMaterial({ color: 0xaabbee, size: 0.03, transparent: true, opacity: 0.45, depthWrite: false });
   const dustPoints = new THREE.Points(dustGeo, dustMat);
   scene.add(dustPoints);
 
@@ -1680,7 +1679,7 @@ console.warn( 'Scripts "build/three.js" and "build/three.min.js" are deprecated 
     return beam;
   }
   LAMPS_1F.forEach(z => {
-    makeLightBeam(0, WALL_H1 - 0.05, z, 0xffd9a0);
+    makeLightBeam(0, WALL_H1 - 0.05, z, 0x8899dd);
   });
   LAMPS_2F.forEach(z => {
     makeLightBeam(0, FLOOR2_Y + WALL_H2 - 0.05, z, 0xffd9a0);
@@ -3041,7 +3040,6 @@ console.warn( 'Scripts "build/three.js" and "build/three.min.js" are deprecated 
   const passSigns = {};
   const PASS_LIGHT = new THREE.Color(0xfff1d0);
   function transformRoom(room, stars) {
-    room.arcadeStars = stars;
     const y0 = room.floor === 1 ? 0 : FLOOR2_Y;
     const cx = (room.x1 + room.x2) / 2, cz = (room.z1 + room.z2) / 2;
     room.lightTarget = { color: PASS_LIGHT, intensity: 1.9 };
@@ -3172,8 +3170,8 @@ console.warn( 'Scripts "build/three.js" and "build/three.min.js" are deprecated 
   // =====================================================================
   // ============ 新手引導：強制新手教學、滑鼠鎖定提示、說明面板 ============
   // =====================================================================
-  // 新手教學必須依序完成三個步驟，完成前走廊入口的門會關著。
-  // 完成後播放慶祝特效、門打開，教學面板之後不再出現（記在瀏覽器裡，重新整理也不會再跑一次）。
+  // 新手教學必須依序完成三個步驟，完成前走廊入口會被一道光牆擋住。
+  // 完成後播放慶祝特效、光牆消失，教學面板之後不再出現（記在瀏覽器裡，重新整理也不會再跑一次）。
   const lockHint = document.getElementById('lock-hint');
   const controlsLegend = document.getElementById('controls-legend');
   const tutorialEl = document.getElementById('tutorial');
@@ -3182,6 +3180,8 @@ console.warn( 'Scripts "build/three.js" and "build/three.min.js" are deprecated 
   const tutCelebrate = document.getElementById('tut-celebrate');
   const TUT_KEY = 'aery-onboard-v2-' + MODE;   // v2：加入新人說明會後的新版教學
   const TUT_WALL_Z = LOBBY_Z2 + 0.6;
+  // 大廳通往訓練區的隔間牆（中間是雙開門，參加完說明會才會打開）
+  addWall(CORR_X1, TUT_WALL_Z, -1.2, TUT_WALL_Z, 1); addWall(1.2, TUT_WALL_Z, CORR_X2, TUT_WALL_Z, 1);
   const TUTORIAL_STEPS = isTouch
     ? ['用左下角的<b>搖桿</b>走幾步', '在畫面右半邊<b>拖曳</b>，轉身看看四周', '跟著<b>金色光柱</b>到會議室，對準<b>發光的座位</b>，點右下角<b>「查看」</b>坐下']
     : ['按 <kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd> 走幾步', '<b>移動滑鼠</b>，轉身看看四周', '跟著<b>金色光柱</b>到會議室，對準<b>發光的座位</b>，按 <kbd>E</kbd> 坐下'];
@@ -3189,173 +3189,47 @@ console.warn( 'Scripts "build/three.js" and "build/three.min.js" are deprecated 
   function tutorialDone() { try { return localStorage.getItem(TUT_KEY) === '1'; } catch (_) { return false; } }
   function setTutorialDone(v) { try { v ? localStorage.setItem(TUT_KEY, '1') : localStorage.removeItem(TUT_KEY); } catch (_) {} }
 
-  // =====================================================================
-  // ============ 實體門（取代雷射門與光牆）============
-  // 每道門 = 左右兩片門扇 + 門框 + 門楣 + 門上的鎖頭燈；關著時擋住通道，開門時門扇往內轉開。
-  // =====================================================================
-  const DOOR_H = 2.4;
-  const ALL_GATES = [];
-  const DOOR_FRAME_MAT = litMat({ color: 0x6e5a4a });
-  const DOOR_HEADER_MAT = litMat({ color: 0xdcc6aa });
-  const DOOR_HANDLE_MAT = litMat({ color: 0xc9a227, emissive: 0x5a4210, emissiveIntensity: 0.45 });
-  const DOOR_GLASS_MAT = new THREE.MeshLambertMaterial({ color: 0xe9e1d3, emissive: 0x4a4030, emissiveIntensity: 0.35, side: THREE.DoubleSide });
-  const LAMP_LOCKED = 0xd9584a, LAMP_OPEN = 0x5fc98a;
-  // opts: x, z = 門口中心；along = 'z'（門開在 x = 常數的牆上）或 'x'；inward = 門往哪一側開（+1 / -1）
-  //       width = 門口寬、color = 門扇顏色、gold = 金色大門、label / labelColor = 門前的鎖定提示牌
-  function makeDoorGate(opts) {
-    const W = opts.width, F = 0.12, H = WALL_H1;
-    const g = new THREE.Group();
-    // 旋轉讓 local +Z 指向門「往內開」的方向，local X 沿著牆
-    g.rotation.y = opts.along === 'z' ? opts.inward * Math.PI / 2 : (opts.inward > 0 ? 0 : Math.PI);
-    g.position.set(opts.x, 0, opts.z);
-    // 門楣（門上方的牆）
-    const header = new THREE.Mesh(new THREE.BoxGeometry(W + 2 * F, H - DOOR_H, 0.25), DOOR_HEADER_MAT);
-    header.position.y = DOOR_H + (H - DOOR_H) / 2; g.add(header);
-    // 門框
-    [-1, 1].forEach(sx => {
-      const post = new THREE.Mesh(new THREE.BoxGeometry(F, DOOR_H + F, 0.32), DOOR_FRAME_MAT);
-      post.position.set(sx * (W / 2 + F / 2), (DOOR_H + F) / 2, 0); g.add(post);
-    });
-    const lintel = new THREE.Mesh(new THREE.BoxGeometry(W + 2 * F, F, 0.32), DOOR_FRAME_MAT);
-    lintel.position.y = DOOR_H + F / 2; g.add(lintel);
-    // 門扇
-    const leafW = W / 2 - 0.02, leafH = DOOR_H - 0.03;
-    const baseCol = new THREE.Color(opts.color);
-    const leafMat = opts.gold
-      ? litMat({ color: 0xd9b04a, emissive: 0x5a4210, emissiveIntensity: 0.35 })
-      : litMat({ color: baseCol, emissive: baseCol.clone().multiplyScalar(0.12), emissiveIntensity: 1 });
-    const trimMat = litMat({ color: opts.gold ? 0xa87f22 : baseCol.clone().multiplyScalar(0.72) });
-    const leaves = [-1, 1].map(side => {         // side = -1：左扇（鉸鍊在 -W/2），+1：右扇
-      const pivot = new THREE.Group();
-      pivot.position.set(side * W / 2, 0, 0); g.add(pivot);
-      const toC = -side;                          // 從鉸鍊往門中央的方向
-      const leaf = new THREE.Mesh(new THREE.BoxGeometry(leafW, leafH, 0.06), leafMat);
-      leaf.position.set(toC * (leafW / 2 + 0.01), leafH / 2 + 0.01, 0); pivot.add(leaf);
-      // 門片上下兩塊凸起飾板（兩面）
-      [[0.62, 0.9], [1.72, 0.9]].forEach(([py, ph]) => [-1, 1].forEach(fz => {
-        const pan = new THREE.Mesh(new THREE.BoxGeometry(leafW - 0.26, ph * (py > 1 ? 0.62 : 1) , 0.02), trimMat);
-        pan.position.set(toC * (leafW / 2 + 0.01), py + (py > 1 ? 0.15 : 0), fz * 0.035); pivot.add(pan);
-      }));
-      // 長條玻璃窗（靠門中央那側）
-      const glass = new THREE.Mesh(new THREE.PlaneGeometry(0.14, 0.9), DOOR_GLASS_MAT);
-      glass.position.set(toC * (leafW - 0.16), 1.62, 0); glass.rotation.y = 0;
-      const glass2 = glass.clone(); glass.position.z = 0.047; glass2.position.z = -0.047;
-      pivot.add(glass); pivot.add(glass2);
-      // 直立把手（兩面）
-      [-1, 1].forEach(fz => {
-        const bar = new THREE.Mesh(new THREE.BoxGeometry(0.035, 0.42, 0.035), DOOR_HANDLE_MAT);
-        bar.position.set(toC * (leafW - 0.09), 1.05, fz * 0.085); pivot.add(bar);
-        [0.16, -0.16].forEach(dy => {
-          const st = new THREE.Mesh(new THREE.BoxGeometry(0.03, 0.03, 0.06), DOOR_HANDLE_MAT);
-          st.position.set(toC * (leafW - 0.09), 1.05 + dy, fz * 0.055); pivot.add(st);
-        });
-      });
-      pivot.userData.openAngle = side < 0 ? -Math.PI / 2 * 0.94 : Math.PI / 2 * 0.94;
-      return pivot;
-    });
-    // 門邊刷卡機：鎖著亮紅燈、開門變綠燈（走廊那面）
-    const readerX = W / 2 + F + 0.2;
-    const reader = new THREE.Mesh(new THREE.BoxGeometry(0.14, 0.22, 0.04), litMat({ color: 0x2b3340 }));
-    reader.position.set(readerX, 1.3, -0.145); g.add(reader);
-    const lamp = new THREE.Mesh(new THREE.BoxGeometry(0.09, 0.035, 0.02), new THREE.MeshBasicMaterial({ color: LAMP_LOCKED }));
-    lamp.position.set(readerX, 1.37, -0.17); g.add(lamp);
-    // 門楣上的門牌
-    if (opts.plaque) {
-      const cnv = document.createElement('canvas'); cnv.width = 512; cnv.height = 150;
-      const c = cnv.getContext('2d');
-      const hex = '#' + new THREE.Color(opts.color).getHexString();
-      c.fillStyle = '#26303d'; if (c.roundRect) { c.beginPath(); c.roundRect(0, 0, 512, 150, 18); c.fill(); } else c.fillRect(0, 0, 512, 150);
-      c.fillStyle = hex; c.fillRect(0, 0, 18, 150);
-      c.textAlign = 'center'; c.textBaseline = 'middle';
-      c.fillStyle = hex; c.font = 'bold 30px "PingFang TC","Microsoft JhengHei","Noto Sans CJK TC",sans-serif';
-      c.fillText(opts.plaque[1] || '', 265, 38);
-      c.fillStyle = '#f4ede2'; c.font = 'bold 54px "PingFang TC","Microsoft JhengHei","Noto Sans CJK TC",sans-serif';
-      let size = 54; while (c.measureText(opts.plaque[0]).width > 460 && size > 30) { size -= 2; c.font = 'bold ' + size + 'px "PingFang TC","Microsoft JhengHei","Noto Sans CJK TC",sans-serif'; }
-      c.fillText(opts.plaque[0], 265, 98);
-      const tex = new THREE.CanvasTexture(cnv);
-      const plate = new THREE.Mesh(new THREE.PlaneGeometry(1.7, 0.5), new THREE.MeshBasicMaterial({ map: tex }));
-      plate.position.set(0, DOOR_H + 0.42, -0.132); plate.rotation.y = Math.PI; g.add(plate);
-    }
-    scene.add(g);
-    g.updateMatrixWorld(true);
-    const P = (lx, lz) => { const v = new THREE.Vector3(lx, 0, lz); g.localToWorld(v); return { x: +v.x.toFixed(3), z: +v.z.toFixed(3) }; };
-    // 門口兩側的牆（永久存在）
-    const a = P(-W / 2 - F, 0), b = P(W / 2 + F, 0);
-    if (opts.along === 'z') {
-      const lo = Math.min(a.z, b.z), hi = Math.max(a.z, b.z);
-      if (opts.span[0] < lo) addWall(opts.x, opts.span[0], opts.x, lo + F, 1);
-      if (opts.span[1] > hi) addWall(opts.x, hi - F, opts.x, opts.span[1], 1);
-    } else {
-      const lo = Math.min(a.x, b.x), hi = Math.max(a.x, b.x);
-      if (opts.span[0] < lo) addWall(opts.span[0], opts.z, lo + F, opts.z, 1);
-      if (opts.span[1] > hi) addWall(hi - F, opts.z, opts.span[1], opts.z, 1);
-    }
-    // 關門時擋住門口的碰撞線；開門後改成兩片門扇的碰撞
-    const c1 = P(-W / 2, 0), c2 = P(W / 2, 0);
-    const wall = { x1: c1.x, z1: c1.z, x2: c2.x, z2: c2.z, floor: 1 };
-    const t1 = P(-W / 2, W / 2 - 0.02), t2 = P(W / 2, W / 2 - 0.02);
-    const leafWalls = [{ x1: c1.x, z1: c1.z, x2: t1.x, z2: t1.z, floor: 1 }, { x1: c2.x, z1: c2.z, x2: t2.x, z2: t2.z, floor: 1 }];
-    let sign = null;
-    if (opts.label) {   // 掛在門上的小吊牌（走廊那面），開門時拿掉
-      const tex = new THREE.CanvasTexture(drawSignCanvas(opts.label, opts.labelColor || '#ffd76a'));
-      sign = new THREE.Mesh(new THREE.PlaneGeometry(1.04, 0.39), new THREE.MeshBasicMaterial({ map: tex, transparent: true }));
-      sign.position.set(0, 1.64, -0.075); sign.rotation.y = Math.PI;
-    }
-    const gate = { group: g, leaves, lamp, sign, wall, leafWalls, state: 'open', t: 0 };
-    ALL_GATES.push(gate);
-    closeGate(gate);
-    return gate;
+  // ---------- 光牆：教學完成前擋住走廊 ----------
+  const wallTex = (() => {
+    const cnv = document.createElement('canvas'); cnv.width = 128; cnv.height = 256;
+    const c = cnv.getContext('2d');
+    const g = c.createLinearGradient(0, 0, 0, 256);
+    g.addColorStop(0, 'rgba(90,200,255,0.05)'); g.addColorStop(0.5, 'rgba(90,200,255,0.35)'); g.addColorStop(1, 'rgba(90,200,255,0.05)');
+    c.fillStyle = g; c.fillRect(0, 0, 128, 256);
+    c.strokeStyle = 'rgba(160,230,255,0.55)'; c.lineWidth = 2;
+    for (let y = 0; y < 256; y += 16) { c.beginPath(); c.moveTo(0, y); c.lineTo(128, y + 8); c.stroke(); }
+    const t = new THREE.CanvasTexture(cnv); t.wrapS = t.wrapT = THREE.RepeatWrapping; t.repeat.set(3, 1); return t;
+  })();
+  let tutWall = null;
+  let tutDoorObj = null;
+  function ensureTutDoor() {
+    if (tutDoorObj) return tutDoorObj;
+    addWallMesh(-1.2, TUT_WALL_Z, 1.2, TUT_WALL_Z, DOOR_H, WALL_H1 - DOOR_H);
+    woodFrame(0, TUT_WALL_Z, 1.2, 0);
+    tutDoorObj = makeWoodDoor(0, TUT_WALL_Z, 1.2, 0, -1);
+    const sign = makeSignSprite('員工訓練區', '#ff7eb6'); sign.scale.set(1.5, 0.42, 1); sign.position.set(0, 2.72, TUT_WALL_Z - 0.2); scene.add(sign);
+    tutDoorObj.lockSign = makeSignSprite('🔒 先參加新人說明會\n門就會打開', '#ff4fa0'); tutDoorObj.lockSign.scale.set(1.5, 0.57, 1);
+    tutDoorObj.lockSign.position.set(0, 1.55, TUT_WALL_Z - 0.3); scene.add(tutDoorObj.lockSign);
+    if (tutorialDone()) { tutDoorObj.fading = 9; setDoorOpen(tutDoorObj, 1); tutDoorObj.lockSign.visible = false; }
+    return tutDoorObj;
   }
-  function removeWall(w) { const i = walls.indexOf(w); if (i >= 0) walls.splice(i, 1); }
-  function closeGate(gate) {
-    if (!gate || gate.state === 'closed') return;
-    gate.state = 'closed'; gate.t = 0;
-    gate.leaves.forEach(l => { l.rotation.y = 0; });
-    gate.leafWalls.forEach(removeWall);
-    if (walls.indexOf(gate.wall) < 0) walls.push(gate.wall);
-    gate.lamp.material.color.set(LAMP_LOCKED);
-    if (gate.sign && !gate.sign.parent) gate.group.add(gate.sign);
+  function createTutorialWall() {
+    const d = ensureTutDoor();
+    d.fading = -1; setDoorOpen(d, 0); d.lockSign.visible = true;
+    tutWall = d;
   }
-  function openGate(gate, instant) {
-    if (!gate || gate.state !== 'closed') return;
-    removeWall(gate.wall);
-    if (gate.sign) gate.group.remove(gate.sign);
-    gate.lamp.material.color.set(LAMP_OPEN);
-    gate.state = 'opening'; gate.t = 0;
-    if (instant) finishOpen(gate);
-    else if (audioCtx && !soundMuted) { tone(220, 0, 0.35, 'triangle', 0.05); tone(330, 0.12, 0.4, 'triangle', 0.04); }
+  function openTutorialWall() {
+    const d = ensureTutDoor();
+    if (d.fading >= 0) return;
+    d.fading = 0; d.lockSign.visible = false;
+    for (let i = 0; i < 3; i++) spawnConfetti(-1 + i, 1.6, TUT_WALL_Z + 0.4, 70, 4);
+    if (audioCtx && !soundMuted) { tone(140, 0, 0.35, 'triangle', 0.05); tone(220, 0.25, 0.3, 'sine', 0.04); }
   }
-  function finishOpen(gate) {
-    gate.state = 'open';
-    gate.leaves.forEach(l => { l.rotation.y = l.userData.openAngle; });
-    gate.leafWalls.forEach(w => { if (walls.indexOf(w) < 0) walls.push(w); });
-  }
-  function updateGates(dt, t) {
-    ALL_GATES.forEach(gate => {
-      if (gate.state === 'opening') {
-        gate.t += dt;
-        const k = Math.min(1, gate.t / 1.3), e = k < 0.5 ? 2 * k * k : 1 - Math.pow(-2 * k + 2, 2) / 2;
-        gate.leaves.forEach(l => { l.rotation.y = l.userData.openAngle * e; });
-        if (k >= 1) finishOpen(gate);
-      } else if (gate.state === 'closed') {
-        gate.lamp.material.color.set(LAMP_LOCKED).multiplyScalar(0.8 + Math.sin(t * 3) * 0.2);
-      }
-    });
+  function updateTutorialWall(dt, t) {
+    const d = ensureTutDoor();
+    if (d.fading >= 0 && d.fading < 1.4) { d.fading += dt; setDoorOpen(d, d.fading / 1.3); if (d.fading >= 1.4) tutWall = null; }
   }
 
-  // ---------- 大廳 → 走廊的門：教學完成前關著 ----------
-  const tutGate = makeDoorGate({ x: 0, z: TUT_WALL_Z, along: 'x', inward: 1, width: 2.6, span: [CORR_X1, CORR_X2],
-    color: 0x8a6a4e, plaque: ['員工訓練區', '走廊・4 間訓練室'], label: '🔒 先參加說明會\n門就會打開', labelColor: '#e8826a' });
-  if (tutorialDone()) openGate(tutGate, true);   // 已經看過說明會：門一開始就是開的
-  function createTutorialWall() { closeGate(tutGate); if (ROOMS[0]) closeGate(roomGates[ROOMS[0].id]); }
-  function openTutorialWall() {
-    if (tutGate.state !== 'closed') return;
-    openGate(tutGate);
-    for (let i = 0; i < 5; i++) spawnConfetti(-2.2 + i * 1.1, 1.4, TUT_WALL_Z, 70, 4);
-    // 看完說明會 → 第 1 關的門也一起打開
-    setTimeout(() => { if (ROOMS[0]) openGate(roomGates[ROOMS[0].id]); }, 700);
-  }
-  function updateTutorialWall() {}
   // ---------- 教學面板 ----------
   function renderTutorial() {
     tutorialEl.innerHTML = '<div class="tut-title">🎮 新手教學（必做・' + Math.min(tut.step + 1, 3) + ' / 3）</div>' + TUTORIAL_STEPS.map((s, i) => {
@@ -3384,11 +3258,10 @@ console.warn( 'Scripts "build/three.js" and "build/three.min.js" are deprecated 
   function finishTutorial() {
     tut.active = false; tut.step = 3;
     setTutorialDone(true);
-    document.body.classList.add('legend-mini');
     renderTutorial();
     tutorialEl.classList.add('complete');
     setTimeout(() => { tutorialEl.classList.remove('show', 'complete'); }, 900);
-    // 慶祝特效：畫面中央大標語 + 彩帶 + 音效 + Aery 開心轉圈，門打開
+    // 慶祝特效：畫面中央大標語 + 彩帶 + 音效 + Aery 開心轉圈，光牆消失
     tutCelebrate.classList.remove('show'); void tutCelebrate.offsetWidth; tutCelebrate.classList.add('show');
     setTimeout(() => tutCelebrate.classList.remove('show'), 4200);
     const fx = Math.sin(player.yaw), fz = Math.cos(player.yaw);
@@ -3398,18 +3271,18 @@ console.warn( 'Scripts "build/three.js" and "build/three.min.js" are deprecated 
     celebrateUntil = clock.elapsedTime + 3;
     aerySpinBoost = 2;
     lastProgressT = clock.elapsedTime;
-    setTimeout(() => aerySay('太棒了，你已經會操作了！前面的門打開囉～' + (IS_EMP ? '第 1 關「個資管理」在走廊右手邊，跟著金色光柱和畫面上的箭頭前進！' : '往前走進電梯，就能到 2F 主管訓練區！') + '', 9), 600);
+    setTimeout(() => aerySay('太棒了，你已經會操作了！訓練區的門打開囉～' + (IS_EMP ? '第 1 關「個資管理」在走廊右手邊，跟著金色光柱和畫面上的箭頭前進！' : '往前走進電梯，就能到 2F 主管訓練區！') + '', 9), 600);
   }
   function bumpTutorialWall() {
     const now = clock.elapsedTime;
     if (now - tut.bumpT < 3.5) return;
     tut.bumpT = now;
-    aerySay('先到大廳旁邊的會議室參加新人說明會，門才會打開喔！跟著金色光柱走～', 6);
+    aerySay('先到大廳旁邊的會議室參加新人說明會，訓練區的門才會打開喔！跟著金色光柱走～', 6);
     beaconFlashT = clock.elapsedTime; pulseObjective();
     tutorialEl.classList.remove('nudge'); void tutorialEl.offsetWidth; tutorialEl.classList.add('nudge');
     if (audioCtx && !soundMuted) tone(220, 0, 0.18, 'sawtooth', 0.04);
   }
-  // 移動後呼叫：教學沒完成前，不能穿過走廊的門
+  // 移動後呼叫：教學沒完成前，不能穿過光牆
   function enforceTutorialWall() {
     if (!tut.active) return;
     const limit = TUT_WALL_Z - 0.35;
@@ -3568,96 +3441,50 @@ console.warn( 'Scripts "build/three.js" and "build/three.min.js" are deprecated 
     const wallX = r.side === 'left' ? r.x1 + 0.06 : r.x2 - 0.06;
     const faceRotY = r.side === 'left' ? Math.PI / 2 : -Math.PI / 2;
     const board = makeUnitSummaryBoard(wallX, y0 + 1.55, cz + 2.6, faceRotY, r.color, r.name, r.desc);
-    interactables.push({ mesh: board.hit, kind: 'prop', title: r.name + ' 單元摘要', lines: [r.desc, '到房間中央的「任務遊戲機」看重點，再找到房間裡標示「任務」的物件，完成小遊戲就能通過這間房。'], color: r.color });
+    interactables.push({ mesh: board.hit, kind: 'prop', title: r.name + ' 單元摘要', lines: [r.desc, '到旁邊查看「錯誤示範」跟「正確做法」，再找到房間裡標示「任務」的物件，完成小遊戲就能通過這間房。'], color: r.color });
   });
 
-  // ---------- 遊戲機：每間房一台（取代原本的紅色方塊＋綠色水晶）----------
-  // 點開後顯示「常見錯誤 vs 正確做法」，再從這裡開始任務；螢幕會依進度顯示鎖定 / PRESS START / CLEAR
-  const arcades = {};
-  function drawArcadeScreen(a, state, blink) {
-    const c = a.ctx, W = 256, H = 200, hex = a.hex;
-    const g = c.createLinearGradient(0, 0, 0, H); g.addColorStop(0, '#101a2a'); g.addColorStop(1, '#070b14');
-    c.fillStyle = g; c.fillRect(0, 0, W, H);
-    c.textAlign = 'center'; c.textBaseline = 'middle';
-    c.fillStyle = hex; c.font = 'bold 18px ' + SIGN_FONT; c.fillText(a.room.name, W / 2, 24);
-    c.fillStyle = hex; c.globalAlpha = 0.5; c.fillRect(24, 40, W - 48, 2); c.globalAlpha = 1;
-    if (state.kind === 'locked') {
-      c.font = '44px ' + SIGN_FONT; c.fillText('🔒', W / 2, 88);
-      c.fillStyle = '#f6f0e6'; c.font = 'bold 22px ' + SIGN_FONT; c.fillText('先找齊線索', W / 2, 132);
-      c.fillStyle = '#f2c66d'; c.font = 'bold 26px ' + SIGN_FONT; c.fillText('🔍 ' + state.n + ' / 3', W / 2, 166);
-    } else if (state.kind === 'ready') {
-      c.fillStyle = '#f2c66d'; c.font = '900 30px ' + SIGN_FONT; c.fillText('任務開放！', W / 2, 90);
-      if (blink) { c.fillStyle = '#f6f0e6'; c.font = '900 28px monospace'; c.fillText('PRESS START', W / 2, 140); }
-    } else {
-      c.fillStyle = '#7be3ab'; c.font = '900 34px ' + SIGN_FONT; c.fillText('CLEAR!', W / 2, 88);
-      c.fillStyle = '#f2c66d'; c.font = '30px ' + SIGN_FONT; c.fillText('★'.repeat(state.stars) + '☆'.repeat(3 - state.stars), W / 2, 134);
-      c.fillStyle = '#b7c4d6'; c.font = 'bold 18px ' + SIGN_FONT; c.fillText('可以再玩一次', W / 2, 172);
-    }
-    for (let y = 0; y < H; y += 4) { c.fillStyle = 'rgba(0,0,0,0.18)'; c.fillRect(0, y, W, 1); }   // 掃描線
-    a.tex.needsUpdate = true;
-  }
-  function makeArcade(r) {
-    const y0 = r.floor === 1 ? 0 : FLOOR2_Y;
-    const cx = (r.x1 + r.x2) / 2, cz = (r.z1 + r.z2) / 2;
-    const inward = r.side === 'left' ? 1 : -1;          // 機台正面朝向門口
+  // --- 房間門口：木頭門框 + 房間主題色的門牌 ---
+  const DOOR_FRAME = litMat({ color: 0x7a5a40 });
+  function woodFrame(x, cz, half, rotY) {
     const g = new THREE.Group();
-    const base = new THREE.Color(r.color), dark = base.clone().multiplyScalar(0.42), mid = base.clone().multiplyScalar(0.7);
-    const bodyMat = litMat({ color: dark }), sideMat = litMat({ color: base, emissive: base, emissiveIntensity: 0.18 });
-    const blackMat = litMat({ color: 0x151a22 }), trimMat = litMat({ color: mid });
-    const box = (w, h, d, mat, x, y, z, rx) => { const m = new THREE.Mesh(new THREE.BoxGeometry(w, h, d), mat); m.position.set(x, y, z); if (rx) m.rotation.x = rx; g.add(m); return m; };
-    box(0.74, 0.08, 0.66, blackMat, 0, 0.04, 0);                 // 底座
-    box(0.74, 0.92, 0.66, bodyMat, 0, 0.5, 0);                   // 下半機身
-    box(0.74, 0.86, 0.46, bodyMat, 0, 1.39, -0.1);               // 上半機身
-    [-1, 1].forEach(sx => box(0.04, 1.96, 0.72, sideMat, sx * 0.39, 0.98, -0.01));   // 兩側彩色側板
-    box(0.8, 0.07, 0.34, trimMat, 0, 0.99, 0.2, 0.22);           // 操作台
-    box(0.64, 0.5, 0.04, blackMat, 0, 1.42, 0.14, -0.16);        // 螢幕外框
-    // 螢幕（動態畫面）
-    const cnv = document.createElement('canvas'); cnv.width = 256; cnv.height = 200;
-    const tex = new THREE.CanvasTexture(cnv);
-    const screen = new THREE.Mesh(new THREE.PlaneGeometry(0.56, 0.44), new THREE.MeshBasicMaterial({ map: tex }));
-    screen.position.set(0, 1.42, 0.163); screen.rotation.x = -0.16; g.add(screen);
-    // 頂部燈箱
-    const mq = document.createElement('canvas'); mq.width = 256; mq.height = 64;
-    const mc = mq.getContext('2d'); const hex = '#' + base.getHexString();
-    mc.fillStyle = hex; mc.fillRect(0, 0, 256, 64);
-    mc.fillStyle = 'rgba(255,255,255,0.18)'; mc.fillRect(0, 0, 256, 22);
-    mc.fillStyle = '#1e2632'; mc.textAlign = 'center'; mc.textBaseline = 'middle'; mc.font = '900 30px ' + SIGN_FONT; mc.fillText('🕹️ 任務遊戲機', 128, 34);
-    box(0.78, 0.22, 0.5, bodyMat, 0, 1.94, -0.08);
-    const marquee = new THREE.Mesh(new THREE.PlaneGeometry(0.74, 0.19), new THREE.MeshBasicMaterial({ map: new THREE.CanvasTexture(mq) }));
-    marquee.position.set(0, 1.94, 0.171); g.add(marquee);
-    // 搖桿 + 按鈕
-    const stick = new THREE.Mesh(new THREE.CylinderGeometry(0.012, 0.012, 0.12, 8), blackMat); stick.position.set(-0.18, 1.07, 0.2); g.add(stick);
-    const ball = new THREE.Mesh(new THREE.SphereGeometry(0.035, 12, 10), litMat({ color: 0xd9584a })); ball.position.set(-0.18, 1.13, 0.2); g.add(ball);
-    [[0.06, 0xf2c66d], [0.15, 0x6fb7d9], [0.24, 0xe8826a]].forEach(([bx, col]) => {
-      const b = new THREE.Mesh(new THREE.CylinderGeometry(0.028, 0.028, 0.025, 14), litMat({ color: col, emissive: col, emissiveIntensity: 0.3 }));
-      b.position.set(bx, 1.035, 0.22); b.rotation.x = 0.22; g.add(b);
-    });
-    // 投幣口
-    box(0.22, 0.26, 0.02, blackMat, 0, 0.55, 0.335);
-    [-0.05, 0.05].forEach(sx => box(0.03, 0.08, 0.01, litMat({ color: 0xe39a3b, emissive: 0xe39a3b, emissiveIntensity: 0.6 }), sx, 0.6, 0.347));
-    g.position.set(cx, y0, cz); g.rotation.y = inward * Math.PI / 2;
-    scene.add(g);
-    const hit = addHitBox(g, 0.9, 2.1, 0.85);
-    // 碰撞：機台四邊
-    const W2 = 0.4;
-    [[-W2, -W2, W2, -W2], [W2, -W2, W2, W2], [W2, W2, -W2, W2], [-W2, W2, -W2, -W2]].forEach(([a1, b1, a2, b2]) =>
-      walls.push({ x1: cx + a1, z1: cz + b1, x2: cx + a2, z2: cz + b2, floor: r.floor }));
-    const a = { room: r, group: g, tex, ctx: cnv.getContext('2d'), hex, key: '' };
-    drawArcadeScreen(a, { kind: 'locked', n: 0 }, true);
-    arcades[r.id] = a;
-    interactables.push({ mesh: hit, room: r, kind: 'arcade', text: r.wrong, good: r.good, color: r.color });
+    [-half - 0.05, half + 0.05].forEach(o => { const p = new THREE.Mesh(new THREE.BoxGeometry(0.12, DOOR_H, 0.24), DOOR_FRAME); p.position.set(o, DOOR_H / 2, 0); g.add(p); });
+    const top = new THREE.Mesh(new THREE.BoxGeometry(half * 2 + 0.34, 0.12, 0.24), DOOR_FRAME); top.position.y = DOOR_H + 0.06; g.add(top);
+    g.position.set(x, 0, cz); g.rotation.y = rotY; scene.add(g);
+    return g;
   }
-  ROOMS.forEach(makeArcade);
-  function updateArcades(t) {
-    const blink = Math.floor(t * 2) % 2 === 0;
-    Object.values(arcades).forEach(a => {
-      const id = a.room.id;
-      const st = missionDone.has(id) ? { kind: 'done', stars: a.room.arcadeStars || 0 }
-        : cluesReady(id) ? { kind: 'ready' } : { kind: 'locked', n: cluesFound(id) };
-      const key = st.kind + (st.n || '') + (st.stars || '') + (st.kind === 'ready' ? blink : '');
-      if (key !== a.key) { a.key = key; drawArcadeScreen(a, st, blink); }
+  ROOMS.forEach(r => {
+    const doorX = r.side === 'left' ? CORR_X1 : CORR_X2, cz = (r.z1 + r.z2) / 2;
+    woodFrame(doorX, cz, DOOR_HALF, Math.PI / 2);
+    const plate = new THREE.Mesh(new THREE.BoxGeometry(0.05, 0.08, DOOR_HALF * 2 + 0.3), litMat({ color: r.color, emissive: r.color, emissiveIntensity: 0.35 }));
+    plate.position.set(doorX + (r.side === 'left' ? 0.13 : -0.13), DOOR_H + 0.06, cz); scene.add(plate);
+  });
+  woodFrame(CORR_X1, (MR_DOOR_Z1 + MR_DOOR_Z2) / 2, (MR_DOOR_Z2 - MR_DOOR_Z1) / 2, Math.PI / 2);
+
+  ROOMS.forEach(r => {
+    const y0 = r.floor === 1 ? 0 : FLOOR2_Y;
+    const cz = (r.z1 + r.z2) / 2;
+    const cx = (r.x1 + r.x2) / 2;
+    // 房間深度方向決定物件排列軸：以 z 為排列軸，左右錯開
+    const pairs = [
+      { kind: 'wrong', dx: -1.4, color: 0xd6453f, icon: '✕', text: r.wrong },
+      { kind: 'good', dx: 1.4, color: 0x3fb573, icon: '✓', text: r.good },
+    ];
+    pairs.forEach(p => {
+      const geo = p.kind === 'wrong'
+        ? new THREE.BoxGeometry(0.85, 0.85, 0.85)
+        : new THREE.OctahedronGeometry(0.62, 0);
+      const mat = litMat({ color: p.color, emissive: p.color, emissiveIntensity: 0.85, roughness: 0.3, metalness: 0.25 });
+      const mesh = new THREE.Mesh(geo, mat);
+      mesh.position.set(cx + p.dx, y0 + 1.3, cz);
+      if (p.kind === 'wrong') mesh.rotation.set(0.4, 0.5, 0.2);
+      scene.add(mesh);
+      interactables.push({
+        mesh, room: r, baseY: mesh.position.y, spin: Math.random() * 10,
+        kind: p.kind, icon: p.icon, text: p.text, color: p.color,
+      });
     });
-  }
+  });
 
   // =====================================================================
   // ============ 環境精緻化：窗景、天花板、家具、裝飾 ============
@@ -3669,12 +3496,12 @@ console.warn( 'Scripts "build/three.js" and "build/three.min.js" are deprecated 
   const DECOR = {
     wood: litMat({ color: 0x4a3a30 }),
     woodDark: litMat({ color: 0x2e241f }),
-    frame: litMat({ color: 0x9d8b79 }),
+    frame: litMat({ color: 0xc9b8f0 }),
     metal: litMat({ color: 0x8a93b0, emissive: 0x2a3048, emissiveIntensity: 0.3 }),
-    ceiling: litMat({ color: 0xe2d9cc }),
-    panelGlow: new THREE.MeshBasicMaterial({ color: 0xf4e7d0 }),
+    ceiling: litMat({ color: 0xeee4fa }),
+    panelGlow: new THREE.MeshBasicMaterial({ color: 0xe8eeff }),
     panelGlowWarm: new THREE.MeshBasicMaterial({ color: 0xffe6c0 }),
-    panelRim: litMat({ color: 0xcdbfad }),
+    panelRim: litMat({ color: 0xe2d6fa }),
   };
   const roomY = r => (r.floor === 1 ? 0 : FLOOR2_Y);
   const roomHeight = r => (r.floor === 1 ? WALL_H1 : WALL_H2);
@@ -3685,7 +3512,7 @@ console.warn( 'Scripts "build/three.js" and "build/three.min.js" are deprecated 
     cnv.width = W; cnv.height = H;
     const c = cnv.getContext('2d');
     const sky = c.createLinearGradient(0, 0, 0, H);
-    sky.addColorStop(0, '#6f86a8'); sky.addColorStop(0.55, '#d9a98a'); sky.addColorStop(0.9, '#f2cfa8');
+    sky.addColorStop(0, '#7cc8ff'); sky.addColorStop(0.55, '#bfe4ff'); sky.addColorStop(0.9, '#ffe3f1');
     c.fillStyle = sky; c.fillRect(0, 0, W, H);
     for (let i = 0; i < 9; i++) { const cx = Math.random() * W, cy = 20 + Math.random() * 90; c.fillStyle = 'rgba(255,255,255,0.9)'; [0, 22, 44].forEach((d, k) => { c.beginPath(); c.arc(cx + d, cy + (k === 1 ? -10 : 0), 18 + (k === 1 ? 8 : 0), 0, Math.PI * 2); c.fill(); }); }
     const moon = c.createRadialGradient(170, 60, 2, 170, 60, 40);
@@ -3696,7 +3523,7 @@ console.warn( 'Scripts "build/three.js" and "build/three.min.js" are deprecated 
       for (let wy = H - h + 6; wy < H - 4; wy += 9) for (let wx = x + 4; wx < x + w - 4; wx += 7)
         if (Math.random() < litChance) { c.fillStyle = 'rgba(255,255,255,0.75)'; c.fillRect(wx, wy, 3, 4); }
     }
-    let x = 0; while (x < W) { const w = 30 + Math.random() * 50; building(x, w, 60 + Math.random() * 90, ['#8e9bb0', '#a8948a', '#8fa39a', '#9a91a6'][Math.floor(Math.random() * 4)], 0.35); x += w + 2; }
+    let x = 0; while (x < W) { const w = 30 + Math.random() * 50; building(x, w, 60 + Math.random() * 90, ['#c9d8ff', '#ffd6e7', '#d5f5e6', '#e6dcff'][Math.floor(Math.random() * 4)], 0.35); x += w + 2; }
     // 台北 101
     const tx = 640, base = H, segH = 20;
     c.fillStyle = '#8fb8e8';
@@ -3747,7 +3574,7 @@ console.warn( 'Scripts "build/three.js" and "build/three.min.js" are deprecated 
     const w = Math.abs(x2 - x1), d = Math.abs(z2 - z1);
     const upstairs = y > FLOOR2_Y + 1;
     const tex = (upstairs ? getCofferTexture() : ceilTex).clone(); tex.needsUpdate = true; tex.repeat.set(w / (upstairs ? 1.0 : 1.2), d / (upstairs ? 1.0 : 1.2));
-    const m = new THREE.Mesh(new THREE.PlaneGeometry(w, d), litMat({ color: upstairs ? 0x6a5a4a : 0xe2d9cc, map: tex, side: THREE.DoubleSide }));
+    const m = new THREE.Mesh(new THREE.PlaneGeometry(w, d), litMat({ color: upstairs ? 0x6a5a4a : 0xeee4fa, map: tex, side: THREE.DoubleSide }));
     m.rotation.x = Math.PI / 2; m.position.set((x1 + x2) / 2, y, (z1 + z2) / 2); scene.add(m);
     (panelRows || []).forEach(([px, pz, pw, pd]) => {
       const rim = new THREE.Mesh(new THREE.BoxGeometry(pw + 0.12, 0.04, pd + 0.12), DECOR.panelRim);
@@ -3817,7 +3644,7 @@ console.warn( 'Scripts "build/three.js" and "build/three.min.js" are deprecated 
   function makeRug(x, y, z, r, color) {
     const cnv = document.createElement('canvas'); cnv.width = 256; cnv.height = 256;
     const c = cnv.getContext('2d'), hex = '#' + color.toString(16).padStart(6, '0');
-    c.fillStyle = 'rgba(214,202,186,0.9)'; c.beginPath(); c.arc(128, 128, 126, 0, Math.PI * 2); c.fill();
+    c.fillStyle = 'rgba(255,255,255,0.9)'; c.beginPath(); c.arc(128, 128, 126, 0, Math.PI * 2); c.fill();
     [118, 104, 60].forEach((rr, i) => { c.strokeStyle = i === 1 ? 'rgba(255,255,255,0.12)' : hex; c.lineWidth = i === 0 ? 5 : 2; c.beginPath(); c.arc(128, 128, rr, 0, Math.PI * 2); c.stroke(); });
     const m = new THREE.Mesh(new THREE.CircleGeometry(r, 48), new THREE.MeshBasicMaterial({ map: new THREE.CanvasTexture(cnv), transparent: true, depthWrite: false, opacity: 0.9 }));
     m.rotation.x = -Math.PI / 2; m.position.set(x, y + 0.015, z); scene.add(m);
@@ -3825,9 +3652,9 @@ console.warn( 'Scripts "build/three.js" and "build/three.min.js" are deprecated 
   const runnerTex = (() => {
     const cnv = document.createElement('canvas'); cnv.width = 64; cnv.height = 128;
     const c = cnv.getContext('2d');
-    c.fillStyle = '#b8846c'; c.fillRect(0, 0, 64, 128);
-    c.fillStyle = '#efe2cf'; c.fillRect(4, 0, 3, 128); c.fillRect(57, 0, 3, 128);
-    c.strokeStyle = 'rgba(239,226,207,0.7)'; c.lineWidth = 1.5;
+    c.fillStyle = '#ffc9df'; c.fillRect(0, 0, 64, 128);
+    c.fillStyle = '#ffffff'; c.fillRect(4, 0, 3, 128); c.fillRect(57, 0, 3, 128);
+    c.strokeStyle = 'rgba(255,255,255,0.8)'; c.lineWidth = 1.5;
     c.beginPath(); c.moveTo(32, 8); c.lineTo(50, 64); c.lineTo(32, 120); c.lineTo(14, 64); c.closePath(); c.stroke();
     const t = new THREE.CanvasTexture(cnv); t.wrapT = THREE.RepeatWrapping; return t;
   })();
@@ -4866,7 +4693,6 @@ console.warn( 'Scripts "build/three.js" and "build/three.min.js" are deprecated 
       else if (obj.kind === 'npc') label = (obj.clue.found ? '✓ ' : '💬 ') + obj.title;
       else if (obj.kind === 'seat') label = '💺 ' + obj.title;
       else if (obj.kind === 'final') label = LEVEL.finalOpen ? '🏁 ' + obj.title : '🔒 ' + obj.title + '（通過 4 關後開放）';
-      else if (obj.kind === 'arcade') label = '🕹️ 任務遊戲機：' + obj.room.name;
       else label = (obj.kind === 'wrong' ? '❌ 常見錯誤 — ' : '✓ 正確做法 — ') + obj.room.name;
       interactPrompt.innerHTML = (isTouch ? '<span class="ip-key">👆</span>點右下角「查看」' : '<span class="ip-key">E</span>按 E 或左鍵') + '　' + escHtml(label);
       interactPrompt.classList.add('show');
@@ -4901,18 +4727,11 @@ console.warn( 'Scripts "build/three.js" and "build/three.min.js" are deprecated 
     missionBlock.style.display = 'none';
     const isWrong = exhibit.kind === 'wrong';
     const hex = '#' + exhibit.color.toString(16).padStart(6, '0');
-    if (exhibit.kind === 'arcade') {
-      panelTag.textContent = '🕹️ 任務遊戲機　' + exhibit.room.name;
-      panelTitle.textContent = '開始挑戰前，先看重點';
-      panelDesc.innerHTML = '<div class="ex-row bad"><b>❌ 常見錯誤</b>' + escHtml(exhibit.text) + '</div>' +
-        '<div class="ex-row good"><b>✓ 正確做法</b>' + escHtml(exhibit.good) + '</div>';
-    } else {
-      panelTag.textContent = (isWrong ? '❌ 常見錯誤示範' : '✓ 正確做法') + '　' + exhibit.room.name;
-      panelTitle.textContent = isWrong ? '這樣做，容易踩到紅線' : '這樣做，才符合規範';
-      panelDesc.textContent = exhibit.text;
-    }
+    panelTag.textContent = (isWrong ? '❌ 常見錯誤示範' : '✓ 正確做法') + '　' + exhibit.room.name;
     panelTag.style.background = hex + '33';
     panelTag.style.color = hex;
+    panelTitle.textContent = isWrong ? '這樣做，容易踩到紅線' : '這樣做，才符合規範';
+    panelDesc.textContent = exhibit.text;
     panelDesc.style.display = 'block';
     panelActions.innerHTML = '';
     {
@@ -5025,7 +4844,6 @@ console.warn( 'Scripts "build/three.js" and "build/three.min.js" are deprecated 
     }
     startOverlay.style.display = 'none';
     document.body.classList.remove('pregame');
-    if (tutorialDone()) document.body.classList.add('legend-mini');
     if (isTouch) { mobileControls.classList.add('active'); interactBtnMobile.style.display = 'flex'; }
     else { container.requestPointerLock(); }
   });
@@ -5211,7 +5029,6 @@ console.warn( 'Scripts "build/three.js" and "build/three.min.js" are deprecated 
   let lastHintZone = '';
   function showRouteHint(text, zone) {
     if (lastHintZone === zone) return;
-    if (document.getElementById('objective').classList.contains('show')) { lastHintZone = zone; return; }   // 上方目標列已經在引導，不重複
     lastHintZone = zone;
     routeHint.textContent = text;
     routeHint.classList.add('show');
@@ -5245,57 +5062,31 @@ console.warn( 'Scripts "build/three.js" and "build/three.min.js" are deprecated 
   }
 
   // In-world directional signs
-  // 看板：圓角卡片 + 左側圖示圓章 + 兩層文字（小標彩色、主標白色），2 倍解析度
-  function drawSignCanvas(text, color) {
-    const W = 512, H = 192, cnv = document.createElement('canvas'); cnv.width = W; cnv.height = H;
-    const c = cnv.getContext('2d');
-    let lines = String(text).split('\n');
-    // 圖示：取第一行開頭的 emoji / 符號
-    let icon = '';
-    const m = lines[0].match(SIGN_ICON_RE);
-    if (m) { icon = m[0].trim(); lines[0] = lines[0].slice(m[0].length); }
-    else if (/^任務/.test(lines[0])) icon = '🎯';
-    else if (/^最終關/.test(lines[0])) icon = '🏁';
-    lines = lines.filter(l => l.trim() !== '');
-    const rr = (x, y, w, h, r) => { c.beginPath(); c.moveTo(x + r, y); c.arcTo(x + w, y, x + w, y + h, r); c.arcTo(x + w, y + h, x, y + h, r); c.arcTo(x, y + h, x, y, r); c.arcTo(x, y, x + w, y, r); c.closePath(); };
-    // 卡片 + 陰影
-    c.save(); c.shadowColor = 'rgba(0,0,0,0.38)'; c.shadowBlur = 16; c.shadowOffsetY = 5;
-    rr(12, 10, W - 24, H - 28, 34); c.fillStyle = 'rgba(30,38,50,0.95)'; c.fill(); c.restore();
-    // 內框與頂部色條
-    rr(12, 10, W - 24, H - 28, 34); c.lineWidth = 3; c.strokeStyle = color; c.globalAlpha = 0.85; c.stroke(); c.globalAlpha = 1;
-    c.save(); rr(12, 10, W - 24, H - 28, 34); c.clip(); c.fillStyle = color; c.globalAlpha = 0.18; c.fillRect(12, 10, W - 24, H - 28); c.restore();
-    // 圖示圓章
-    let left = 40;
-    if (icon) {
-      const cx = 88, cy = (H - 18) / 2 + 1;
-      c.beginPath(); c.arc(cx, cy, 46, 0, Math.PI * 2); c.fillStyle = color; c.fill();
-      c.beginPath(); c.arc(cx, cy, 46, 0, Math.PI * 2); c.lineWidth = 4; c.strokeStyle = 'rgba(255,255,255,0.35)'; c.stroke();
-      c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillStyle = '#1e2632';
-      c.font = 'bold 48px ' + SIGN_FONT; c.fillText(icon, cx, cy + 3);
-      left = 150;
-    }
-    const right = W - 44, midX = (left + right) / 2, maxW = right - left;
-    c.textAlign = 'center'; c.textBaseline = 'middle';
-    const fit = (str, size, weight) => { let s = size; c.font = weight + ' ' + s + 'px ' + SIGN_FONT; while (c.measureText(str).width > maxW && s > 20) { s -= 2; c.font = weight + ' ' + s + 'px ' + SIGN_FONT; } };
-    const cy = (H - 18) / 2 + 2;
-    if (lines.length >= 2) {
-      fit(lines[0], 32, 'bold'); c.fillStyle = color; c.fillText(lines[0], midX, cy - 30);
-      fit(lines[1], 46, '900'); c.fillStyle = /[★☆]/.test(lines[1]) ? '#f2c66d' : '#f6f0e6'; c.fillText(lines[1], midX, cy + 22);
-    } else if (lines.length === 1) {
-      fit(lines[0], 50, '900'); c.fillStyle = '#f6f0e6'; c.fillText(lines[0], midX, cy);
-    }
-    return cnv;
-  }
   function makeSignSprite(text, color) {
-    const tex = new THREE.CanvasTexture(drawSignCanvas(text, color));
-    const mat = new THREE.SpriteMaterial({ map: tex, transparent: true, depthWrite: false });
+    const cnv = document.createElement('canvas');
+    cnv.width = 256; cnv.height = 96;
+    const c = cnv.getContext('2d');
+    c.fillStyle = 'rgba(10,15,32,0.75)';
+    c.roundRect ? (c.roundRect(4, 4, 248, 88, 14), c.fill()) : c.fillRect(4, 4, 248, 88);
+    c.strokeStyle = color; c.lineWidth = 3;
+    c.strokeRect(4, 4, 248, 88);
+    c.fillStyle = '#ffffff';
+    c.font = 'bold 30px "Noto Sans CJK TC", sans-serif';
+    c.textAlign = 'center';
+    c.textBaseline = 'middle';
+    const lines = text.split('\n');
+    lines.forEach((line, i) => c.fillText(line, 128, 48 + (i - (lines.length - 1) / 2) * 34));
+    const tex = new THREE.CanvasTexture(cnv);
+    const mat = new THREE.SpriteMaterial({ map: tex, transparent: true });
     const spr = new THREE.Sprite(mat);
     spr.scale.set(2.0, 0.75, 1);
     return spr;
   }
 
   if (IS_EMP) {
-    // 原本的「沿走廊探索」大看板移除：走廊入口的門牌已經標示「員工訓練區」
+    const signLobby = makeSignSprite('沿走廊探索\n4 間員工訓練室', '#4a5e80');
+    signLobby.position.set(0, 2.5, LOBBY_Z2 + 3.5);
+    scene.add(signLobby);
   } else {
     const signLobby = makeSignSprite('🛗 前方電梯\n↑ 2F 主管訓練區', '#ffd76a');
     signLobby.scale.set(2.0, 0.9, 1);
@@ -5306,7 +5097,17 @@ console.warn( 'Scripts "build/three.js" and "build/three.min.js" are deprecated 
     scene.add(signLanding);
   }
 
-  // （房間名稱改成門楣上的門牌，見 makeDoorGate）
+  // --- 房間入口標題牌 ---
+  ROOMS.forEach(r => {
+    const y0 = r.floor === 1 ? 0 : FLOOR2_Y;
+    const cz = (r.z1 + r.z2) / 2;
+    const hex = '#' + r.color.toString(16).padStart(6, '0');
+    const doorX = r.side === 'left' ? CORR_X1 - 0.15 : CORR_X2 + 0.15;
+    const sign = makeSignSprite(r.name + '\n' + r.role, hex);
+    sign.scale.set(1.7, 0.68, 1);
+    sign.position.set(doorX, y0 + 2.35, cz);
+    scene.add(sign);
+  });
 
 
   // =====================================================================
@@ -5542,18 +5343,93 @@ console.warn( 'Scripts "build/three.js" and "build/three.min.js" are deprecated 
     pulseObjective();
   }
 
-  // ---------- 房間的門：每間房用自己的主題色，未解鎖時關著 ----------
-  const ROOM_DOOR_W = 2.2;
+  // ---------- 雷射門：未解鎖的關卡擋住入口 ----------
+  function laserTexture(rgb) {
+    const cnv = document.createElement('canvas'); cnv.width = 64; cnv.height = 256;
+    const c = cnv.getContext('2d');
+    for (let y = 16; y < 256; y += 32) {
+      const g = c.createLinearGradient(0, y - 7, 0, y + 7);
+      g.addColorStop(0, 'rgba(' + rgb + ',0)'); g.addColorStop(0.5, 'rgba(' + rgb + ',1)'); g.addColorStop(1, 'rgba(' + rgb + ',0)');
+      c.fillStyle = g; c.fillRect(0, y - 7, 64, 14);
+      c.fillStyle = 'rgba(255,255,255,0.9)'; c.fillRect(0, y - 1, 64, 2);
+    }
+    const t = new THREE.CanvasTexture(cnv); t.wrapS = t.wrapT = THREE.RepeatWrapping; return t;
+  }
+  const LASER_RED = laserTexture('255,70,70'), LASER_GOLD = laserTexture('255,200,70');
+  // 木門（雙開門）：關著時看不到裡面，解鎖後往房間內打開
+  let woodDoorTex = null;
+  function getWoodDoorTex() {
+    if (woodDoorTex) return woodDoorTex;
+    const cnv = document.createElement('canvas'); cnv.width = 128; cnv.height = 256; const c = cnv.getContext('2d');
+    c.fillStyle = '#9a6e4a'; c.fillRect(0, 0, 128, 256);
+    for (let i = 0; i < 70; i++) { c.strokeStyle = 'rgba(70,40,20,' + (0.08 + Math.random() * 0.12) + ')'; c.lineWidth = 1 + Math.random() * 2; const x = Math.random() * 128; c.beginPath(); c.moveTo(x, 0); c.bezierCurveTo(x + 6, 80, x - 6, 170, x + 3, 256); c.stroke(); }
+    c.strokeStyle = 'rgba(50,28,12,0.55)'; c.lineWidth = 4; c.strokeRect(16, 18, 96, 98); c.strokeRect(16, 136, 96, 102);
+    c.strokeStyle = 'rgba(255,230,200,0.25)'; c.lineWidth = 2; c.strokeRect(19, 21, 90, 92); c.strokeRect(19, 139, 90, 96);
+    woodDoorTex = new THREE.CanvasTexture(cnv); return woodDoorTex;
+  }
+  function makeWoodDoor(x, z, half, rotY, swing) {
+    const g = new THREE.Group();
+    const mat = litMat({ color: 0xffffff, map: getWoodDoorTex() });
+    const knob = litMat({ color: 0xd8c08a, emissive: 0x3a2a10, emissiveIntensity: 0.4 });
+    const leaves = [-1, 1].map(sd => {
+      const pivot = new THREE.Group(); pivot.position.set(sd * half, 0, 0);
+      const leaf = new THREE.Mesh(new THREE.BoxGeometry(half - 0.02, DOOR_H - 0.04, 0.06), mat);
+      leaf.position.set(-sd * (half / 2), (DOOR_H - 0.04) / 2, 0); pivot.add(leaf);
+      [-0.05, 0.05].forEach(zz => { const k = new THREE.Mesh(new THREE.BoxGeometry(0.04, 0.2, 0.03), knob); k.position.set(-sd * (half - 0.12), 1.05, zz); pivot.add(k); });
+      g.add(pivot); return pivot;
+    });
+    g.position.set(x, 0, z); g.rotation.y = rotY; scene.add(g);
+    return { group: g, leaves, swing, isDoor: true, fading: -1 };
+  }
+  function makeLaserGate(x, z, width, rotY, tex, text, color) {   // 名稱保留，內容改成木門
+    const swing = rotY ? (x < 0 ? 1 : -1) : -1;   // 房間門往房內開；走廊門往前開
+    const half = rotY ? DOOR_HALF : 1.2;
+    const d = makeWoodDoor(x, z, half, rotY, swing);
+    const sign = makeSignSprite(text, color); sign.scale.set(1.5, 0.57, 1);
+    sign.position.set(x + (rotY ? (x < 0 ? 0.35 : -0.35) : 0), 1.55, z + (rotY ? 0 : -0.3)); scene.add(sign);
+    d.sign = sign; d.wall = null; d.mat = { opacity: 1 };
+    return d;
+  }
+  function setDoorOpen(d, k) {
+    const e = 1 - Math.pow(1 - Math.min(1, Math.max(0, k)), 3);
+    d.leaves[0].rotation.y = d.swing * e * 1.7; d.leaves[1].rotation.y = -d.swing * e * 1.7;
+  }
   const roomGates = {};
-  ROOMS.forEach((r, i) => {
+  function buildRoomGate(r, i) {
     const doorX = r.side === 'left' ? CORR_X1 : CORR_X2;
-    const hex = '#' + r.color.toString(16).padStart(6, '0');
-    roomGates[r.id] = makeDoorGate({ x: doorX, z: (r.z1 + r.z2) / 2, along: 'z', inward: r.side === 'left' ? -1 : 1,
-      width: ROOM_DOOR_W, span: [r.z1, r.z2], color: r.color, labelColor: hex, plaque: [r.name, '第 ' + (i + 1) + ' 關・' + r.role],
-      label: i === 0 ? '🔒 第 1 關\n看完說明會就開門' : '🔒 第 ' + (i + 1) + ' 關\n先通過第 ' + i + ' 關' });
-  });
-  // 已經看過說明會的玩家：第 1 關的門一開始就是開的
-  if (tutorialDone() && ROOMS[0]) openGate(roomGates[ROOMS[0].id], true);
+    const gate = makeLaserGate(doorX, (r.z1 + r.z2) / 2, r.z2 - r.z1, Math.PI / 2, LASER_RED,
+      i ? '🔒 第 ' + (i + 1) + ' 關\n先通過第 ' + i + ' 關' : '第 1 關', '#ff6a6a');
+    gate.wall = { x1: doorX, z1: (r.z1 + r.z2) / 2 - DOOR_HALF, x2: doorX, z2: (r.z1 + r.z2) / 2 + DOOR_HALF, floor: 1 };
+    walls.push(gate.wall);
+    roomGates[r.id] = gate;
+  }
+  ROOMS.forEach((r, i) => { buildRoomGate(r, i); if (i < LEVEL.unlocked) openGate(roomGates[r.id]); });
+  function openGate(gate) {
+    if (!gate || gate.fading >= 0) return;
+    gate.fading = 0;
+    const wi = walls.indexOf(gate.wall); if (wi >= 0) walls.splice(wi, 1);
+    scene.remove(gate.sign);
+  }
+  function updateGates(dt, t) {
+    LASER_RED.offset.y = t * 0.25; LASER_GOLD.offset.y = t * 0.25;
+    const all = Object.values(roomGates).concat(finalGate ? [finalGate] : []);
+    all.forEach(gt => {
+      if (!gt.group.parent) return;
+      if (gt.isDoor) {
+        if (gt.fading >= 0 && gt.fading < 1.4) {
+          if (gt.fading === 0 && audioCtx && !soundMuted) { tone(140, 0, 0.35, 'triangle', 0.05); tone(220, 0.25, 0.3, 'sine', 0.04); }
+          gt.fading += dt; setDoorOpen(gt, gt.fading / 1.3);
+        }
+        return;
+      }
+      if (gt.fading >= 0) {
+        gt.fading += dt;
+        const k = Math.min(1, gt.fading / 1.1);
+        gt.mat.opacity = 0.8 * (1 - k); gt.group.scale.y = 1 - k * 0.95;
+        if (k >= 1) scene.remove(gt.group);
+      } else gt.mat.opacity = 0.62 + Math.sin(t * 6) * 0.18;
+    });
+  }
   function unlockLevel(n) {
     if (n <= LEVEL.unlocked) return;
     LEVEL.unlocked = n;
@@ -5567,8 +5443,13 @@ console.warn( 'Scripts "build/three.js" and "build/three.min.js" are deprecated 
 
   // ---------- 最終關：走廊盡頭的綜合挑戰台 ----------
   const FINAL_GATE_Z = R2_Z2 + 0.4;
-  const finalGate = makeDoorGate({ x: 0, z: FINAL_GATE_Z, along: 'x', inward: 1, width: 2.6, span: [CORR_X1, CORR_X2],
-    color: 0xd9b04a, gold: true, plaque: ['綜合挑戰', '🏁 最終關'], label: '🏁 最終關\n通過 4 關後開啟', labelColor: '#ffd76a' });
+  // 最終關前的隔間牆（中間留雙開門）
+  addWall(CORR_X1, FINAL_GATE_Z, -1.2, FINAL_GATE_Z, 1); addWall(1.2, FINAL_GATE_Z, CORR_X2, FINAL_GATE_Z, 1);
+  addWallMesh(-1.2, FINAL_GATE_Z, 1.2, FINAL_GATE_Z, DOOR_H, WALL_H1 - DOOR_H);
+  woodFrame(0, FINAL_GATE_Z, 1.2, 0);
+  let finalGate = makeLaserGate(0, FINAL_GATE_Z, CORR_X2 - CORR_X1, 0, LASER_GOLD, '🏁 最終關\n通過 4 關後開啟', '#ffd76a');
+  finalGate.wall = { x1: -1.2, z1: FINAL_GATE_Z, x2: 1.2, z2: FINAL_GATE_Z, floor: 1 };
+  walls.push(finalGate.wall);
   const podium = new THREE.Group();
   {
     const base = new THREE.Mesh(new THREE.BoxGeometry(0.95, 1.0, 0.6), propMat(0x1c2340, 0x1c2340, 0.1)); base.position.y = 0.5; podium.add(base);
@@ -5905,7 +5786,6 @@ console.warn( 'Scripts "build/three.js" and "build/three.min.js" are deprecated 
   }
   function updateProgression(dt, t) {
     updateGates(dt, t);
-    updateArcades(t);
     updateBriefing(dt);
     updateWayfinding(dt, t);
     const show = gameStarted && !BRIEF.active;
@@ -5926,18 +5806,18 @@ console.warn( 'Scripts "build/three.js" and "build/three.min.js" are deprecated 
     }));
     if (finalMarker.visible) finalMarker.position.y = 2.35 + Math.sin(t * 2) * 0.06;
     podiumLight.intensity = LEVEL.finalOpen ? 1.6 + Math.sin(t * 4) * 0.5 : 0.5;
-    // 撞到鎖住的門時提示
+    // 撞到雷射門時提示
     if (gameStarted && !uiOpen && t - lockBumpT > 4) {
       ROOMS.forEach((r, i) => {
         if (i < LEVEL.unlocked) return;
         const doorX = r.side === 'left' ? CORR_X1 : CORR_X2;
-        if (Math.abs(player.x - doorX) < 0.75 && Math.abs(player.z - (r.z1 + r.z2) / 2) < ROOM_DOOR_W / 2 + 0.3) {
+        if (Math.abs(player.x - doorX) < 0.75 && player.z > r.z1 && player.z < r.z2) {
           lockBumpT = t;
           aerySay('🔒 這是第 ' + (i + 1) + ' 關，要先通過第 ' + i + ' 關「' + ROOMS[i - 1].name + '」才會打開喔！', 5);
           if (audioCtx && !soundMuted) tone(180, 0, 0.2, 'sawtooth', 0.04);
         }
       });
-      if (!LEVEL.finalOpen && Math.abs(player.z - FINAL_GATE_Z) < 0.75 && Math.abs(player.x) < 1.6) {
+      if (!LEVEL.finalOpen && Math.abs(player.z - FINAL_GATE_Z) < 0.75) {
         lockBumpT = t;
         aerySay('🏁 最終關要先通過前面 4 關才會開放！', 5);
       }
@@ -5973,8 +5853,13 @@ console.warn( 'Scripts "build/three.js" and "build/three.min.js" are deprecated 
       if (c.bubble) c.bubble.visible = true;
     }));
     Object.values(missionMarkers).forEach(m => { m.visible = false; });
-    ROOMS.forEach((r, i) => { if (i >= LEVEL.unlocked) closeGate(roomGates[r.id]); });
-    closeGate(finalGate);
+    Object.values(roomGates).forEach(g => { scene.remove(g.group); scene.remove(g.sign); const wi = walls.indexOf(g.wall); if (wi >= 0) walls.splice(wi, 1); });
+    Object.keys(roomGates).forEach(k => delete roomGates[k]);
+    ROOMS.forEach((r, i) => { buildRoomGate(r, i); if (i < LEVEL.unlocked) openGate(roomGates[r.id]); });
+    scene.remove(finalGate.group); scene.remove(finalGate.sign); { const wi = walls.indexOf(finalGate.wall); if (wi >= 0) walls.splice(wi, 1); }
+    finalGate = makeLaserGate(0, FINAL_GATE_Z, CORR_X2 - CORR_X1, 0, LASER_GOLD, '🏁 最終關\n通過 4 關後開啟', '#ffd76a');
+    finalGate.wall = { x1: -1.2, z1: FINAL_GATE_Z, x2: 1.2, z2: FINAL_GATE_Z, floor: 1 };
+    walls.push(finalGate.wall);
     finalMarker.visible = false;
     finaleEl.classList.remove('show'); certOverlay.classList.remove('show'); hideStageClear();
     lastObjective = '';
@@ -5991,10 +5876,10 @@ console.warn( 'Scripts "build/three.js" and "build/three.min.js" are deprecated 
   const hintCard = document.getElementById('hint-card'), hintBody = hintCard.querySelector('.hc-body');
   // 3D 金色光柱 + 地面光圈
   const beaconGroup = new THREE.Group();
-  const beamMat = new THREE.MeshBasicMaterial({ color: 0xe3a449, transparent: true, opacity: 0.2, side: THREE.DoubleSide, depthWrite: false });
+  const beamMat = new THREE.MeshBasicMaterial({ color: 0xffb020, transparent: true, opacity: 0.2, side: THREE.DoubleSide, depthWrite: false });
   const beam = new THREE.Mesh(new THREE.CylinderGeometry(0.5, 0.5, WALL_H1 - 0.05, 28, 1, true), beamMat);
   beam.position.y = (WALL_H1 - 0.05) / 2; beaconGroup.add(beam);
-  const ringMat = new THREE.MeshBasicMaterial({ color: 0xe8826a, transparent: true, opacity: 0.8, side: THREE.DoubleSide, depthWrite: false });
+  const ringMat = new THREE.MeshBasicMaterial({ color: 0xff4fa0, transparent: true, opacity: 0.8, side: THREE.DoubleSide, depthWrite: false });
   const floorRing = new THREE.Mesh(new THREE.RingGeometry(0.52, 0.66, 40), ringMat);
   floorRing.rotation.x = -Math.PI / 2; floorRing.position.y = 0.03; beaconGroup.add(floorRing);
   const floorRing2 = new THREE.Mesh(new THREE.RingGeometry(0.52, 0.58, 40), ringMat.clone());
@@ -6127,21 +6012,19 @@ console.warn( 'Scripts "build/three.js" and "build/three.min.js" are deprecated 
   addWall(MR.x1, MR.z1, MR.x1, MR.z2, 1, 0x1c2340);
   addWall(MR.x1, MR.z1, MR.x2, MR.z1, 1, 0x1c2340);
   addWall(MR.x1, MR.z2, MR.x2, MR.z2, 1, 0x1c2340);
-  addFloor(MR.x1, MR.z1, MR.x2, MR.z2, 0, 0xffffff, 0xeab4a4, 'carpet');
-  addCeiling(MR.x1, MR.z1, MR.x2, MR.z2, WALL_H1 - 0.01, 0xe2d9cc);
-  const mrLight = new THREE.PointLight(0xffe6cc, 0.75, 14); mrLight.position.set(-7, 2.7, -5); scene.add(mrLight);
+  addFloor(MR.x1, MR.z1, MR.x2, MR.z2, 0, 0xffffff, 0xff9ec7, 'carpet');
+  addCeiling(MR.x1, MR.z1, MR.x2, MR.z2, WALL_H1 - 0.01, 0xeee4fa);
+  const mrLight = new THREE.PointLight(0xfff0f6, 0.8, 14); mrLight.position.set(-7, 2.7, -5); scene.add(mrLight);
   // 門框 + 門牌
   {
-    const pink = new THREE.MeshBasicMaterial({ color: 0xe89a8a });
-    [MR_DOOR_Z1, MR_DOOR_Z2].forEach(z => { const p = new THREE.Mesh(new THREE.BoxGeometry(0.16, 2.3, 0.16), pink); p.position.set(CORR_X1, 1.15, z); scene.add(p); });
-    const top = new THREE.Mesh(new THREE.BoxGeometry(0.16, 0.16, MR_DOOR_Z2 - MR_DOOR_Z1 + 0.16), pink); top.position.set(CORR_X1, 2.3, (MR_DOOR_Z1 + MR_DOOR_Z2) / 2); scene.add(top);
-    const sign = makeSignSprite('📽️ 新人說明會\n會議室', '#e89a8a'); sign.scale.set(1.7, 0.64, 1);
+    // 門框改由 woodFrame() 建立
+    const sign = makeSignSprite('📽️ 新人說明會\n會議室', '#ff7eb6'); sign.scale.set(1.7, 0.64, 1);
     sign.position.set(CORR_X1 + 0.2, 2.75, (MR_DOOR_Z1 + MR_DOOR_Z2) / 2); scene.add(sign);
   }
   const pathArrows = [];
   {
     const cnv = document.createElement('canvas'); cnv.width = 128; cnv.height = 128; const c = cnv.getContext('2d');
-    c.fillStyle = '#e8826a'; c.beginPath(); c.moveTo(64, 8); c.lineTo(118, 70); c.lineTo(84, 70); c.lineTo(84, 120); c.lineTo(44, 120); c.lineTo(44, 70); c.lineTo(10, 70); c.closePath(); c.fill();
+    c.fillStyle = '#ff4fa0'; c.beginPath(); c.moveTo(64, 8); c.lineTo(118, 70); c.lineTo(84, 70); c.lineTo(84, 120); c.lineTo(44, 120); c.lineTo(44, 70); c.lineTo(10, 70); c.closePath(); c.fill();
     c.strokeStyle = '#fff'; c.lineWidth = 6; c.stroke();
     const tex = new THREE.CanvasTexture(cnv);
     [[0, -2.6], [-0.9, -3.6], [-1.9, -4.5], [-2.7, -4.7], [-3.8, -4.8], [-5, -4.9]].forEach(([x, z], i, arr) => {
@@ -6155,8 +6038,8 @@ console.warn( 'Scripts "build/three.js" and "build/three.min.js" are deprecated 
   const CHAIR_COLORS = [0xffb3d1, 0xb8e6ff, 0xc6f5dc, 0xfff0a8, 0xdccbff];
   function makeChair(x, z, color, special) {
     const g = new THREE.Group();
-    const m = litMat({ color, emissive: special ? 0xe89a8a : 0x000000, emissiveIntensity: special ? 0.35 : 0 });
-    const leg = litMat({ color: 0xa99a8a });
+    const m = litMat({ color, emissive: special ? 0xff7eb6 : 0x000000, emissiveIntensity: special ? 0.35 : 0 });
+    const leg = litMat({ color: 0xb9a8e6 });
     const seat = new THREE.Mesh(new THREE.BoxGeometry(0.5, 0.08, 0.5), m); seat.position.y = 0.46; g.add(seat);
     const back = new THREE.Mesh(new THREE.BoxGeometry(0.08, 0.5, 0.5), m); back.position.set(0.23, 0.75, 0); g.add(back);
     [[-0.2, -0.2], [0.2, -0.2], [-0.2, 0.2], [0.2, 0.2]].forEach(([a, b]) => { const l = new THREE.Mesh(new THREE.CylinderGeometry(0.025, 0.025, 0.44, 6), leg); l.position.set(a, 0.22, b); g.add(l); });
@@ -6164,19 +6047,19 @@ console.warn( 'Scripts "build/three.js" and "build/three.min.js" are deprecated 
     return g;
   }
   [-6.6, -5, -3.4].forEach((z, k) => { [-7.2, -5.7].forEach((x, j) => { if (!(x === SEAT.x && z === SEAT.z)) makeChair(x, z, CHAIR_COLORS[(k + j * 2) % 5], false); }); });
-  const seatChair = makeChair(SEAT.x, SEAT.z, 0xeab4a4, true);
-  const seatRing = new THREE.Mesh(new THREE.RingGeometry(0.38, 0.46, 32), new THREE.MeshBasicMaterial({ color: 0xe8826a, transparent: true, opacity: 0.9, side: THREE.DoubleSide }));
+  const seatChair = makeChair(SEAT.x, SEAT.z, 0xff9ec7, true);
+  const seatRing = new THREE.Mesh(new THREE.RingGeometry(0.38, 0.46, 32), new THREE.MeshBasicMaterial({ color: 0xff4fa0, transparent: true, opacity: 0.9, side: THREE.DoubleSide }));
   seatRing.rotation.x = -Math.PI / 2; seatRing.position.set(SEAT.x, 0.03, SEAT.z); scene.add(seatRing);
-  const seatSign = makeSignSprite('💺 你的座位\n對準按 E 坐下', '#e8826a'); seatSign.scale.set(1.25, 0.47, 1); seatSign.position.set(SEAT.x, 1.55, SEAT.z); scene.add(seatSign);
+  const seatSign = makeSignSprite('💺 你的座位\n對準按 E 坐下', '#ff4fa0'); seatSign.scale.set(1.25, 0.47, 1); seatSign.position.set(SEAT.x, 1.55, SEAT.z); scene.add(seatSign);
   const seatHit = addHitBox(seatChair, 0.9, 1.3, 0.9, 0.6);
-  interactables.push({ mesh: seatHit, kind: 'seat', title: '坐下，參加新人說明會', color: 0xe8826a });
+  interactables.push({ mesh: seatHit, kind: 'seat', title: '坐下，參加新人說明會', color: 0xff4fa0 });
   // 講台、氣球、歡迎布條、窗景、盆栽
   {
     const pod = new THREE.Group();
-    const body = new THREE.Mesh(new THREE.BoxGeometry(0.6, 1.05, 0.7), litMat({ color: 0xefd9cc })); body.position.y = 0.52; pod.add(body);
-    const topb = new THREE.Mesh(new THREE.BoxGeometry(0.7, 0.06, 0.8), litMat({ color: 0xeab4a4 })); topb.position.y = 1.07; pod.add(topb);
+    const body = new THREE.Mesh(new THREE.BoxGeometry(0.6, 1.05, 0.7), litMat({ color: 0xffd6e7 })); body.position.y = 0.52; pod.add(body);
+    const topb = new THREE.Mesh(new THREE.BoxGeometry(0.7, 0.06, 0.8), litMat({ color: 0xff9ec7 })); topb.position.y = 1.07; pod.add(topb);
     pod.position.set(-9.9, 0, -8.0); scene.add(pod);
-    const BAL = [0xe89a8a, 0x7cc8ff, 0xffd23f, 0x7ee0b5, 0xb49bff];
+    const BAL = [0xff7eb6, 0x7cc8ff, 0xffd23f, 0x7ee0b5, 0xb49bff];
     [[-10.4, -8.4], [-10.4, -1.6]].forEach(([bx, bz], gi) => {
       for (let i = 0; i < 4; i++) {
         const b = new THREE.Mesh(new THREE.SphereGeometry(0.2, 16, 14), litMat({ color: BAL[(i + gi) % 5], emissive: BAL[(i + gi) % 5], emissiveIntensity: 0.25 }));
@@ -6185,7 +6068,7 @@ console.warn( 'Scripts "build/three.js" and "build/three.min.js" are deprecated 
       }
     });
     const cnv = document.createElement('canvas'); cnv.width = 1024; cnv.height = 160; const c = cnv.getContext('2d');
-    const gr = c.createLinearGradient(0, 0, 1024, 0); ['#eab4a4', '#ffd23f', '#7ee0b5', '#7cc8ff', '#b49bff'].forEach((col, i) => gr.addColorStop(i / 4, col));
+    const gr = c.createLinearGradient(0, 0, 1024, 0); ['#ff9ec7', '#ffd23f', '#7ee0b5', '#7cc8ff', '#b49bff'].forEach((col, i) => gr.addColorStop(i / 4, col));
     c.fillStyle = gr; c.fillRect(0, 0, 1024, 160);
     c.fillStyle = '#fff'; c.font = '900 76px ' + GFONT; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText('🎉 歡迎新同事加入 SYSTEX！', 512, 84);
     const banner = new THREE.Mesh(new THREE.PlaneGeometry(5.2, 0.8), new THREE.MeshBasicMaterial({ map: new THREE.CanvasTexture(cnv) }));
@@ -6254,9 +6137,9 @@ console.warn( 'Scripts "build/three.js" and "build/three.min.js" are deprecated 
   }
   function slideWelcome(c, W, H, st) {
     sBg(c, W, H, '#ffe3f1', '#d9ecff');
-    for (let i = 0; i < 40; i++) { const x = (i * 71) % W, y = ((st * 90 + i * 53) % (H + 40)) - 20; c.fillStyle = ['#e89a8a', '#ffd23f', '#7ee0b5', '#7cc8ff', '#b49bff'][i % 5]; c.save(); c.translate(x, y); c.rotate(st * 2 + i); c.fillRect(-6, -3, 12, 6); c.restore(); }
+    for (let i = 0; i < 40; i++) { const x = (i * 71) % W, y = ((st * 90 + i * 53) % (H + 40)) - 20; c.fillStyle = ['#ff7eb6', '#ffd23f', '#7ee0b5', '#7cc8ff', '#b49bff'][i % 5]; c.save(); c.translate(x, y); c.rotate(st * 2 + i); c.fillRect(-6, -3, 12, 6); c.restore(); }
     drawOrb(c, W / 2, 210 + Math.sin(st * 3) * 14, 78 * Math.min(1, st * 1.5), '#8fc0ff');
-    const s = pop(st, 0.6); if (s > 0) { c.save(); c.translate(W / 2, 380); c.scale(s, s); txt(c, '歡迎報到！', 0, 0, 92, '#e8826a', 900); c.restore(); }
+    const s = pop(st, 0.6); if (s > 0) { c.save(); c.translate(W / 2, 380); c.scale(s, s); txt(c, '歡迎報到！', 0, 0, 92, '#ff4fa0', 900); c.restore(); }
     if (st > 1.2) { c.globalAlpha = easeOut((st - 1.2) / 0.5); txt(c, 'SYSTEX 新人訓練・員工篇', W / 2, 480, 38, '#6b4bb8'); c.globalAlpha = 1; }
   }
   function slideMap(c, W, H, st) {
@@ -6270,18 +6153,18 @@ console.warn( 'Scripts "build/three.js" and "build/three.min.js" are deprecated 
         emo(c, ic, 85, 110, 62); txt(c, nm, 85, 170, 28, '#4a3a70'); c.restore();
       }
     });
-    if (st > 2.0) { c.globalAlpha = easeOut((st - 2) / 0.4); txt(c, '➜', 815, 250, 60, '#e8826a', 900); c.globalAlpha = 1; }
+    if (st > 2.0) { c.globalAlpha = easeOut((st - 2) / 0.4); txt(c, '➜', 815, 250, 60, '#ff4fa0', 900); c.globalAlpha = 1; }
     if (card(c, 850, 150, 140, 200, '#fff1b8', pop(st, 2.3))) { emo(c, '🏁', 70, 70, 54); txt(c, '最終關', 70, 130, 28, '#a0620a', 900); emo(c, '🎓', 70, 172, 34); c.restore(); }
-    if (st > 3) { c.globalAlpha = easeOut((st - 3) / 0.5); txt(c, '全部破關 → 領取結業證書！', W / 2, 440, 40, '#e8826a', 900); c.globalAlpha = 1; }
+    if (st > 3) { c.globalAlpha = easeOut((st - 3) / 0.5); txt(c, '全部破關 → 領取結業證書！', W / 2, 440, 40, '#ff4fa0', 900); c.globalAlpha = 1; }
   }
   function slideFlow(c, W, H, st) {
     sBg(c, W, H, '#f0e8ff', '#e3fff3');
     sTitle(c, W, '每一關這樣玩', '#6b4bb8', st);
-    const S = [['🔍', '找齊 3 個線索', '#7cc8ff'], ['🎯', '任務出現', '#ffd23f'], ['🎮', '兩回合挑戰', '#eab4a4'], ['🏆', 'STAGE CLEAR', '#7ee0b5']];
+    const S = [['🔍', '找齊 3 個線索', '#7cc8ff'], ['🎯', '任務出現', '#ffd23f'], ['🎮', '兩回合挑戰', '#ff9ec7'], ['🏆', 'STAGE CLEAR', '#7ee0b5']];
     S.forEach(([ic, nm, col], i) => {
       const x = 36 + i * 250, y = 160;
       if (card(c, x, y, 200, 210, col, pop(st, 0.5 + i * 0.5))) { emo(c, ic, 100, 85, 70); txt(c, nm, 100, 165, 28, '#3a2a5a', 900); c.restore(); }
-      if (i < 3 && st > 0.8 + i * 0.5) { c.globalAlpha = easeOut((st - 0.8 - i * 0.5) / 0.3); txt(c, '➜', x + 225, 265, 40, '#e8826a', 900); c.globalAlpha = 1; }
+      if (i < 3 && st > 0.8 + i * 0.5) { c.globalAlpha = easeOut((st - 0.8 - i * 0.5) / 0.3); txt(c, '➜', x + 225, 265, 40, '#ff4fa0', 900); c.globalAlpha = 1; }
     });
     if (st > 2.8) { c.globalAlpha = easeOut((st - 2.8) / 0.5); txt(c, '💬 其中一個線索，是跟房間裡的同事聊天！', W / 2, 455, 32, '#6b4bb8'); c.globalAlpha = 1; }
   }
@@ -6292,7 +6175,7 @@ console.warn( 'Scripts "build/three.js" and "build/three.min.js" are deprecated 
       const keys = [['W', 150, 170], ['A', 90, 232], ['S', 150, 232], ['D', 210, 232]];
       keys.forEach(([k, x, y], i) => {
         const down = Math.floor(st * 2.5) % 4 === i;
-        c.fillStyle = down ? '#e8826a' : '#ffffff'; rr(c, x - 27, y - 27 + (down ? 4 : 0), 54, 54, 12); c.fill();
+        c.fillStyle = down ? '#ff4fa0' : '#ffffff'; rr(c, x - 27, y - 27 + (down ? 4 : 0), 54, 54, 12); c.fill();
         c.fillStyle = 'rgba(80,40,120,0.25)'; if (!down) { rr(c, x - 27, y + 27, 54, 6, 3); c.fill(); }
         txt(c, k, x, y + (down ? 4 : 0), 30, down ? '#fff' : '#4a3a70', 900);
       });
@@ -6308,9 +6191,9 @@ console.warn( 'Scripts "build/three.js" and "build/three.min.js" are deprecated 
     emo(c, '🔍', cx + 50 - (aim ? 50 : 0) * 0 , cy - 10, 70);
     const ox = cx - 60 + (aim ? 110 : 0) * easeOut(((st % 3) - 1.0) / 0.5), oy = cy - 10;
     c.fillStyle = aim ? '#ffd23f' : '#7cc8ff'; c.beginPath(); c.arc(ox, oy, 16, 0, Math.PI * 2); c.fill();
-    c.strokeStyle = aim ? '#f0b060' : '#fff'; c.lineWidth = 3; c.stroke();
+    c.strokeStyle = aim ? '#ff9f1c' : '#fff'; c.lineWidth = 3; c.stroke();
     if (aim) { c.fillStyle = '#ffd23f'; rr(c, cx - 110, cy + 58, 220, 40, 14); c.fill(); txt(c, isTouch ? '點「查看」' : '[ E ] 互動', cx, cy + 78, 24, '#3a2a5a', 900); }
-    txt(c, '小球對準 → 變黃色 → ' + (isTouch ? '點「查看」' : '按 E'), W / 2, 450, 36, '#e8826a', 900);
+    txt(c, '小球對準 → 變黃色 → ' + (isTouch ? '點「查看」' : '按 E'), W / 2, 450, 36, '#ff4fa0', 900);
   }
   function slideHelp(c, W, H, st) {
     sBg(c, W, H, '#e3fff3', '#fff6d6');
@@ -6326,7 +6209,7 @@ console.warn( 'Scripts "build/three.js" and "build/three.min.js" are deprecated 
     sTitle(c, W, '額外挑戰', '#6b4bb8', st);
     if (card(c, 110, 140, 360, 170, '#ffffff', pop(st, 0.4))) { emo(c, '⭐⭐⭐', 180, 60, 50); txt(c, '每關最多 3 顆星', 180, 125, 30, '#a0620a', 900); c.restore(); }
     if (card(c, 554, 140, 360, 170, '#ffffff', pop(st, 0.8))) { emo(c, '💎', 180, 60, 60); txt(c, '找出 4 顆知識寶石', 180, 125, 30, '#6b4bb8', 900); c.restore(); }
-    const s = pop(st, 1.4); if (s > 0) { c.save(); c.translate(W / 2, 420 + Math.sin(st * 4) * 6); c.scale(s, s); txt(c, '準備好了嗎？出發！🚀', 0, 0, 72, '#e8826a', 900); c.restore(); }
+    const s = pop(st, 1.4); if (s > 0) { c.save(); c.translate(W / 2, 420 + Math.sin(st * 4) * 6); c.scale(s, s); txt(c, '準備好了嗎？出發！🚀', 0, 0, 72, '#ff4fa0', 900); c.restore(); }
   }
 
   // ---------- 簡報的畫面下方對話框 ----------
@@ -6419,6 +6302,8 @@ console.warn( 'Scripts "build/three.js" and "build/three.min.js" are deprecated 
       if (k >= 1) finishBriefing();
     }
   }
+
+  ensureTutDoor();
 
   // ============ Main loop ============
   const clock = new THREE.Clock();
