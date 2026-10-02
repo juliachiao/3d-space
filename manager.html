@@ -665,7 +665,7 @@
 <div id="minimap-wrap">
   <div id="minimap-title">建築導覽圖</div>
   <canvas id="minimap" width="150" height="340"></canvas>
-  <div id="progress-badge">已通過 0 / 4 個房間</div>
+  <div id="progress-badge">已通過 0 / 3 個房間</div>
   <div id="gem-badge">💎 知識寶石 0 / 4</div>
   <div id="minimap-actions">
     <button id="btn-lobby" title="回大廳" aria-label="回大廳">🏠<span class="txt"> 回大廳</span></button>
@@ -700,7 +700,7 @@
 <div id="lock-hint"><div class="lock-card"><div class="lock-icon">🖱️</div><div><b>點一下畫面，繼續探索</b><br><small>滑鼠會用來轉動視角・隨時按 <kbd>Esc</kbd> 叫回游標</small></div></div></div>
 <div id="tutorial" role="status" aria-live="polite"></div>
 <div id="elev-prompt" role="button" tabindex="0"></div>
-<div id="tut-celebrate" aria-live="assertive"><div class="tc-burst">🎉</div><div class="tc-title">新手教學完成！</div><div class="tc-sub">光牆已經打開，<b>第 1 關</b>在走廊右手邊，出發吧！</div></div>
+<div id="tut-celebrate" aria-live="assertive"><div class="tc-burst">🎉</div><div class="tc-title">新手教學完成！</div><div class="tc-sub">訓練區的門已經打開，<b>第 1 關</b>在走廊右手邊，出發吧！</div></div>
 <div id="controls-legend">
   <div><kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd> 移動</div>
   <div>🖱️ 轉視角</div>
@@ -1010,7 +1010,7 @@ console.warn( 'Scripts "build/three.js" and "build/three.min.js" are deprecated 
 
   // ============ Three.js setup ============
   const scene = new THREE.Scene();
-  scene.fog = new THREE.FogExp2(0xdcebf8, 0.01);
+  scene.fog = new THREE.FogExp2(0xcfd5dc, 0.008);
 
   const camera = new THREE.PerspectiveCamera(72, window.innerWidth / window.innerHeight, 0.1, 200);
   const EYE_HEIGHT = 1.65;
@@ -1033,9 +1033,9 @@ console.warn( 'Scripts "build/three.js" and "build/three.min.js" are deprecated 
   renderer.setClearColor(0x000000, 0);
   container.appendChild(renderer.domElement);
 
-  const ambientLight = new THREE.AmbientLight(0xffffff, 0.42);
+  const ambientLight = new THREE.AmbientLight(0xfffaf3, 0.34);
   scene.add(ambientLight);
-  const hemiLight = new THREE.HemisphereLight(0xfff6ee, 0xb6d8ff, 0.3);
+  const hemiLight = new THREE.HemisphereLight(0xfffaf2, 0x9aa6b4, 0.24);
   scene.add(hemiLight);
 
   // ============ Building data ============
@@ -1051,7 +1051,7 @@ console.warn( 'Scripts "build/three.js" and "build/three.min.js" are deprecated 
     const upstairs = y0 >= FLOOR2_Y - 0.01;
     const wtex = (upstairs ? getWoodWallTexture() : getWallTexture()).clone(); wtex.needsUpdate = true;
     wtex.repeat.set(Math.max(1, len / (upstairs ? 2.0 : 2.4)), 1);
-    const wcol = upstairs ? new THREE.Color(0xb3a08a) : new THREE.Color(color === 0x1c2340 ? 0xc9e2fa : 0xffdcc6);   // 主管篇：房間天空藍、走廊蜜桃橘
+    const wcol = upstairs ? new THREE.Color(0xb3a08a) : new THREE.Color(color === 0x1c2340 ? 0xdfe3e7 : 0xe6e0d6);   // 主管篇：辦公室的暖白牆
     const mesh = new THREE.Mesh(
       new THREE.BoxGeometry(len, h, 0.25),
       litMat({ color: wcol, map: wtex })
@@ -1179,7 +1179,7 @@ console.warn( 'Scripts "build/three.js" and "build/three.min.js" are deprecated 
     const tex = (carpet ? getCarpetTexture() : parquet ? getParquetTexture() : getFloorTileTexture()).clone();
     tex.needsUpdate = true;
     tex.repeat.set(w / (carpet ? 1.6 : parquet ? 1.4 : 2.2), d / (carpet ? 1.6 : parquet ? 1.4 : 2.2));
-    const fcol = carpet ? (upstairs ? new THREE.Color(0x2a1d14).lerp(new THREE.Color(emissiveColor), 0.24) : new THREE.Color(0xf4ecff).lerp(new THREE.Color(emissiveColor), 0.45)) : parquet ? new THREE.Color(0x9a7a5c) : color;
+    const fcol = carpet ? (upstairs ? new THREE.Color(0x2a1d14).lerp(new THREE.Color(emissiveColor), 0.24) : new THREE.Color(0x8f98a3).lerp(new THREE.Color(emissiveColor), 0.22)) : parquet ? new THREE.Color(0x9a7a5c) : color;
     const mesh = new THREE.Mesh(
       new THREE.PlaneGeometry(w, d),
       litMat({ color: fcol, map: tex, emissive: parquet ? 0x2a1a0c : (emissiveColor || 0x000000), emissiveIntensity: carpet ? 0.07 : parquet ? 0.25 : 0.15 })
@@ -1189,7 +1189,7 @@ console.warn( 'Scripts "build/three.js" and "build/three.min.js" are deprecated 
     scene.add(mesh);
 
     // 踢腳板 (沿四邊，僅視覺用不影響碰撞)
-    const baseColor = 0xf2b48f;
+    const baseColor = 0x6e5440;
     const baseH = 0.14;
     const baseMat = litMat({ color: baseColor, roughness: 0.7 });
     const baseTop = new THREE.Mesh(new THREE.BoxGeometry(w, baseH, 0.05), baseMat);
@@ -1231,8 +1231,8 @@ console.warn( 'Scripts "build/three.js" and "build/three.min.js" are deprecated 
 
   // ============ Floors (ground plane) ============
   // Lobby floor
-  addFloor(CORR_X1, LOBBY_Z1, CORR_X2, LOBBY_Z2, 0, 0xb5daf7, 0x000000);
-  addCeiling(CORR_X1, LOBBY_Z1, CORR_X2, LOBBY_Z2, WALL_H1, 0xeaf4fd);
+  addFloor(CORR_X1, LOBBY_Z1, CORR_X2, LOBBY_Z2, 0, 0xbfc3c8, 0x000000);
+  addCeiling(CORR_X1, LOBBY_Z1, CORR_X2, LOBBY_Z2, WALL_H1, 0xe3e6ea);
 
   // --- 大廳天窗效果 ---
   {
@@ -1257,8 +1257,8 @@ console.warn( 'Scripts "build/three.js" and "build/three.min.js" are deprecated 
   }
 
   // Corridor 1F floor (z LOBBY_Z2 to RAMP_Z1)
-  addFloor(CORR_X1, LOBBY_Z2, CORR_X2, RAMP_Z1, 0, 0xc4e0f7, 0x000000);
-  addCeiling(CORR_X1, LOBBY_Z2, CORR_X2, RAMP_Z1, WALL_H1, 0xeaf4fd);
+  addFloor(CORR_X1, LOBBY_Z2, CORR_X2, RAMP_Z1, 0, 0xffffff, 0x5f6f86, 'carpet');
+  addCeiling(CORR_X1, LOBBY_Z2, CORR_X2, RAMP_Z1, WALL_H1, 0xe3e6ea);
 
   // ============ Room definitions ============
   const ROOMS = [
@@ -1315,9 +1315,15 @@ console.warn( 'Scripts "build/three.js" and "build/three.min.js" are deprecated 
     });
     if (cursor < end) addWall(xLine, cursor, xLine, end, floor);
   }
-  const ROOMS_1F_Z = [[R1_Z1, R1_Z2], [R2_Z1, R2_Z2]];
+  const DOOR_HALF = 1.1;   // 房間門寬 2.2 公尺
+  const doorGap = (z1, z2) => [(z1 + z2) / 2 - DOOR_HALF, (z1 + z2) / 2 + DOOR_HALF];
+  const ROOMS_1F_Z = [doorGap(R1_Z1, R1_Z2), doorGap(R2_Z1, R2_Z2)];
   corridorWallSegments(CORR_X1, 1, [[MR_DOOR_Z1, MR_DOOR_Z2]].concat(ROOMS_1F_Z));
-  corridorWallSegments(CORR_X2, 1, [[R1_Z1, R1_Z2]]);   // 主管篇：左手邊只有一間
+  corridorWallSegments(CORR_X2, 1, [doorGap(R1_Z1, R1_Z2)]);   // 主管篇：左手邊只有一間
+  // 門上方的牆（門高 2.3 公尺）
+  const DOOR_H = 2.3;
+  [[CORR_X1, MR_DOOR_Z1, MR_DOOR_Z2]].concat(ROOMS_1F_Z.map(g => [CORR_X1, g[0], g[1]]), [[CORR_X2, ROOMS_1F_Z[0][0], ROOMS_1F_Z[0][1]]])
+    .forEach(([x, z1, z2]) => addWallMesh(x, z1, x, z2, DOOR_H, WALL_H1 - DOOR_H));
   if (IS_MGR) {
     corridorWallSegments(CORR_X1, 2, [[R3_Z1, R3_Z2]]);
     corridorWallSegments(CORR_X2, 2, [[R3_Z1, R3_Z2]]);
@@ -1360,7 +1366,7 @@ console.warn( 'Scripts "build/three.js" and "build/three.min.js" are deprecated 
   // ============ Lighting per room ============
   ROOMS.forEach(r => {
     const y0 = (r.floor === 1 ? 0 : FLOOR2_Y) + 2.2;
-    const light = new THREE.PointLight(r.floor === 2 ? new THREE.Color(r.color).lerp(new THREE.Color(0xfff1dc), 0.72) : new THREE.Color(r.color).lerp(new THREE.Color(0xffffff), 0.55), r.floor === 2 ? 2.6 : 1.1, 12);
+    const light = new THREE.PointLight(r.floor === 2 ? new THREE.Color(r.color).lerp(new THREE.Color(0xfff1dc), 0.72) : new THREE.Color(r.color).lerp(new THREE.Color(0xfff8ee), 0.8), r.floor === 2 ? 2.6 : 0.95, 12);
     r.light = light;
     r.baseLight = { color: light.color.clone(), intensity: light.intensity };
     light.position.set((r.x1 + r.x2) / 2, y0, (r.z1 + r.z2) / 2);
@@ -3153,7 +3159,7 @@ console.warn( 'Scripts "build/three.js" and "build/three.min.js" are deprecated 
     '小提示：遊戲結束時剩下的 ❤️ 越多，拿到的 ⭐ 就越多！',
     '覺得音樂太大聲或太小聲？按右上角的 🎵 可以切換音量。',
     '職場法律不難，難的是「遇到的時候記得」。我們一起加油！',
-    '每破一關，房間的燈光都會變亮，下一關的雷射門也會打開！',
+    '每破一關，房間的燈光都會變亮，下一關的門也會打開！',
     '最終關是主管情境快問快答，破關還有結業證書可以下載喔！',
   ];
   let aeryChatIdx = 0, aerySpinBoost = 0;
@@ -3339,6 +3345,8 @@ console.warn( 'Scripts "build/three.js" and "build/three.min.js" are deprecated 
   const tutCelebrate = document.getElementById('tut-celebrate');
   const TUT_KEY = 'aery-onboard-v2-' + EDITION;   // v2：加入主管說明會後的新版教學
   const TUT_WALL_Z = LOBBY_Z2 + 0.6;
+  // 大廳通往訓練區的隔間牆（中間是雙開門，參加完說明會才會打開）
+  addWall(CORR_X1, TUT_WALL_Z, -1.2, TUT_WALL_Z, 1); addWall(1.2, TUT_WALL_Z, CORR_X2, TUT_WALL_Z, 1);
   const TUTORIAL_STEPS = isTouch
     ? ['用左下角的<b>搖桿</b>走幾步', '在畫面右半邊<b>拖曳</b>，轉身看看四周', '跟著<b>金色光柱</b>到會議室，對準<b>發光的座位</b>，點右下角<b>「查看」</b>坐下']
     : ['按 <kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd> 走幾步', '<b>移動滑鼠</b>，轉身看看四周', '跟著<b>金色光柱</b>到會議室，對準<b>發光的座位</b>，按 <kbd>E</kbd> 坐下'];
@@ -3358,39 +3366,33 @@ console.warn( 'Scripts "build/three.js" and "build/three.min.js" are deprecated 
     const t = new THREE.CanvasTexture(cnv); t.wrapS = t.wrapT = THREE.RepeatWrapping; t.repeat.set(3, 1); return t;
   })();
   let tutWall = null;
+  let tutDoorObj = null;
+  function ensureTutDoor() {
+    if (tutDoorObj) return tutDoorObj;
+    addWallMesh(-1.2, TUT_WALL_Z, 1.2, TUT_WALL_Z, DOOR_H, WALL_H1 - DOOR_H);
+    woodFrame(0, TUT_WALL_Z, 1.2, 0);
+    tutDoorObj = makeWoodDoor(0, TUT_WALL_Z, 1.2, 0, -1);
+    const sign = makeSignSprite('主管訓練區', '#ff9a5c'); sign.scale.set(1.5, 0.42, 1); sign.position.set(0, 2.72, TUT_WALL_Z - 0.2); scene.add(sign);
+    tutDoorObj.lockSign = makeSignSprite('🔒 先參加主管說明會\n門就會打開', '#ff7a3d'); tutDoorObj.lockSign.scale.set(1.5, 0.57, 1);
+    tutDoorObj.lockSign.position.set(0, 1.55, TUT_WALL_Z - 0.3); scene.add(tutDoorObj.lockSign);
+    if (tutorialDone()) { tutDoorObj.fading = 9; setDoorOpen(tutDoorObj, 1); tutDoorObj.lockSign.visible = false; }
+    return tutDoorObj;
+  }
   function createTutorialWall() {
-    if (tutWall) return;
-    const g = new THREE.Group();
-    const w = CORR_X2 - CORR_X1;
-    const mat = new THREE.MeshBasicMaterial({ map: wallTex, transparent: true, opacity: 0.85, side: THREE.DoubleSide, depthWrite: false });
-    const plane = new THREE.Mesh(new THREE.PlaneGeometry(w, WALL_H1), mat);
-    plane.position.y = WALL_H1 / 2; g.add(plane);
-    const edge = new THREE.Mesh(new THREE.BoxGeometry(w, 0.05, 0.05), new THREE.MeshBasicMaterial({ color: 0x9fe6ff }));
-    edge.position.y = 0.03; g.add(edge);
-    const sign = makeSignSprite('🔒 先參加主管說明會\n光牆就會打開', '#ff7a3d');
-    sign.scale.set(1.9, 0.72, 1); sign.position.y = 1.7; g.add(sign);
-    g.position.set(0, 0, TUT_WALL_Z);
-    scene.add(g);
-    tutWall = { group: g, mat, plane, sign, fading: -1 };
+    const d = ensureTutDoor();
+    d.fading = -1; setDoorOpen(d, 0); d.lockSign.visible = true;
+    tutWall = d;
   }
   function openTutorialWall() {
-    if (!tutWall || tutWall.fading >= 0) return;
-    tutWall.fading = 0;
-    for (let i = 0; i < 5; i++) spawnConfetti(-2.2 + i * 1.1, 1.4, TUT_WALL_Z, 70, 4);
+    const d = ensureTutDoor();
+    if (d.fading >= 0) return;
+    d.fading = 0; d.lockSign.visible = false;
+    for (let i = 0; i < 3; i++) spawnConfetti(-1 + i, 1.6, TUT_WALL_Z + 0.4, 70, 4);
+    if (audioCtx && !soundMuted) { tone(140, 0, 0.35, 'triangle', 0.05); tone(220, 0.25, 0.3, 'sine', 0.04); }
   }
   function updateTutorialWall(dt, t) {
-    if (!tutWall) return;
-    wallTex.offset.y = -t * 0.35;
-    if (tutWall.fading >= 0) {
-      tutWall.fading += dt;
-      const k = Math.min(1, tutWall.fading / 1.2);
-      tutWall.mat.opacity = 0.85 * (1 - k);
-      tutWall.plane.scale.y = 1 - k * 0.9;
-      tutWall.sign.material.opacity = 1 - k;
-      if (k >= 1) { scene.remove(tutWall.group); tutWall = null; }
-    } else {
-      tutWall.mat.opacity = 0.7 + Math.sin(t * 3) * 0.15;
-    }
+    const d = ensureTutDoor();
+    if (d.fading >= 0 && d.fading < 1.4) { d.fading += dt; setDoorOpen(d, d.fading / 1.3); if (d.fading >= 1.4) tutWall = null; }
   }
 
   // ---------- 教學面板 ----------
@@ -3434,13 +3436,13 @@ console.warn( 'Scripts "build/three.js" and "build/three.min.js" are deprecated 
     celebrateUntil = clock.elapsedTime + 3;
     aerySpinBoost = 2;
     lastProgressT = clock.elapsedTime;
-    setTimeout(() => aerySay('太棒了，你已經會操作了！前面的光牆打開囉～' + (IS_EMP ? '第 1 關「職場霸凌預防」在走廊右手邊，跟著金色光柱和畫面上的箭頭前進！' : '往前走進電梯，就能到 2F 主管訓練區！') + '', 9), 600);
+    setTimeout(() => aerySay('太棒了，你已經會操作了！訓練區的門打開囉～' + (IS_EMP ? '第 1 關「職場霸凌預防」在走廊右手邊，跟著金色光柱和畫面上的箭頭前進！' : '往前走進電梯，就能到 2F 主管訓練區！') + '', 9), 600);
   }
   function bumpTutorialWall() {
     const now = clock.elapsedTime;
     if (now - tut.bumpT < 3.5) return;
     tut.bumpT = now;
-    aerySay('先到大廳旁邊的會議室參加主管說明會，光牆才會打開喔！跟著金色光柱走～', 6);
+    aerySay('先到大廳旁邊的會議室參加主管說明會，訓練區的門才會打開喔！跟著金色光柱走～', 6);
     beaconFlashT = clock.elapsedTime; pulseObjective();
     tutorialEl.classList.remove('nudge'); void tutorialEl.offsetWidth; tutorialEl.classList.add('nudge');
     if (audioCtx && !soundMuted) tone(220, 0, 0.18, 'sawtooth', 0.04);
@@ -3612,19 +3614,22 @@ console.warn( 'Scripts "build/three.js" and "build/three.min.js" are deprecated 
     interactables.push({ mesh: board.hit, kind: 'prop', title: r.name + ' 單元摘要', lines: [r.desc, '到旁邊查看「錯誤示範」跟「正確做法」，再找到房間裡標示「任務」的物件，完成小遊戲就能通過這間房。'], color: r.color });
   });
 
-  // --- 房間門口發光邊框 ---
+  // --- 房間門口：木頭門框 + 房間主題色的門牌 ---
+  const DOOR_FRAME = litMat({ color: 0x7a5a40 });
+  function woodFrame(x, cz, half, rotY) {
+    const g = new THREE.Group();
+    [-half - 0.05, half + 0.05].forEach(o => { const p = new THREE.Mesh(new THREE.BoxGeometry(0.12, DOOR_H, 0.24), DOOR_FRAME); p.position.set(o, DOOR_H / 2, 0); g.add(p); });
+    const top = new THREE.Mesh(new THREE.BoxGeometry(half * 2 + 0.34, 0.12, 0.24), DOOR_FRAME); top.position.y = DOOR_H + 0.06; g.add(top);
+    g.position.set(x, 0, cz); g.rotation.y = rotY; scene.add(g);
+    return g;
+  }
   ROOMS.forEach(r => {
-    const y0 = r.floor === 1 ? 0 : FLOOR2_Y;
-    const hex = r.color;
-    const doorX = r.side === 'left' ? CORR_X1 : CORR_X2;
-    const doorMat = litMat({ color: hex, emissive: hex, emissiveIntensity: 0.7, roughness: 0.4 });
-    const top = new THREE.Mesh(new THREE.BoxGeometry(0.08, 0.08, 3.2), doorMat);
-    top.position.set(doorX, y0 + 2.15, (r.z1 + r.z2) / 2); scene.add(top);
-    [r.z1 + 0.2, r.z2 - 0.2].forEach(fz => {
-      const side = new THREE.Mesh(new THREE.BoxGeometry(0.08, 2.15, 0.08), doorMat);
-      side.position.set(doorX, y0 + 1.08, fz); scene.add(side);
-    });
+    const doorX = r.side === 'left' ? CORR_X1 : CORR_X2, cz = (r.z1 + r.z2) / 2;
+    woodFrame(doorX, cz, DOOR_HALF, Math.PI / 2);
+    const plate = new THREE.Mesh(new THREE.BoxGeometry(0.05, 0.08, DOOR_HALF * 2 + 0.3), litMat({ color: r.color, emissive: r.color, emissiveIntensity: 0.35 }));
+    plate.position.set(doorX + (r.side === 'left' ? 0.13 : -0.13), DOOR_H + 0.06, cz); scene.add(plate);
   });
+  woodFrame(CORR_X1, (MR_DOOR_Z1 + MR_DOOR_Z2) / 2, (MR_DOOR_Z2 - MR_DOOR_Z1) / 2, Math.PI / 2);
 
   ROOMS.forEach(r => {
     const y0 = r.floor === 1 ? 0 : FLOOR2_Y;
@@ -3661,12 +3666,12 @@ console.warn( 'Scripts "build/three.js" and "build/three.min.js" are deprecated 
   const DECOR = {
     wood: litMat({ color: 0x4a3a30 }),
     woodDark: litMat({ color: 0x2e241f }),
-    frame: litMat({ color: 0x9cc8ee }),
+    frame: litMat({ color: 0x8a7562 }),
     metal: litMat({ color: 0x8a93b0, emissive: 0x2a3048, emissiveIntensity: 0.3 }),
-    ceiling: litMat({ color: 0xeaf4fd }),
+    ceiling: litMat({ color: 0xe3e6ea }),
     panelGlow: new THREE.MeshBasicMaterial({ color: 0xe8eeff }),
     panelGlowWarm: new THREE.MeshBasicMaterial({ color: 0xffe6c0 }),
-    panelRim: litMat({ color: 0xd2e8fb }),
+    panelRim: litMat({ color: 0xd4d7db }),
   };
   const roomY = r => (r.floor === 1 ? 0 : FLOOR2_Y);
   const roomHeight = r => (r.floor === 1 ? WALL_H1 : WALL_H2);
@@ -3739,7 +3744,7 @@ console.warn( 'Scripts "build/three.js" and "build/three.min.js" are deprecated 
     const w = Math.abs(x2 - x1), d = Math.abs(z2 - z1);
     const upstairs = y > FLOOR2_Y + 1;
     const tex = (upstairs ? getCofferTexture() : ceilTex).clone(); tex.needsUpdate = true; tex.repeat.set(w / (upstairs ? 1.0 : 1.2), d / (upstairs ? 1.0 : 1.2));
-    const m = new THREE.Mesh(new THREE.PlaneGeometry(w, d), litMat({ color: upstairs ? 0x6a5a4a : 0xeaf4fd, map: tex, side: THREE.DoubleSide }));
+    const m = new THREE.Mesh(new THREE.PlaneGeometry(w, d), litMat({ color: upstairs ? 0x6a5a4a : 0xe3e6ea, map: tex, side: THREE.DoubleSide }));
     m.rotation.x = Math.PI / 2; m.position.set((x1 + x2) / 2, y, (z1 + z2) / 2); scene.add(m);
     (panelRows || []).forEach(([px, pz, pw, pd]) => {
       const rim = new THREE.Mesh(new THREE.BoxGeometry(pw + 0.12, 0.04, pd + 0.12), DECOR.panelRim);
@@ -3817,9 +3822,9 @@ console.warn( 'Scripts "build/three.js" and "build/three.min.js" are deprecated 
   const runnerTex = (() => {
     const cnv = document.createElement('canvas'); cnv.width = 64; cnv.height = 128;
     const c = cnv.getContext('2d');
-    c.fillStyle = '#ffc4a3'; c.fillRect(0, 0, 64, 128);
-    c.fillStyle = '#ffffff'; c.fillRect(4, 0, 3, 128); c.fillRect(57, 0, 3, 128);
-    c.strokeStyle = 'rgba(255,255,255,0.8)'; c.lineWidth = 1.5;
+    c.fillStyle = '#4e5c70'; c.fillRect(0, 0, 64, 128);
+    c.fillStyle = '#c9a77a'; c.fillRect(4, 0, 3, 128); c.fillRect(57, 0, 3, 128);
+    c.strokeStyle = 'rgba(255,255,255,0.18)'; c.lineWidth = 1.5;
     c.beginPath(); c.moveTo(32, 8); c.lineTo(50, 64); c.lineTo(32, 120); c.lineTo(14, 64); c.closePath(); c.stroke();
     const t = new THREE.CanvasTexture(cnv); t.wrapT = THREE.RepeatWrapping; return t;
   })();
@@ -5577,31 +5582,54 @@ console.warn( 'Scripts "build/three.js" and "build/three.min.js" are deprecated 
     const t = new THREE.CanvasTexture(cnv); t.wrapS = t.wrapT = THREE.RepeatWrapping; return t;
   }
   const LASER_RED = laserTexture('255,70,70'), LASER_GOLD = laserTexture('255,200,70');
-  function makeLaserGate(x, z, width, rotY, tex, text, color) {
+  // 木門（雙開門）：關著時看不到裡面，解鎖後往房間內打開
+  let woodDoorTex = null;
+  function getWoodDoorTex() {
+    if (woodDoorTex) return woodDoorTex;
+    const cnv = document.createElement('canvas'); cnv.width = 128; cnv.height = 256; const c = cnv.getContext('2d');
+    c.fillStyle = '#9a6e4a'; c.fillRect(0, 0, 128, 256);
+    for (let i = 0; i < 70; i++) { c.strokeStyle = 'rgba(70,40,20,' + (0.08 + Math.random() * 0.12) + ')'; c.lineWidth = 1 + Math.random() * 2; const x = Math.random() * 128; c.beginPath(); c.moveTo(x, 0); c.bezierCurveTo(x + 6, 80, x - 6, 170, x + 3, 256); c.stroke(); }
+    c.strokeStyle = 'rgba(50,28,12,0.55)'; c.lineWidth = 4; c.strokeRect(16, 18, 96, 98); c.strokeRect(16, 136, 96, 102);
+    c.strokeStyle = 'rgba(255,230,200,0.25)'; c.lineWidth = 2; c.strokeRect(19, 21, 90, 92); c.strokeRect(19, 139, 90, 96);
+    woodDoorTex = new THREE.CanvasTexture(cnv); return woodDoorTex;
+  }
+  function makeWoodDoor(x, z, half, rotY, swing) {
     const g = new THREE.Group();
-    const mat = new THREE.MeshBasicMaterial({ map: tex, transparent: true, opacity: 0.8, side: THREE.DoubleSide, depthWrite: false });
-    const plane = new THREE.Mesh(new THREE.PlaneGeometry(width, WALL_H1 - 0.2), mat);
-    plane.position.y = (WALL_H1 - 0.2) / 2; g.add(plane);
-    [-width / 2, width / 2].forEach(px => {
-      const post = new THREE.Mesh(new THREE.BoxGeometry(0.12, WALL_H1 - 0.2, 0.12), new THREE.MeshBasicMaterial({ color: tex === LASER_RED ? 0xff5050 : 0xffc846 }));
-      post.position.set(px, (WALL_H1 - 0.2) / 2, 0); g.add(post);
+    const mat = litMat({ color: 0xffffff, map: getWoodDoorTex() });
+    const knob = litMat({ color: 0xd8c08a, emissive: 0x3a2a10, emissiveIntensity: 0.4 });
+    const leaves = [-1, 1].map(sd => {
+      const pivot = new THREE.Group(); pivot.position.set(sd * half, 0, 0);
+      const leaf = new THREE.Mesh(new THREE.BoxGeometry(half - 0.02, DOOR_H - 0.04, 0.06), mat);
+      leaf.position.set(-sd * (half / 2), (DOOR_H - 0.04) / 2, 0); pivot.add(leaf);
+      [-0.05, 0.05].forEach(zz => { const k = new THREE.Mesh(new THREE.BoxGeometry(0.04, 0.2, 0.03), knob); k.position.set(-sd * (half - 0.12), 1.05, zz); pivot.add(k); });
+      g.add(pivot); return pivot;
     });
     g.position.set(x, 0, z); g.rotation.y = rotY; scene.add(g);
-    const sign = makeSignSprite(text, color); sign.scale.set(1.9, 0.72, 1);
-    const off = rotY ? 0 : -0.25;
-    sign.position.set(x + (rotY ? (x < 0 ? 0.3 : -0.3) : 0), 1.45, z + off); scene.add(sign);
-    return { group: g, mat, sign, wall: null, fading: -1 };
+    return { group: g, leaves, swing, isDoor: true, fading: -1 };
+  }
+  function makeLaserGate(x, z, width, rotY, tex, text, color) {   // 名稱保留，內容改成木門
+    const swing = rotY ? (x < 0 ? 1 : -1) : -1;   // 房間門往房內開；走廊門往前開
+    const half = rotY ? DOOR_HALF : 1.2;
+    const d = makeWoodDoor(x, z, half, rotY, swing);
+    const sign = makeSignSprite(text, color); sign.scale.set(1.5, 0.57, 1);
+    sign.position.set(x + (rotY ? (x < 0 ? 0.35 : -0.35) : 0), 1.55, z + (rotY ? 0 : -0.3)); scene.add(sign);
+    d.sign = sign; d.wall = null; d.mat = { opacity: 1 };
+    return d;
+  }
+  function setDoorOpen(d, k) {
+    const e = 1 - Math.pow(1 - Math.min(1, Math.max(0, k)), 3);
+    d.leaves[0].rotation.y = d.swing * e * 1.7; d.leaves[1].rotation.y = -d.swing * e * 1.7;
   }
   const roomGates = {};
   function buildRoomGate(r, i) {
     const doorX = r.side === 'left' ? CORR_X1 : CORR_X2;
     const gate = makeLaserGate(doorX, (r.z1 + r.z2) / 2, r.z2 - r.z1, Math.PI / 2, LASER_RED,
-      '🔒 第 ' + (i + 1) + ' 關\n先通過第 ' + i + ' 關', '#ff6a6a');
-    gate.wall = { x1: doorX, z1: r.z1, x2: doorX, z2: r.z2, floor: 1 };
+      i ? '🔒 第 ' + (i + 1) + ' 關\n先通過第 ' + i + ' 關' : '第 1 關', '#ff6a6a');
+    gate.wall = { x1: doorX, z1: (r.z1 + r.z2) / 2 - DOOR_HALF, x2: doorX, z2: (r.z1 + r.z2) / 2 + DOOR_HALF, floor: 1 };
     walls.push(gate.wall);
     roomGates[r.id] = gate;
   }
-  ROOMS.forEach((r, i) => { if (i >= LEVEL.unlocked) buildRoomGate(r, i); });
+  ROOMS.forEach((r, i) => { buildRoomGate(r, i); if (i < LEVEL.unlocked) openGate(roomGates[r.id]); });
   function openGate(gate) {
     if (!gate || gate.fading >= 0) return;
     gate.fading = 0;
@@ -5613,6 +5641,13 @@ console.warn( 'Scripts "build/three.js" and "build/three.min.js" are deprecated 
     const all = Object.values(roomGates).concat(finalGate ? [finalGate] : []);
     all.forEach(gt => {
       if (!gt.group.parent) return;
+      if (gt.isDoor) {
+        if (gt.fading >= 0 && gt.fading < 1.4) {
+          if (gt.fading === 0 && audioCtx && !soundMuted) { tone(140, 0, 0.35, 'triangle', 0.05); tone(220, 0.25, 0.3, 'sine', 0.04); }
+          gt.fading += dt; setDoorOpen(gt, gt.fading / 1.3);
+        }
+        return;
+      }
       if (gt.fading >= 0) {
         gt.fading += dt;
         const k = Math.min(1, gt.fading / 1.1);
@@ -5634,8 +5669,12 @@ console.warn( 'Scripts "build/three.js" and "build/three.min.js" are deprecated 
 
   // ---------- 最終關：走廊盡頭的綜合挑戰台 ----------
   const FINAL_GATE_Z = R2_Z2 + 0.4;
+  // 最終關前的隔間牆（中間留雙開門）
+  addWall(CORR_X1, FINAL_GATE_Z, -1.2, FINAL_GATE_Z, 1); addWall(1.2, FINAL_GATE_Z, CORR_X2, FINAL_GATE_Z, 1);
+  addWallMesh(-1.2, FINAL_GATE_Z, 1.2, FINAL_GATE_Z, DOOR_H, WALL_H1 - DOOR_H);
+  woodFrame(0, FINAL_GATE_Z, 1.2, 0);
   let finalGate = makeLaserGate(0, FINAL_GATE_Z, CORR_X2 - CORR_X1, 0, LASER_GOLD, '🏁 最終關\n通過 3 關後開啟', '#ffd76a');
-  finalGate.wall = { x1: CORR_X1, z1: FINAL_GATE_Z, x2: CORR_X2, z2: FINAL_GATE_Z, floor: 1 };
+  finalGate.wall = { x1: -1.2, z1: FINAL_GATE_Z, x2: 1.2, z2: FINAL_GATE_Z, floor: 1 };
   walls.push(finalGate.wall);
   const podium = new THREE.Group();
   {
@@ -5806,7 +5845,7 @@ console.warn( 'Scripts "build/three.js" and "build/three.min.js" are deprecated 
     showStageClear(room, stars);
     if (i + 1 < ROOMS.length) {
       unlockLevel(i + 2);
-      setTimeout(() => aerySay('第 ' + (i + 1) + ' 關破關！🎉 第 ' + (i + 2) + ' 關「' + ROOMS[i + 1].name + '」的雷射門打開了，在走廊' + sideWord(ROOMS[i + 1]) + '手邊，跟著金色光柱走！', 8), 1500);
+      setTimeout(() => aerySay('第 ' + (i + 1) + ' 關破關！🎉 第 ' + (i + 2) + ' 關「' + ROOMS[i + 1].name + '」的門打開了，在走廊' + sideWord(ROOMS[i + 1]) + '手邊，跟著金色光柱走！', 8), 1500);
     } else {
       openFinalGate();
       setTimeout(() => aerySay('三關全破！🔥 走廊盡頭的最終關開啟了，通過「綜合挑戰」就全數破關！', 9), 1500);
@@ -6042,10 +6081,10 @@ console.warn( 'Scripts "build/three.js" and "build/three.min.js" are deprecated 
     Object.values(missionMarkers).forEach(m => { m.visible = false; });
     Object.values(roomGates).forEach(g => { scene.remove(g.group); scene.remove(g.sign); const wi = walls.indexOf(g.wall); if (wi >= 0) walls.splice(wi, 1); });
     Object.keys(roomGates).forEach(k => delete roomGates[k]);
-    ROOMS.forEach((r, i) => { if (i >= LEVEL.unlocked) buildRoomGate(r, i); });
+    ROOMS.forEach((r, i) => { buildRoomGate(r, i); if (i < LEVEL.unlocked) openGate(roomGates[r.id]); });
     scene.remove(finalGate.group); scene.remove(finalGate.sign); { const wi = walls.indexOf(finalGate.wall); if (wi >= 0) walls.splice(wi, 1); }
     finalGate = makeLaserGate(0, FINAL_GATE_Z, CORR_X2 - CORR_X1, 0, LASER_GOLD, '🏁 最終關\n通過 3 關後開啟', '#ffd76a');
-    finalGate.wall = { x1: CORR_X1, z1: FINAL_GATE_Z, x2: CORR_X2, z2: FINAL_GATE_Z, floor: 1 };
+    finalGate.wall = { x1: -1.2, z1: FINAL_GATE_Z, x2: 1.2, z2: FINAL_GATE_Z, floor: 1 };
     walls.push(finalGate.wall);
     finalMarker.visible = false;
     finaleEl.classList.remove('show'); certOverlay.classList.remove('show'); hideStageClear();
@@ -6199,14 +6238,12 @@ console.warn( 'Scripts "build/three.js" and "build/three.min.js" are deprecated 
   addWall(MR.x1, MR.z1, MR.x1, MR.z2, 1, 0x1c2340);
   addWall(MR.x1, MR.z1, MR.x2, MR.z1, 1, 0x1c2340);
   addWall(MR.x1, MR.z2, MR.x2, MR.z2, 1, 0x1c2340);
-  addFloor(MR.x1, MR.z1, MR.x2, MR.z2, 0, 0xffffff, 0x7cc8ff, 'carpet');
-  addCeiling(MR.x1, MR.z1, MR.x2, MR.z2, WALL_H1 - 0.01, 0xeaf4fd);
+  addFloor(MR.x1, MR.z1, MR.x2, MR.z2, 0, 0xffffff, 0x4f6a8f, 'carpet');
+  addCeiling(MR.x1, MR.z1, MR.x2, MR.z2, WALL_H1 - 0.01, 0xe3e6ea);
   const mrLight = new THREE.PointLight(0xfff0f6, 0.8, 14); mrLight.position.set(-7, 2.7, -5); scene.add(mrLight);
   // 門框 + 門牌
   {
-    const pink = new THREE.MeshBasicMaterial({ color: 0xff9a5c });
-    [MR_DOOR_Z1, MR_DOOR_Z2].forEach(z => { const p = new THREE.Mesh(new THREE.BoxGeometry(0.16, 2.3, 0.16), pink); p.position.set(CORR_X1, 1.15, z); scene.add(p); });
-    const top = new THREE.Mesh(new THREE.BoxGeometry(0.16, 0.16, MR_DOOR_Z2 - MR_DOOR_Z1 + 0.16), pink); top.position.set(CORR_X1, 2.3, (MR_DOOR_Z1 + MR_DOOR_Z2) / 2); scene.add(top);
+    // 門框改由 woodFrame() 建立
     const sign = makeSignSprite('📽️ 主管說明會\n會議室', '#ff9a5c'); sign.scale.set(1.7, 0.64, 1);
     sign.position.set(CORR_X1 + 0.2, 2.75, (MR_DOOR_Z1 + MR_DOOR_Z2) / 2); scene.add(sign);
   }
@@ -6224,7 +6261,7 @@ console.warn( 'Scripts "build/three.js" and "build/three.min.js" are deprecated 
     });
   }
   // 椅子（兩排，面向投影幕）；第一排中間是玩家座位
-  const CHAIR_COLORS = [0xffcfb3, 0xb8e6ff, 0xc6f5dc, 0xfff0a8, 0x9fd3ff];
+  const CHAIR_COLORS = [0x3d4a5e, 0x4a5870, 0x3d4a5e, 0x56657d, 0x4a5870];
   function makeChair(x, z, color, special) {
     const g = new THREE.Group();
     const m = litMat({ color, emissive: special ? 0xff9a5c : 0x000000, emissiveIntensity: special ? 0.35 : 0 });
@@ -6500,6 +6537,47 @@ console.warn( 'Scripts "build/three.js" and "build/three.min.js" are deprecated 
       const k = Math.min(1, BRIEF.t / 1.4); setScreenRoll(1 - easeOut(k));
       if (k >= 1) finishBriefing();
     }
+  }
+
+  // ---------- 辦公室擺設 ----------
+  {
+    const wood = litMat({ color: 0x8a6446 }), top = litMat({ color: 0xece8e1 }), dark = litMat({ color: 0x3a4250 }), metal = litMat({ color: 0xb8bec6 });
+    const box = (g, w, h, d, m, x, y, z) => { const o = new THREE.Mesh(new THREE.BoxGeometry(w, h, d), m); o.position.set(x, y, z); g.add(o); return o; };
+    // 大廳接待櫃檯
+    const desk = new THREE.Group();
+    box(desk, 0.6, 1.05, 2.0, wood, 0, 0.525, 0); box(desk, 0.75, 0.05, 2.1, top, 0, 1.075, 0);
+    box(desk, 0.02, 0.18, 1.2, litMat({ color: 0xff9a5c, emissive: 0xff9a5c, emissiveIntensity: 0.4 }), -0.31, 0.8, 0);
+    const mon = box(desk, 0.05, 0.32, 0.5, dark, 0.15, 1.3, 0.4); mon.rotation.y = 0.3;
+    desk.position.set(2.3, 0, -4.2); scene.add(desk);
+    const rsign = makeSignSprite('🛎️ 接待處', '#ff9a5c'); rsign.scale.set(1.0, 0.36, 1); rsign.position.set(2.3, 1.75, -4.2); scene.add(rsign);
+    // 走廊茶水區（飲水機 + 咖啡機）
+    const tea = new THREE.Group();
+    box(tea, 0.5, 0.9, 1.4, wood, 0, 0.45, 0); box(tea, 0.55, 0.04, 1.45, top, 0, 0.92, 0);
+    box(tea, 0.3, 0.38, 0.3, dark, 0, 1.13, -0.35);
+    const jug = new THREE.Mesh(new THREE.CylinderGeometry(0.14, 0.14, 0.42, 16), litMat({ color: 0x9fd3ff, transparent: true, opacity: 0.7 })); jug.position.set(0, 1.62, 0.3); tea.add(jug);
+    box(tea, 0.3, 0.5, 0.3, metal, 0, 1.16, 0.3);
+    tea.position.set(CORR_X2 - 0.3, 0, (R2_Z1 + R2_Z2) / 2 + 2.2); scene.add(tea);
+    const tsign = makeSignSprite('☕ 茶水區', '#7cc8ff'); tsign.scale.set(0.95, 0.34, 1); tsign.position.set(CORR_X2 - 0.35, 2.1, (R2_Z1 + R2_Z2) / 2 + 2.2); scene.add(tsign);
+    // 走廊掛畫
+    const ART = [['#f2c6a0', '#7aa6c9'], ['#9cc7a4', '#f4e2b8'], ['#c9b8d8', '#f0a989']];
+    [[CORR_X2 - 0.06, 15.0, -Math.PI / 2, 0], [CORR_X1 + 0.06, 11.0, Math.PI / 2, 1], [CORR_X2 - 0.06, 11.0, -Math.PI / 2, 2]].forEach(([x, z, ry, k]) => {
+      const cnv = document.createElement('canvas'); cnv.width = 200; cnv.height = 140; const c = cnv.getContext('2d');
+      c.fillStyle = ART[k][1]; c.fillRect(0, 0, 200, 140);
+      c.fillStyle = ART[k][0]; c.beginPath(); c.arc(70 + k * 20, 70, 42, 0, Math.PI * 2); c.fill();
+      c.fillStyle = 'rgba(255,255,255,0.6)'; c.fillRect(110, 30 + k * 10, 60, 70);
+      const g = new THREE.Group();
+      box(g, 0.9, 0.66, 0.04, litMat({ color: 0x3a2e24 }), 0, 0, 0);
+      const art = new THREE.Mesh(new THREE.PlaneGeometry(0.8, 0.56), new THREE.MeshBasicMaterial({ map: new THREE.CanvasTexture(cnv) })); art.position.z = 0.025; g.add(art);
+      g.position.set(x, 1.65, z); g.rotation.y = ry; scene.add(g);
+    });
+    // 逃生指示燈
+    const ex = document.createElement('canvas'); ex.width = 128; ex.height = 48; const ec = ex.getContext('2d');
+    ec.fillStyle = '#1f9d55'; ec.fillRect(0, 0, 128, 48); ec.fillStyle = '#fff'; ec.font = 'bold 26px sans-serif'; ec.textAlign = 'center'; ec.textBaseline = 'middle'; ec.fillText('🏃 EXIT', 64, 25);
+    [[0, TUT_WALL_Z - 0.04, Math.PI], [0, LOBBY_Z1 + 0.06, 0]].forEach(([x, z, ry]) => {
+      const m = new THREE.Mesh(new THREE.PlaneGeometry(0.42, 0.16), new THREE.MeshBasicMaterial({ map: new THREE.CanvasTexture(ex) }));
+      m.position.set(x + (z === TUT_WALL_Z - 0.04 ? 1.9 : -1.6), 2.85, z); m.rotation.y = ry; scene.add(m);
+    });
+    ensureTutDoor();
   }
 
   // ============ Main loop ============
