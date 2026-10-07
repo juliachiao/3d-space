@@ -746,6 +746,12 @@
     body.mobile #panel-actions .panel-btn { flex: 1 1 100%; min-height: 42px; }
     body.mobile #panel-title { font-size: 17px !important; }
   }
+  #start-overlay .st-save { margin: -6px auto 16px; padding: 9px 14px; border-radius: 14px; background: rgba(255,255,255,0.7); color: #4a3a70;
+    font: 700 14px/1.5 "PingFang TC","Microsoft JhengHei",sans-serif; box-shadow: inset 0 0 0 2px rgba(0,0,0,0.06); }
+  #start-overlay .st-save small { color: #8a7aa8; font-weight: 600; }
+  #start-overlay .st-restart { display: block; margin: 14px auto 0; padding: 9px 22px; border-radius: 30px; border: 2px solid rgba(0,0,0,0.12); background: rgba(255,255,255,0.8);
+    color: #5a4a80; font: 800 14px "PingFang TC","Microsoft JhengHei",sans-serif; cursor: pointer; }
+  #start-overlay .st-restart:hover { background: #fff; }
 </style>
 </head>
 <body class="pregame">
@@ -6014,6 +6020,7 @@ console.warn( 'Scripts "build/three.js" and "build/three.min.js" are deprecated 
     if (LEVEL.finalDone) { openCert(); return; }
     LEVEL.finalDone = true;
     LEVEL.endTime = performance.now();
+    setTimeout(() => writeSave(true), 100);
     allRoomsCompleted = true;
     uiOpen = true;
     if (pointerLocked) document.exitPointerLock();
@@ -6117,6 +6124,7 @@ console.warn( 'Scripts "build/three.js" and "build/three.min.js" are deprecated 
   }
   function updateProgression(dt, t) {
     updateGates(dt, t);
+    updateAutosave(t);
     updateBriefing(dt);
     updateWayfinding(dt, t);
     const show = gameStarted && !BRIEF.active;
@@ -6172,6 +6180,7 @@ console.warn( 'Scripts "build/three.js" and "build/three.min.js" are deprecated 
     ctx.fillText(LEVEL.finalOpen ? '🏁' : '🔒', mapX(0), mapY(R2_Z2 + 1.3));
   }
   function resetProgression() {
+    clearSave();
     LEVEL.unlocked = 1; LEVEL.finalOpen = false; LEVEL.finalDone = false; LEVEL.finalScore = 0; LEVEL.startTime = performance.now(); LEVEL.endTime = 0;
     Object.keys(roundProgress).forEach(k => delete roundProgress[k]);
     Object.keys(round1Stars).forEach(k => delete round1Stars[k]);
@@ -6722,6 +6731,127 @@ console.warn( 'Scripts "build/three.js" and "build/three.min.js" are deprecated 
     camera.rotation.set(0, Math.PI / 2, 0);
   }
 
+
+  // =====================================================================
+  // ============ 遊戲存檔：自動儲存進度，下次打開可以繼續 ============
+  // =====================================================================
+  const SAVE_KEY = 'aery-save-v1-' + (typeof EDITION !== 'undefined' ? EDITION : MODE);
+  let saveSnapshot = '', saveT = 0, playedBeforeMs = 0;
+  function readSave() {
+    try { const v = JSON.parse(localStorage.getItem(SAVE_KEY) || 'null'); return v && v.v === 1 ? v : null; } catch (e) { return null; }
+  }
+  function clearSave() { try { localStorage.removeItem(SAVE_KEY); } catch (e) {} saveSnapshot = ''; }
+  function collectSave() {
+    return {
+      v: 1,
+      unlocked: LEVEL.unlocked, finalOpen: LEVEL.finalOpen, finalDone: LEVEL.finalDone, finalScore: LEVEL.finalScore,
+      passed: [...passedRooms], done: [...missionDone], stars: { ...roomStars },
+      round: { ...roundProgress }, r1: { ...round1Stars }, fails: { ...failCount },
+      clues: Object.fromEntries(Object.entries(roomClues).map(([id, list]) => [id, list.map(c => c.found ? 1 : 0)])),
+      gems: gems.map(g => g.found ? 1 : 0),
+    };
+  }
+  const hasProgress = d => d && (d.unlocked > 1 || d.passed.length || d.gems.some(Boolean) || Object.values(d.clues).some(l => l.some(Boolean)));
+  function writeSave(force) {
+    if (!gameStarted) return;
+    const d = collectSave();
+    const snap = JSON.stringify(d);
+    if (!force && snap === saveSnapshot) return;
+    saveSnapshot = snap;
+    if (!hasProgress(d)) return;
+    d.playedMs = playedBeforeMs + (LEVEL.finalDone && LEVEL.endTime ? LEVEL.endTime - LEVEL.startTime : performance.now() - LEVEL.startTime);
+    d.savedAt = Date.now();
+    try { localStorage.setItem(SAVE_KEY, JSON.stringify(d)); } catch (e) {}
+  }
+  function updateAutosave(t) {
+    if (t - saveT < 2) return;   // 每 2 秒檢查一次有沒有新進度
+    saveT = t;
+    writeSave(false);
+  }
+  window.addEventListener('pagehide', () => writeSave(true));
+  document.addEventListener('visibilitychange', () => { if (document.hidden) writeSave(true); });
+
+  // 把存檔套回場景（安靜地還原，不放特效）
+  function applySave(d) {
+    // 房間門
+    LEVEL.unlocked = Math.max(1, Math.min(ROOMS.length, d.unlocked || 1));
+    ROOMS.forEach((r, i) => {
+      const gt = roomGates[r.id];
+      if (i < LEVEL.unlocked && gt) { openGate(gt); if (gt.isDoor) { gt.fading = 9; setDoorOpen(gt, 1); } else scene.remove(gt.group); }
+    });
+    // 線索
+    Object.entries(d.clues || {}).forEach(([id, flags]) => {
+      (roomClues[id] || []).forEach((c, k) => {
+        if (!flags[k] || c.found) return;
+        c.found = true;
+        relabel(c, '✓ 已找到', '#4fd48a');
+        if (c.icon) c.icon.material.opacity = 0.55;
+        if (c.bubble) c.bubble.visible = false;
+        if (c.ring) c.ring.material.color.set(0x4fd48a);
+      });
+      if (cluesReady(id) && missionMarkers[id]) missionMarkers[id].visible = true;
+    });
+    // 回合、星數、失敗次數
+    Object.assign(roundProgress, d.round || {}); Object.assign(round1Stars, d.r1 || {}); Object.assign(failCount, d.fails || {});
+    // 已破關的房間
+    (d.passed || []).forEach(id => {
+      const room = ROOMS.find(r => r.id === id); if (!room) return;
+      missionDone.add(id); passedRooms.add(id);
+      if (missionMarkers[id]) missionMarkers[id].visible = false;
+      roomStars[id] = Math.max(roomStars[id] || 0, (d.stars || {})[id] || 1);
+      transformRoom(room, roomStars[id]);
+    });
+    // 最終關
+    LEVEL.finalScore = d.finalScore || 0;
+    if (d.finalOpen && finalGate) {
+      LEVEL.finalOpen = true; openGate(finalGate);
+      if (finalGate.isDoor) { finalGate.fading = 9; setDoorOpen(finalGate, 1); } else scene.remove(finalGate.group);
+      finalMarker.visible = true;
+    }
+    if (d.finalDone) { LEVEL.finalDone = true; allRoomsCompleted = true; fireworksDone = true; }
+    // 知識寶石
+    (d.gems || []).forEach((f, i) => {
+      const g = gems[i]; if (!f || !g || g.found) return;
+      g.found = true; g.group.visible = false;
+      const idx = interactables.findIndex(o => o.gem === g); if (idx >= 0) interactables.splice(idx, 1);
+    });
+    updateGemBadge(); updateProgressBadge();
+    // 遊玩時間接著算
+    playedBeforeMs = d.playedMs || 0;
+    LEVEL.startTime = performance.now() - playedBeforeMs; playedBeforeMs = 0;
+    if (LEVEL.finalDone) LEVEL.endTime = performance.now();
+    lastObjective = '';
+    saveSnapshot = JSON.stringify(collectSave());
+  }
+
+  // ---------- 開始畫面：有存檔時顯示「繼續挑戰」和「重新開始」----------
+  {
+    const save = readSave();
+    if (hasProgress(save)) {
+      const lv = (save.passed || []).length >= ROOMS.length ? (save.finalDone ? '已全數破關' : '最終關') : '第 ' + Math.min(ROOMS.length, (save.passed || []).length + 1) + ' 關';
+      const stars = Object.values(save.stars || {}).reduce((a, b) => a + b, 0);
+      const when = save.savedAt ? new Date(save.savedAt) : null;
+      const info = document.createElement('div'); info.className = 'st-save';
+      info.innerHTML = '💾 上次進度：<b>' + lv + '</b>　⭐ ' + stars + '　💎 ' + (save.gems || []).filter(Boolean).length +
+        (when ? '<br><small>儲存時間 ' + (when.getMonth() + 1) + '/' + when.getDate() + ' ' + String(when.getHours()).padStart(2, '0') + ':' + String(when.getMinutes()).padStart(2, '0') + '</small>' : '');
+      startBtn.textContent = '▶ 繼續挑戰（' + lv + '）';
+      startBtn.parentNode.insertBefore(info, startBtn);
+      const restart = document.createElement('button'); restart.type = 'button'; restart.className = 'st-restart'; restart.textContent = '↺ 重新開始';
+      startBtn.parentNode.insertBefore(restart, startBtn.nextSibling);
+      let resume = true;
+      restart.addEventListener('click', () => {
+        if (!confirm('確定要清除進度、從第 1 關重新開始嗎？')) return;
+        resume = false; clearSave(); startBtn.click();
+      });
+      startBtn.addEventListener('click', () => {   // 在原本的開始流程之後執行
+        if (!resume) return;
+        applySave(save);
+        setTimeout(() => aerySay(LEVEL.finalDone ? '歡迎回來！你已經全數破關了，可以繼續逛逛，或到最終關領取結業證書～'
+          : '歡迎回來！已經幫你接回上次的進度：' + lv + '，跟著金色光柱繼續出發吧！', 9), 1300);
+      });
+    }
+  }
+
   // ============ Main loop ============
   const clock = new THREE.Clock();
   let gameStarted = false;
@@ -6880,7 +7010,7 @@ console.warn( 'Scripts "build/three.js" and "build/three.min.js" are deprecated 
   animate();
 
   // debug hook for automated testing (harmless in production)
-  window.__debug = { SLIDES, BRIEF, startBriefing, failCount, LEVEL, roomClues, markClueFound, openClue, openNpc, requestMission, openMission, openFinalQuiz, startFinale, showStageClear, onLevelCleared, roundProgress, get finalGate() { return finalGate; }, roomGates, elev, doorA, doorB, elevatorTryRide, inCab, getFloorY, updateElevator, moveWithCollision, tut, tutorialDone, get tutWall() { return tutWall; }, replayTutorial, openHelp, closeHelp, get pointerLocked() { return pointerLocked; }, gems, collectGem, aeryChat, roomStars, passSigns, get fireworksDone() { return fireworksDone; }, player, keys, getFloorY, walls, ROOMS, moveWithCollision, interactables, camera, tryInteract, openInfoPanel, visitedRooms, triggerCompletion, get lookedAt() { return lookedAt; }, get uiOpen() { return uiOpen; }, get allRoomsCompleted() { return allRoomsCompleted; } };
+  window.__debug = { passedRooms, markMissionDone, finishTutorial, readSave, writeSave, applySave, SLIDES, BRIEF, startBriefing, failCount, LEVEL, roomClues, markClueFound, openClue, openNpc, requestMission, openMission, openFinalQuiz, startFinale, showStageClear, onLevelCleared, roundProgress, get finalGate() { return finalGate; }, roomGates, elev, doorA, doorB, elevatorTryRide, inCab, getFloorY, updateElevator, moveWithCollision, tut, tutorialDone, get tutWall() { return tutWall; }, replayTutorial, openHelp, closeHelp, get pointerLocked() { return pointerLocked; }, gems, collectGem, aeryChat, roomStars, passSigns, get fireworksDone() { return fireworksDone; }, player, keys, getFloorY, walls, ROOMS, moveWithCollision, interactables, camera, tryInteract, openInfoPanel, visitedRooms, triggerCompletion, get lookedAt() { return lookedAt; }, get uiOpen() { return uiOpen; }, get allRoomsCompleted() { return allRoomsCompleted; } };
 })();
 
 </script>
