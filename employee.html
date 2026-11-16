@@ -1415,7 +1415,7 @@ console.warn( 'Scripts "build/three.js" and "build/three.min.js" are deprecated 
   const R3_Z1 = 36 + Z_OFF, R3_Z2 = 44 + Z_OFF;
   const END_Z = 46 + Z_OFF;
   const WORLD_END_Z = IS_EMP ? RAMP_Z1 : END_Z;   // 整棟建築最北端
-  const ROOM_OUT = 11; // outer x extent of side rooms
+  const ROOM_OUT = 13.5; // outer x extent of side rooms
   const MR_DOOR_Z1 = -5.7, MR_DOOR_Z2 = -3.7;   // 員工篇：大廳旁會議室的門
 
   // ============ Floors (ground plane) ============
@@ -4881,6 +4881,8 @@ console.warn( 'Scripts "build/three.js" and "build/three.min.js" are deprecated 
       crosshair.classList.add('active');
       let label;
       if (obj.kind === 'prop') label = obj.title;
+      else if (obj.kind === 'quiz') label = (roomQuizDone.has(obj.room.id) ? '✓ ' : '❓ ') + obj.title;
+      else if (obj.kind === 'fun') label = obj.title;
       else if (obj.kind === 'gem') label = '💎 ' + obj.title;
       else if (obj.kind === 'aery') label = '🤖 ' + obj.title;
       else if (obj.kind === 'mission') label = '🎯 任務：' + obj.title + (missionDone.has(obj.room.id) ? '（已破關）' : (!cluesReady(obj.room.id) ? '（先找齊 3 個線索）' : '（第 ' + (roundProgress[obj.room.id] || 1) + ' / 2 回合）'));
@@ -4911,6 +4913,8 @@ console.warn( 'Scripts "build/three.js" and "build/three.min.js" are deprecated 
     else if (lookedAt.kind === 'npc') openNpc(lookedAt.clue);
     else if (lookedAt.kind === 'final') openFinalQuiz();
     else if (lookedAt.kind === 'prop') openDialogue(lookedAt);
+    else if (lookedAt.kind === 'quiz') openRoomQuiz(lookedAt);
+    else if (lookedAt.kind === 'fun') openFunProp(lookedAt);
     else if (lookedAt.kind === 'mission') requestMission(lookedAt.room);
     else openInfoPanel(lookedAt);
   }
@@ -5101,7 +5105,7 @@ console.warn( 'Scripts "build/three.js" and "build/three.min.js" are deprecated 
   });
 
   // ============ Minimap ============
-  const WORLD_X1 = -13, WORLD_X2 = 13, WORLD_Z1 = -9, WORLD_Z2 = WORLD_END_Z + 2;
+  const WORLD_X1 = -(ROOM_OUT + 2), WORLD_X2 = ROOM_OUT + 2, WORLD_Z1 = -9, WORLD_Z2 = WORLD_END_Z + 2;
   const MAP_W = 150, MAP_H = Math.round(MAP_W / (WORLD_X2 - WORLD_X1) * (WORLD_Z2 - WORLD_Z1)); // 依建築長度調整，比例不變形
   minimapCanvas.height = MAP_H;
   const mapScaleX = MAP_W / (WORLD_X2 - WORLD_X1);
@@ -6952,6 +6956,200 @@ console.warn( 'Scripts "build/three.js" and "build/three.min.js" are deprecated 
   {
     const ha = document.querySelector('#help-overlay .help-actions');
     if (ha) { const b = document.createElement('button'); b.type = 'button'; b.textContent = '🎬 看操作示範'; b.addEventListener('click', () => { helpOverlay.classList.remove('show'); openHowto(true); }); ha.insertBefore(b, ha.firstChild); }
+  }
+  
+  // =====================================================================
+  // ============ v3：房間加大後，在門口區新增多樣化互動（布告欄／快問快答／休息角）============
+  // =====================================================================
+  const ROOM_EXTRAS = {
+    pdpa: {
+      board: { head: '個資小教室', title: '📌 個資小教室布告欄', lines: ['個資的生命週期：蒐集 → 處理 → 利用 → 刪除，每個階段都要符合「特定目的」，用完就要妥善銷毀。', '📎 小知識：姓名＋電話就能認出一個人，一樣是個資；病歷、醫療、基因、健康檢查、犯罪前科屬於「特種個資」，原則上不得蒐集、處理或利用。'] },
+      quiz: { q: '下面哪一個「不是」安全的個資處理方式？', options: [
+        { text: '離開座位前把螢幕鎖定（Win + L）', ok: false, why: '這是正確做法喔！離開座位鎖螢幕，可以避免別人看到畫面上的個資。' },
+        { text: '用公司核准的加密方式傳送客戶資料', ok: false, why: '這是正確做法喔！加密傳送能降低資料被攔截外洩的風險。' },
+        { text: '把客戶名單存到私人雲端硬碟，回家方便加班', ok: true, why: '答對了！私人雲端不在公司管控範圍，帳號一旦外洩，客戶資料也跟著外洩。' } ] },
+      fun: { kind: 'shredder', icon: '🗑️', title: '碎紙機', lines: ['喀嚓喀嚓～含個資的紙本不能直接丟回收，要用碎紙機銷毀！', '過期的客戶資料也要定期清理，資料留越久，外洩風險越高。', '影印機旁邊忘了拿的報表，也是常見的個資外洩來源喔。'] } },
+    osh: {
+      board: { head: '安全衛生公告', title: '📌 安全衛生布告欄', lines: ['「看、避、報」：看見危險 → 先讓自己和同事避開 → 通報主管或總務處理。', '📎 小知識：滅火器口訣「拉、瞄、壓、掃」；逃生門和走道要隨時保持暢通，不能堆放雜物。'] },
+      quiz: { q: '辦公室走道上的延長線被踩得翹起來，最好的做法是？', options: [
+        { text: '先放警示或把線整理好，再通報總務處理', ok: true, why: '答對了！這就是「看、避、報」：先排除立即的危險，再通報從根本解決。' },
+        { text: '跨過去就好，大家走路都會注意', ok: false, why: '只靠「大家小心」擋不住意外，絆倒是辦公室最常見的職災之一。' },
+        { text: '等有人絆倒了再處理', ok: false, why: '職安重在預防，發現風險就要立即處理。' } ] },
+      fun: { kind: 'firstaid', icon: '🩹', title: '急救箱', lines: ['急救箱和 AED 放在哪裡，上班第一週就先記起來！', '受傷再小都要通報，職災紀錄能幫助公司改善工作環境。', '長時間打電腦，記得每小時起來動一動、讓眼睛休息。'] } },
+    ai_policy: {
+      board: { head: 'AI 使用小提醒', title: '📌 AI 使用小提醒', lines: ['使用 AI 三步驟：用公司核准的工具 → 輸入前先去識別化 → 產出後人工查證。', '📎 小知識：AI 可能一本正經地說錯話（稱為「幻覺」），引用數據和法規之前，一定要回頭查原始出處。'] },
+      quiz: { q: 'AI 產出的報告要給客戶之前，下列哪個做法最正確？', options: [
+        { text: '人工查證內容與數據，並依公司規定標註 AI 協助', ok: true, why: '答對了！AI 只是輔助工具，內容正確與否的責任仍在使用者身上。' },
+        { text: '直接寄出，AI 寫的應該沒問題', ok: false, why: 'AI 可能出現錯誤或過時資訊，未經查證就對外使用風險很高。' },
+        { text: '把 AI 的內容改幾個字，當作自己寫的', ok: false, why: '這樣既沒有查證內容，也不符合誠實使用 AI 的原則。' } ] },
+      fun: { kind: 'coffee', icon: '☕', title: '咖啡機', lines: ['休息一下！讓 AI 幫你整理想法很方便，但重要的決定還是要自己做。', '小提醒：不要把會議錄音或客戶合約直接丟給外部 AI 摘要喔。', '寫提示詞的小技巧：說清楚目的、對象和格式，AI 會回答得更好。'] } },
+    infosec: {
+      board: { head: '資安布告欄', title: '📌 資安布告欄', lines: ['遇到可疑狀況記住「疑、查、報」：先起疑 → 用其他管道查證 → 通報資安窗口。', '📎 小知識：資安的 CIA 三要素是機密性（Confidentiality）、完整性（Integrity）、可用性（Availability）。'] },
+      quiz: { q: '下列哪一個密碼最安全？', options: [
+        { text: 'Systex2026', ok: false, why: '公司名稱加年份很容易被猜到。' },
+        { text: 'P@ssw0rd', ok: false, why: '這是駭客字典裡最常見的密碼之一，換成符號也一樣不安全。' },
+        { text: '只有你知道的長句子加符號，例如 Cat!Loves#Rain42', ok: true, why: '答對了！密碼越長越難破解，再搭配多重驗證（MFA）會更安全。' } ] },
+      fun: { kind: 'printer', icon: '🖨️', title: '印表機', lines: ['列印完記得馬上取件，機密文件放在出紙匣也是一種外洩。', '有些印表機可以設定「刷卡取件」，到機器前才會印出來，更安全。', '隨身碟來路不明？不要插到公司電腦，交給資訊部門處理。'] } },
+    bullying: {
+      board: { head: '主管管理守則', title: '📌 主管管理守則', lines: ['合理的工作指示和霸凌的差別：是否有正當的業務目的、手段是否適當、是否持續貶抑或羞辱。', '📎 小知識：主管知悉疑似霸凌，就應主動了解並依公司程序處理，不能等到有書面申訴才行動。'] },
+      quiz: { q: '下列哪一個比較可能構成職場霸凌？', options: [
+        { text: '主管依績效標準，私下給予具體的改善建議', ok: false, why: '有正當目的、方式適當的績效指導，屬於合理的管理行為。' },
+        { text: '主管長期在群組公開嘲諷某位同仁，並刻意不分派工作給他', ok: true, why: '答對了！持續公開貶抑與刻意排擠，可能造成身心傷害，是典型的霸凌樣態。' },
+        { text: '主管因專案需要，調整同仁的工作內容', ok: false, why: '基於業務需要的合理調整，不等於霸凌。' } ] },
+      fun: { kind: 'plant', icon: '🪴', title: '綠色盆栽', lines: ['深呼吸～好的管理也需要好的情緒，想發脾氣前先暫停 10 秒。', '定期和部屬一對一面談，能及早發現團隊裡的人際衝突。', '稱讚可以公開，指正盡量私下，是很好用的溝通原則。'] } },
+    harassment: {
+      board: { head: '性騷擾防治重點', title: '📌 性騷擾防治重點', lines: ['處理原則「通、調、密、記」：立即通報、啟動調查、全程保密、詳實紀錄。', '📎 小知識：依 2023 年修正的《性別平等工作法》，非工作時間也可能構成職場性騷擾，例如下班後的同事聚餐。'] },
+      quiz: { q: '部屬私下告訴你，她在聚餐時被同事騷擾，但不想正式申訴。主管應該怎麼做？', options: [
+        { text: '尊重她的意願，就當作沒聽到', ok: false, why: '主管知悉後就有處理義務，不能因為沒有正式申訴就不處理。' },
+        { text: '依公司程序通報並採取保護措施，同時注意保密', ok: true, why: '答對了！知悉即應處理，並保護當事人的隱私，避免二次傷害。' },
+        { text: '先在部門會議上公開提醒大家注意', ok: false, why: '公開討論可能洩漏當事人身分，造成二次傷害。' } ] },
+      fun: { kind: 'water', icon: '🚰', title: '飲水機', lines: ['喝口水休息一下～保密是處理性騷擾事件最重要的事之一。', '當事人的姓名和事件內容，只能讓「需要知道」的人知道。', '調查期間也要注意，不讓當事人受到報復或不利對待。'] } },
+    case_sim: {
+      board: { head: '主管的第一步', title: '📌 主管的第一步', lines: ['接到員工反映時，先判斷案件類型：是工作上的不當對待（霸凌），還是和性或性別有關的言行（性騷擾）？', '📎 小知識：不論哪一類，第一步都是「傾聽、保密、依程序通報」，不要私下要求和解，也不要叫當事人忍耐。'] },
+      quiz: { q: '員工反映某位同事常在會議上拿她的外貌開黃腔，這比較屬於哪一類事件？', options: [
+        { text: '職場霸凌', ok: false, why: '和性、性別或外貌有關的冒犯言語，應優先依性騷擾防治程序處理。' },
+        { text: '職場性騷擾', ok: true, why: '答對了！與性或性別有關、讓人感到被冒犯的言行，屬於性騷擾，應依程序通報並保護當事人。' },
+        { text: '只是開玩笑，不用處理', ok: false, why: '只要讓人感到被冒犯、影響工作環境，就不能用「開玩笑」帶過。' } ] },
+      fun: { kind: 'coffee', icon: '☕', title: '咖啡機', lines: ['處理衝突前先冷靜一下，聽完雙方說法再下判斷。', '紀錄要寫「事實」：時間、地點、誰說了什麼，不寫個人評價。', '不確定怎麼處理時，先找人資或法務討論，不要自己硬扛。'] } },
+  };
+  const roomQuizDone = new Set();
+  function xMat(color, emi) { return litMat({ color, emissive: emi || 0x000000, emissiveIntensity: emi ? 0.25 : 0 }); }
+  function makeKiosk(x, y, z, rotY, color) {
+    const g = new THREE.Group();
+    const body = new THREE.Mesh(new THREE.BoxGeometry(0.56, 1.0, 0.42), xMat(0x2a3358)); body.position.y = 0.5; g.add(body);
+    const stripe = new THREE.Mesh(new THREE.BoxGeometry(0.57, 0.08, 0.43), xMat(color, color)); stripe.position.y = 0.92; g.add(stripe);
+    const cnv = document.createElement('canvas'); cnv.width = 512; cnv.height = 360; const c = cnv.getContext('2d');
+    const hex = '#' + color.toString(16).padStart(6, '0');
+    function draw(done) {
+      const gr = c.createLinearGradient(0, 0, 0, 360); gr.addColorStop(0, '#1b2242'); gr.addColorStop(1, hex);
+      c.fillStyle = gr; c.fillRect(0, 0, 512, 360);
+      c.strokeStyle = '#ffd76a'; c.lineWidth = 10; c.strokeRect(5, 5, 502, 350);
+      c.fillStyle = '#fff'; c.textAlign = 'center'; c.textBaseline = 'middle';
+      c.font = 'bold 64px "Noto Sans CJK TC","Microsoft JhengHei",sans-serif'; c.fillText(done ? '✓ 已作答' : '❓ 快問快答', 256, 140);
+      c.font = 'bold 34px "Noto Sans CJK TC","Microsoft JhengHei",sans-serif'; c.fillStyle = '#ffe9a8'; c.fillText(done ? '可以再挑戰一次' : '對準後互動來答題', 256, 245);
+      tex.needsUpdate = true;
+    }
+    const tex = new THREE.CanvasTexture(cnv); tex.anisotropy = renderer.capabilities.getMaxAnisotropy();
+    draw(false);
+    const scr = new THREE.Mesh(new THREE.PlaneGeometry(0.62, 0.44), new THREE.MeshBasicMaterial({ map: tex }));
+    scr.position.set(0, 1.22, 0.06); scr.rotation.x = -0.32; g.add(scr);
+    const frame = new THREE.Mesh(new THREE.BoxGeometry(0.68, 0.5, 0.05), xMat(0x1b2242)); frame.position.set(0, 1.22, 0.03); frame.rotation.x = -0.32; g.add(frame);
+    const icon = iconSprite('❓', color, 0.32); icon.position.y = 1.78; g.add(icon);
+    const hit = addHitBox(g, 0.85, 1.7, 0.85, 0.85);
+    g.position.set(x, y, z); g.rotation.y = rotY; scene.add(g);
+    return { group: g, hit, setDone: () => draw(true), icon };
+  }
+  function makeAppliance(x, y, z, rotY, kind, icon, color) {
+    const g = new THREE.Group();
+    if (kind === 'plant') {
+      const pot = new THREE.Mesh(new THREE.CylinderGeometry(0.26, 0.2, 0.42, 16), xMat(0xc98a5a)); pot.position.y = 0.21; g.add(pot);
+      [[0, 0.75, 0, 0.32], [0.14, 0.95, 0.05, 0.24], [-0.12, 0.92, -0.06, 0.25], [0.02, 1.15, 0, 0.2]].forEach(([a, b, d, s]) => {
+        const leaf = new THREE.Mesh(new THREE.SphereGeometry(s, 12, 10), xMat(0x3fae6a)); leaf.position.set(a, b, d); g.add(leaf); });
+    } else if (kind === 'firstaid') {
+      const box = new THREE.Mesh(new THREE.BoxGeometry(0.5, 0.42, 0.16), xMat(0xd6453f, 0xd6453f)); box.position.y = 1.35; g.add(box);
+      const c1 = new THREE.Mesh(new THREE.BoxGeometry(0.26, 0.07, 0.01), xMat(0xffffff)); c1.position.set(0, 1.35, 0.085); g.add(c1);
+      const c2 = new THREE.Mesh(new THREE.BoxGeometry(0.07, 0.26, 0.01), xMat(0xffffff)); c2.position.set(0, 1.35, 0.085); g.add(c2);
+      const shelf = new THREE.Mesh(new THREE.BoxGeometry(0.7, 0.8, 0.4), xMat(0xe9e2f5)); shelf.position.y = 0.4; g.add(shelf);
+    } else {
+      const cab = new THREE.Mesh(new THREE.BoxGeometry(0.7, 0.8, 0.46), xMat(0x8a6a50)); cab.position.y = 0.4; g.add(cab);
+      if (kind === 'coffee') {
+        const m = new THREE.Mesh(new THREE.BoxGeometry(0.32, 0.42, 0.3), xMat(0x2b2b33)); m.position.set(0, 1.01, -0.02); g.add(m);
+        const cup = new THREE.Mesh(new THREE.CylinderGeometry(0.05, 0.04, 0.1, 12), xMat(0xffffff)); cup.position.set(0, 0.86, 0.1); g.add(cup);
+      } else if (kind === 'shredder') {
+        const m = new THREE.Mesh(new THREE.BoxGeometry(0.42, 0.5, 0.32), xMat(0x6b7280)); m.position.set(0, 1.05, 0); g.add(m);
+        const slot = new THREE.Mesh(new THREE.BoxGeometry(0.3, 0.02, 0.05), xMat(0x111111)); slot.position.set(0, 1.31, 0); g.add(slot);
+      } else if (kind === 'printer') {
+        const m = new THREE.Mesh(new THREE.BoxGeometry(0.56, 0.26, 0.42), xMat(0xe5e7eb)); m.position.set(0, 0.93, 0); g.add(m);
+        const paper = new THREE.Mesh(new THREE.BoxGeometry(0.3, 0.01, 0.2), xMat(0xffffff)); paper.position.set(0, 1.07, 0.12); g.add(paper);
+      } else if (kind === 'water') {
+        const m = new THREE.Mesh(new THREE.BoxGeometry(0.36, 0.5, 0.34), xMat(0xf3f4f6)); m.position.set(0, 1.05, 0); g.add(m);
+        const bottle = new THREE.Mesh(new THREE.CylinderGeometry(0.15, 0.15, 0.4, 16), new THREE.MeshLambertMaterial({ color: 0x7fc4ff, transparent: true, opacity: 0.75 })); bottle.position.set(0, 1.5, 0); g.add(bottle);
+      }
+    }
+    const ic = iconSprite(icon, color, 0.3); ic.position.y = kind === 'water' ? 1.95 : 1.78; g.add(ic);
+    const hit = addHitBox(g, 0.85, 1.6, 0.8, 0.8);
+    g.position.set(x, y, z); g.rotation.y = rotY; scene.add(g);
+    return { group: g, hit };
+  }
+  function makeSofa(x, y, z, rotY, color) {
+    const g = new THREE.Group(), m = xMat(color), d = xMat(0x2a3358);
+    const seat = new THREE.Mesh(new THREE.BoxGeometry(1.7, 0.36, 0.72), m); seat.position.y = 0.3; g.add(seat);
+    const back = new THREE.Mesh(new THREE.BoxGeometry(1.7, 0.55, 0.16), m); back.position.set(0, 0.62, -0.3); g.add(back);
+    [-0.92, 0.92].forEach(a => { const arm = new THREE.Mesh(new THREE.BoxGeometry(0.16, 0.5, 0.72), m); arm.position.set(a, 0.42, 0); g.add(arm); });
+    const base = new THREE.Mesh(new THREE.BoxGeometry(1.84, 0.1, 0.72), d); base.position.y = 0.07; g.add(base);
+    [-0.45, 0.45].forEach(a => { const p = new THREE.Mesh(new THREE.BoxGeometry(0.5, 0.32, 0.12), xMat(0xffffff)); p.position.set(a, 0.62, -0.18); p.rotation.x = -0.2; g.add(p); });
+    g.position.set(x, y, z); g.rotation.y = rotY; scene.add(g);
+    return g;
+  }
+  // 新物件也要有碰撞（用軸對齊的方框，避免穿過沙發、機台）
+  function blockRect(x, z, w, d, floor) {
+    const x1 = x - w / 2, x2 = x + w / 2, z1 = z - d / 2, z2 = z + d / 2;
+    walls.push({ x1, z1, x2, z2: z1, floor }, { x1: x2, z1, x2, z2, floor }, { x1, z1: z2, x2, z2, floor }, { x1, z1, x2: x1, z2, floor });
+  }
+  ROOMS.forEach(r => {
+    const ex = ROOM_EXTRAS[r.id]; if (!ex) return;
+    const y0 = r.floor === 1 ? 0 : FLOOR2_Y;
+    const W = Math.abs(r.x2 - r.x1), cx = (r.x1 + r.x2) / 2, cz = (r.z1 + r.z2) / 2;
+    const L = (u, v) => roomLocal(r, u, v);
+    const face = (p) => Math.atan2(cx - p.x, cz - p.z);
+    // 布告欄（靠門口那一側的牆邊）
+    PROP_CONTENT['xb_' + r.id] = { title: ex.board.title, lines: ex.board.lines };
+    const bp = L(W - 2.1, 0.45);
+    registerProp('xb_' + r.id, makeBulletinBoard(bp.x, y0, bp.z, Math.PI, r.color, ex.board.head), r.color);
+    // 快問快答機
+    const kp = L(W - 1.9, 7.3);
+    const k = makeKiosk(kp.x, y0, kp.z, face(kp), r.color);
+    interactables.push({ mesh: k.hit, kind: 'quiz', room: r, title: '快問快答：' + r.name, quiz: ex.quiz, kiosk: k, color: r.color, x: kp.x, z: kp.z });
+    // 休息角互動物件
+    const fp = L(W - 0.65, 1.3);
+    const f = makeAppliance(fp.x, y0, fp.z, face(fp), ex.fun.kind, ex.fun.icon, r.color);
+    interactables.push({ mesh: f.hit, kind: 'fun', room: r, title: ex.fun.icon + ' ' + ex.fun.title, lines: ex.fun.lines, idx: 0, color: r.color });
+    // 裝飾：沙發、盆栽，讓加大的空間不空曠
+    // 沙發靠在門口那面牆（走廊牆）、面向房間，避開原本的主題佈置
+    const sp = L(W - 0.45, 6.6); makeSofa(sp.x, y0, sp.z, r.side === 'left' ? -Math.PI / 2 : Math.PI / 2, r.color);
+    const pp = L(W - 0.45, 7.75); makePlant(pp.x, y0, pp.z);
+    blockRect(kp.x, kp.z, 0.62, 0.62, r.floor);
+    blockRect(fp.x, fp.z, 0.75, 0.75, r.floor);
+    blockRect(sp.x, sp.z, 0.8, 1.9, r.floor);
+    blockRect(bp.x, bp.z, 1.0, 0.25, r.floor);
+  });
+  function openRoomQuiz(o) {
+    uiOpen = true;
+    const q = o.quiz, hex = '#' + o.color.toString(16).padStart(6, '0');
+    dialogueBlock.style.display = 'none';
+    panelDesc.style.display = 'none';
+    panelTag.textContent = '❓ 快問快答　' + o.room.name;
+    panelTag.style.background = hex + '33'; panelTag.style.color = hex;
+    panelTitle.textContent = roomQuizDone.has(o.room.id) ? '再挑戰一次！' : '快問快答：你答得出來嗎？';
+    missionBlock.style.display = 'block';
+    missionBlock.innerHTML = '<div class="npc-line"><b>題目：</b>' + escHtml(q.q) + '</div><div class="choice-list"></div><div class="choice-slot"></div>';
+    const list = missionBlock.querySelector('.choice-list'), slot = missionBlock.querySelector('.choice-slot');
+    panelActions.innerHTML = '';
+    const closeBtn = el('button', 'panel-btn'); closeBtn.textContent = '先離開'; closeBtn.onclick = closePanel; panelActions.appendChild(closeBtn);
+    shuffled(q.options).forEach(op => {
+      const b = el('button', 'choice-btn'); b.textContent = op.text;
+      b.onclick = () => {
+        if (op.ok) {
+          b.classList.add('right'); list.querySelectorAll('button').forEach(x => { x.disabled = true; });
+          slot.innerHTML = '<div class="choice-why ok">✓ ' + escHtml(op.why) + '</div>';
+          playSound('correct');
+          if (!roomQuizDone.has(o.room.id)) { roomQuizDone.add(o.room.id); o.kiosk.setDone(); spawnConfetti(o.x, 1.6, o.z, 40, 2.2); }
+          closeBtn.textContent = '繼續探索'; closeBtn.className = 'panel-btn primary';
+        } else {
+          b.classList.add('wrong'); b.disabled = true;
+          slot.innerHTML = '<div class="choice-why no">✕ ' + escHtml(op.why) + '　再想想看！</div>';
+          playSound('wrong');
+        }
+      };
+      list.appendChild(b);
+    });
+    panelOverlay.classList.add('show');
+    if (pointerLocked) document.exitPointerLock();
+  }
+  function openFunProp(o) {
+    const line = o.lines[o.idx % o.lines.length]; o.idx++;
+    openDialogue({ title: o.title, lines: [line], color: o.color });
+    panelTag.textContent = '☕ 休息角　' + o.room.name;
   }
   window.__debug = { passedRooms, markMissionDone, finishTutorial, readSave, writeSave, applySave, SLIDES, BRIEF, startBriefing, failCount, LEVEL, roomClues, markClueFound, openClue, openNpc, requestMission, openMission, openFinalQuiz, startFinale, showStageClear, onLevelCleared, roundProgress, get finalGate() { return finalGate; }, roomGates, elev, doorA, doorB, elevatorTryRide, inCab, getFloorY, updateElevator, moveWithCollision, tut, tutorialDone, get tutWall() { return tutWall; }, replayTutorial, openHelp, closeHelp, get pointerLocked() { return pointerLocked; }, gems, collectGem, aeryChat, roomStars, passSigns, get fireworksDone() { return fireworksDone; }, player, keys, getFloorY, walls, ROOMS, moveWithCollision, interactables, camera, tryInteract, openInfoPanel, visitedRooms, triggerCompletion, get lookedAt() { return lookedAt; }, get uiOpen() { return uiOpen; }, get allRoomsCompleted() { return allRoomsCompleted; } };
 })();
