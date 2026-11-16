@@ -418,6 +418,79 @@
     opacity: 0; transform: translateY(-8px); transition: opacity 0.3s, transform 0.3s; pointer-events: none;
   }
   #aery-say.show { opacity: 1; transform: translateY(0); }
+  /* ===== v2 回饋修正：操作示範、指路羅盤、介面減量 ===== */
+  #howto { position: fixed; inset: 0; z-index: 200; display: none; align-items: center; justify-content: center; padding: 16px;
+    background: radial-gradient(ellipse at center, rgba(22,28,60,0.96), rgba(8,10,24,0.98)); font-family: "Microsoft JhengHei","Noto Sans CJK TC",sans-serif; color: #e6ecfb; }
+  #howto.show { display: flex; }
+  #howto .ht-card { width: min(720px, 100%); max-height: calc(100vh - 32px); overflow: auto; background: rgba(18,24,52,0.96); border: 1px solid rgba(255,215,106,0.35);
+    border-radius: 20px; padding: 22px 26px 18px; box-shadow: 0 20px 60px rgba(0,0,0,0.5); }
+  #howto .ht-top { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 6px; }
+  #howto .ht-kicker { color: #ffd76a; font-size: 13px; letter-spacing: 2px; font-weight: 700; }
+  #howto .ht-skip { background: none; border: 1px solid rgba(255,255,255,0.25); color: #c3cfe8; border-radius: 999px; padding: 5px 14px; font-size: 13px; cursor: pointer; }
+  #howto h2 { margin: 4px 0 6px; font-size: 24px; color: #fff; }
+  #howto .ht-desc { font-size: 15px; line-height: 1.75; color: #c9d4ee; margin: 0 0 14px; min-height: 52px; }
+  #howto .ht-desc b { color: #ffd76a; }
+  #howto .ht-stage { position: relative; height: 230px; border-radius: 14px; overflow: hidden; background: linear-gradient(180deg,#2a2f58,#3b3566 60%,#5a4a7a);
+    border: 1px solid rgba(255,255,255,0.12); }
+  #howto .ht-dots { display: flex; justify-content: center; gap: 8px; margin: 14px 0 10px; }
+  #howto .ht-dots span { width: 9px; height: 9px; border-radius: 50%; background: rgba(255,255,255,0.25); }
+  #howto .ht-dots span.on { background: #ffd76a; width: 22px; border-radius: 6px; }
+  #howto .ht-nav { display: flex; justify-content: space-between; gap: 10px; }
+  #howto .ht-nav button { flex: 1; padding: 12px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.2); background: rgba(255,255,255,0.06); color: #e6ecfb; font-size: 15px; font-weight: 700; cursor: pointer; }
+  #howto .ht-nav button.primary { background: linear-gradient(135deg,#ffd76a,#ffb020); color: #1b2242; border: none; }
+  #howto .ht-nav button:disabled { opacity: 0.35; cursor: default; }
+  #howto kbd { display: inline-flex; align-items: center; justify-content: center; min-width: 34px; height: 34px; padding: 0 6px; border-radius: 8px; background: #f3f5fb; color: #1b2242;
+    font: 700 15px/1 "Segoe UI", sans-serif; box-shadow: 0 3px 0 #9aa6c4; }
+  #howto kbd.press { animation: htPress 1.2s infinite; }
+  @keyframes htPress { 0%,55%,100% { transform: translateY(0); box-shadow: 0 3px 0 #9aa6c4; background: #f3f5fb; } 20%,40% { transform: translateY(3px); box-shadow: 0 0 0 #9aa6c4; background: #ffd76a; } }
+  .ht-keys { position: absolute; left: 34px; top: 50%; transform: translateY(-50%); display: grid; grid-template-columns: repeat(3, 40px); gap: 6px; justify-items: center; }
+  .ht-keys kbd:nth-child(1) { grid-column: 2; grid-row: 1; } .ht-keys kbd:nth-child(2) { grid-column: 1; grid-row: 2; } .ht-keys kbd:nth-child(3) { grid-column: 2; grid-row: 2; } .ht-keys kbd:nth-child(4) { grid-column: 3; grid-row: 2; }
+  .ht-map { position: absolute; right: 30px; top: 22px; bottom: 22px; width: 52%; border-radius: 12px; background: #232a4e; border: 1px solid rgba(255,255,255,0.12); overflow: hidden; }
+  .ht-map .corr { position: absolute; left: 42%; width: 16%; top: 0; bottom: 0; background: #3e4777; }
+  .ht-map .room { position: absolute; width: 40%; height: 34%; border: 2px solid rgba(255,255,255,0.15); border-radius: 6px; }
+  .ht-map .me { position: absolute; left: 50%; width: 16px; height: 16px; margin-left: -8px; border-radius: 50%; background: #ffd76a; box-shadow: 0 0 12px #ffd76a; animation: htWalk 3s ease-in-out infinite; }
+  .ht-map .me::after { content: ''; position: absolute; left: 4px; top: -9px; border: 4px solid transparent; border-bottom: 7px solid #ffd76a; }
+  @keyframes htWalk { 0% { top: 85%; } 60%,100% { top: 18%; } }
+  .ht-joy { position: absolute; left: 40px; bottom: 30px; width: 110px; height: 110px; border-radius: 50%; background: rgba(255,255,255,0.12); border: 2px solid rgba(255,255,255,0.3); }
+  .ht-joy::after { content: ''; position: absolute; left: 32px; top: 32px; width: 46px; height: 46px; border-radius: 50%; background: rgba(255,255,255,0.75); animation: htJoy 1.6s ease-in-out infinite; }
+  @keyframes htJoy { 0%,100% { transform: translate(0,0); } 40%,60% { transform: translate(0,-28px); } }
+  .ht-view { position: absolute; inset: 0; }
+  .ht-ball { position: absolute; left: 50%; top: 50%; width: 22px; height: 22px; margin: -11px 0 0 -11px; border-radius: 50%; border: 3px solid #fff; background: rgba(255,255,255,0.25); animation: htBall 3.2s infinite; z-index: 2; }
+  @keyframes htBall { 0%,45% { border-color: #fff; background: rgba(255,255,255,0.25); transform: scale(1); } 55%,90% { border-color: #ffd76a; background: rgba(255,215,106,0.65); transform: scale(1.25); box-shadow: 0 0 18px #ffd76a; } 100% { border-color: #fff; } }
+  .ht-obj { position: absolute; top: 50%; width: 70px; margin-top: -48px; text-align: center; animation: htPan 3.2s infinite; }
+  .ht-obj .ped { width: 26px; height: 40px; margin: 6px auto 0; border-radius: 6px 6px 3px 3px; background: #2a3358; border-top: 3px solid #ffd76a; }
+  .ht-obj .ico { font-size: 30px; line-height: 1; }
+  @keyframes htPan { 0% { left: 78%; } 45%,90% { left: calc(50% - 35px); } 100% { left: 78%; } }
+  .ht-mouse { position: absolute; right: 26px; bottom: 18px; font-size: 13px; color: #c3cfe8; display: flex; align-items: center; gap: 6px; }
+  .ht-mouse i { font-style: normal; font-size: 26px; display: inline-block; animation: htMouse 3.2s infinite; }
+  @keyframes htMouse { 0% { transform: translateX(14px); } 45%,100% { transform: translateX(-14px); } }
+  .ht-pop { position: absolute; left: 50%; top: 50%; transform: translate(-50%,-50%) scale(0.6); opacity: 0; width: 250px; padding: 12px 14px; border-radius: 12px; background: #12183a;
+    border: 1.5px solid #ffd76a; font-size: 13px; line-height: 1.6; animation: htPop 3s infinite; z-index: 3; }
+  .ht-pop b { color: #ffd76a; }
+  @keyframes htPop { 0%,35% { opacity: 0; transform: translate(-50%,-50%) scale(0.6); } 45%,90% { opacity: 1; transform: translate(-50%,-50%) scale(1); } 100% { opacity: 0; } }
+  .ht-ekey { position: absolute; left: 26px; bottom: 22px; display: flex; align-items: center; gap: 8px; font-size: 13px; color: #c3cfe8; }
+  .ht-beam { position: absolute; left: 66%; top: 0; bottom: 30px; width: 46px; margin-left: -23px; background: linear-gradient(180deg, rgba(255,176,32,0), rgba(255,176,32,0.45)); }
+  .ht-beam::after { content: ''; position: absolute; left: -10px; right: -10px; bottom: -6px; height: 14px; border-radius: 50%; border: 3px solid #ff4fa0; }
+  .ht-obj-bar { position: absolute; top: 12px; left: 50%; transform: translateX(-50%); padding: 6px 14px; border-radius: 999px; background: rgba(10,15,32,0.85); border: 1px solid #ffd76a; font-size: 12.5px; white-space: nowrap; }
+  .ht-flow { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; gap: 8px; flex-wrap: wrap; padding: 14px; }
+  .ht-flow div { padding: 10px 12px; border-radius: 12px; background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.18); font-size: 13.5px; text-align: center; line-height: 1.5; }
+  .ht-flow div b { display: block; font-size: 22px; }
+  .ht-flow span { color: #ffd76a; font-size: 20px; }
+  /* 指路羅盤：固定在畫面中下方，箭頭依「玩家面向」指出該往哪走（取代滿場飛的邊緣箭頭） */
+  #nav-compass { position: fixed; left: 50%; bottom: 150px; transform: translateX(-50%); z-index: 12; display: none; align-items: center; gap: 10px; pointer-events: none;
+    padding: 6px 16px 6px 6px; border-radius: 999px; background: rgba(10,15,32,0.88); border: 1.5px solid #ffd76a; box-shadow: 0 6px 24px rgba(0,0,0,0.35); max-width: calc(100vw - 24px); }
+  #nav-compass.show { display: flex; }
+  #nav-compass .nc-arrow { width: 44px; height: 44px; flex: 0 0 44px; border-radius: 50%; background: #ffd76a; color: #1b2242; display: flex; align-items: center; justify-content: center;
+    font: 900 26px/1 "Segoe UI", sans-serif; transition: transform 0.12s linear; }
+  #nav-compass .nc-label { color: #ffe9a8; font: 700 14px/1.35 "Microsoft JhengHei", sans-serif; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  body.mobile #nav-compass { bottom: calc(env(safe-area-inset-bottom, 0px) + 200px); }
+  body.mobile #nav-compass .nc-label { font-size: 12px; }
+  #guide-edge { display: none !important; }
+  body.briefing #nav-compass { display: none !important; }
+  /* 操作提示精簡：新手教學完成後，左下操作表縮成一行 */
+  #controls-legend.mini > div:not(:last-child) { display: none; }
+  @media (min-width: 601px) { body:not(.mobile) #aery-say { max-width: min(360px, calc(50vw - 190px)); } }
+
   #aery-say b { display: block; color: #7ea0e0; font-size: 12px; }
   .aery-face { font-size: 24px; line-height: 1; }
   .star-row { font-size: 30px; letter-spacing: 4px; margin-bottom: 4px; }
@@ -858,6 +931,16 @@
 <div id="crosshair"></div>
 <div id="interact-prompt"></div>
 
+<div id="howto" role="dialog" aria-modal="true" aria-labelledby="ht-title">
+  <div class="ht-card">
+    <div class="ht-top"><div class="ht-kicker" id="ht-kicker">遊戲開始前・操作示範</div><button class="ht-skip" id="ht-skip" type="button">略過說明</button></div>
+    <h2 id="ht-title"></h2>
+    <p class="ht-desc" id="ht-desc"></p>
+    <div class="ht-stage" id="ht-stage"></div>
+    <div class="ht-dots" id="ht-dots"></div>
+    <div class="ht-nav"><button id="ht-prev" type="button">上一步</button><button id="ht-next" class="primary" type="button">下一步</button></div>
+  </div>
+</div>
 <div id="start-overlay">
   <div class="st-bg"></div>
   <div class="st-box">
@@ -1130,9 +1213,9 @@ console.warn( 'Scripts "build/three.js" and "build/three.min.js" are deprecated 
   // 效能設定：Retina 螢幕 (Mac) devicePixelRatio = 2，原本會用 2 倍解析度 + 反鋸齒渲染，像素量是一般螢幕的 4 倍以上。
   // 這裡改成最高 1.5 倍、高解析度螢幕關閉反鋸齒，並在執行時依實際 FPS 自動降解析度 (見 adaptQuality)。
   const DEVICE_DPR = window.devicePixelRatio || 1;
-  const renderer = new THREE.WebGLRenderer({ antialias: DEVICE_DPR < 1.5, alpha: true, powerPreference: 'high-performance' });
+  const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, powerPreference: 'high-performance' });
   renderer.setSize(window.innerWidth, window.innerHeight);
-  let currentPixelRatio = Math.min(DEVICE_DPR, 1.5);
+  let currentPixelRatio = Math.min(DEVICE_DPR, isTouch ? 1.5 : 2);
   renderer.setPixelRatio(currentPixelRatio);
 
   // 材質：MeshStandardMaterial (PBR) 對每盞點光源的計算量很大，改用 MeshLambertMaterial，外觀接近但快很多。
@@ -1390,7 +1473,7 @@ console.warn( 'Scripts "build/three.js" and "build/three.min.js" are deprecated 
       wrong: '收到「帳戶異常」信件，立即點擊連結並輸入帳號密碼重設。',
       good: '核對寄件者網域，有疑慮先通報資安窗口，絕不點擊不明連結。' },
     { id: 'bullying', name: '職場霸凌預防舉措', role: '主管人員', side: 'left', floor: 1, x1: -ROOM_OUT, x2: CORR_X1, z1: R1_Z1, z2: R1_Z2, color: 0xff8a5c,
-      desc: '掌握霸凌五大構成要件、企業防治義務與主管調查程序的法定責任。',
+      desc: '掌握霸凌構成要件、企業防治義務與主管調查程序的法定責任。',
       wrong: '主管認為霸凌只發生在直屬上下屬之間，同事間的排擠不用理會。',
       good: '霸凌不限職級關係，只要具備持續性與傷害性，同事間也適用防治規範。' },
     { id: 'harassment', name: '職場性騷擾防治', role: '主管人員', side: 'right', floor: 1, x1: CORR_X2, x2: ROOM_OUT, z1: R1_Z1, z2: R1_Z2, color: 0x3fa9f5,
@@ -3536,6 +3619,7 @@ console.warn( 'Scripts "build/three.js" and "build/three.min.js" are deprecated 
     setTutorialDone(true);
     renderTutorial();
     tutorialEl.classList.add('complete');
+    controlsLegend.classList.add('mini');
     setTimeout(() => { tutorialEl.classList.remove('show', 'complete'); }, 900);
     // 慶祝特效：畫面中央大標語 + 彩帶 + 音效 + Aery 開心轉圈，光牆消失
     tutCelebrate.classList.remove('show'); void tutCelebrate.offsetWidth; tutCelebrate.classList.add('show');
@@ -5376,20 +5460,29 @@ console.warn( 'Scripts "build/three.js" and "build/three.min.js" are deprecated 
 
   // In-world directional signs
   function makeSignSprite(text, color) {
+    // v2：畫布解析度加倍、文字依寬度自動縮放，遠看也清楚、長名稱不會被裁掉
     const cnv = document.createElement('canvas');
-    cnv.width = 256; cnv.height = 96;
+    cnv.width = 512; cnv.height = 192;
     const c = cnv.getContext('2d');
-    c.fillStyle = 'rgba(10,15,32,0.75)';
-    c.roundRect ? (c.roundRect(4, 4, 248, 88, 14), c.fill()) : c.fillRect(4, 4, 248, 88);
+    c.scale(2, 2);
+    c.fillStyle = 'rgba(10,15,32,0.8)';
+    c.roundRect ? (c.beginPath(), c.roundRect(4, 4, 248, 88, 14), c.fill()) : c.fillRect(4, 4, 248, 88);
     c.strokeStyle = color; c.lineWidth = 3;
-    c.strokeRect(4, 4, 248, 88);
+    c.roundRect ? (c.beginPath(), c.roundRect(4, 4, 248, 88, 14), c.stroke()) : c.strokeRect(4, 4, 248, 88);
     c.fillStyle = '#ffffff';
-    c.font = 'bold 30px "Noto Sans CJK TC", sans-serif';
+    const lines = text.split('\n');
+    let fs = 30;
+    c.font = 'bold 30px "Noto Sans CJK TC", "Microsoft JhengHei", sans-serif';
+    const maxW = Math.max.apply(null, lines.map(l => c.measureText(l).width));
+    if (maxW > 228) fs = Math.max(16, Math.floor(30 * 228 / maxW));
+    if (lines.length > 2) fs = Math.min(fs, 24);
+    c.font = 'bold ' + fs + 'px "Noto Sans CJK TC", "Microsoft JhengHei", sans-serif';
     c.textAlign = 'center';
     c.textBaseline = 'middle';
-    const lines = text.split('\n');
-    lines.forEach((line, i) => c.fillText(line, 128, 48 + (i - (lines.length - 1) / 2) * 34));
+    const gap = fs * 1.15;
+    lines.forEach((line, i) => c.fillText(line, 128, 48 + (i - (lines.length - 1) / 2) * gap));
     const tex = new THREE.CanvasTexture(cnv);
+    tex.anisotropy = renderer.capabilities.getMaxAnisotropy();
     const mat = new THREE.SpriteMaterial({ map: tex, transparent: true });
     const spr = new THREE.Sprite(mat);
     spr.scale.set(2.0, 0.75, 1);
@@ -5521,7 +5614,7 @@ console.warn( 'Scripts "build/three.js" and "build/three.min.js" are deprecated 
     const hit = addHitBox(g, 0.9, 1.7, 0.9, 0.85);
     g.position.set(p.x, 0, p.z);
     scene.add(g);
-    const label = makeSignSprite('🔍 線索', '#ffd76a'); label.scale.set(0.95, 0.36, 1); label.position.set(p.x, 1.95, p.z); scene.add(label);
+    const label = makeSignSprite('🔍 ' + data.title, '#ffd76a'); label.scale.set(1.15, 0.43, 1); label.position.set(p.x, 1.95, p.z); scene.add(label);
     const clue = { kind: 'clue', room: r, data, idx, group: g, icon, ring, label, found: false, x: p.x, z: p.z };
     interactables.push({ mesh: hit, kind: 'clue', clue, title: data.title, color: r.color });
     return clue;
@@ -5575,7 +5668,7 @@ console.warn( 'Scripts "build/three.js" and "build/three.min.js" are deprecated 
   }
   function markClueFound(c) {
     if (c.found) return;
-    c.found = true;
+    c.found = true; c.foundT = clock.elapsedTime;
     relabel(c, '✓ 已找到', '#4fd48a');
     if (c.icon) c.icon.material.opacity = 0.55;
     if (c.bubble) c.bubble.visible = false;
@@ -5596,7 +5689,13 @@ console.warn( 'Scripts "build/three.js" and "build/three.min.js" are deprecated 
     }
   }
   function openClue(c) {
-    openDialogue({ title: c.data.title, lines: c.data.lines, color: c.room.color });
+    // v2：線索內容分成「現場狀況／重點」，最後告訴玩家這關還差哪些線索、下一步做什麼
+    const others = roomClues[c.room.id].filter(x => !x.found && x !== c);
+    const tail = others.length
+      ? '🧩 這是本關的線索之一，記住上面的「重點」，任務小遊戲會用到！還差 ' + others.length + ' 個：' + others.map(x => x.kind === 'npc' ? '💬 跟' + x.data.name + '聊聊' : '🔍 ' + x.data.title).join('、')
+      : '✅ 3 個線索都找齊了！關掉這個視窗後，去找頭上有黃色「任務」牌的物件，開始任務挑戰。';
+    const lines = c.data.lines.map((l, i) => (i === 0 && !/^📍/.test(l)) ? '📍 現場狀況：' + l : l).concat([tail]);
+    openDialogue({ title: c.data.title, lines, color: c.room.color });
     markClueFound(c);
     panelTag.textContent = '🔍 線索（' + cluesFound(c.room.id) + ' / 3）　' + c.room.name;
   }
@@ -6279,12 +6378,13 @@ console.warn( 'Scripts "build/three.js" and "build/three.min.js" are deprecated 
   let guideKey = '', guideRefT = 0, idleTier = 0, beaconFlashT = -99;
   function updateWayfinding(dt, t) {
     const tg = guideTarget();
+    tidyLabels(t);
     const active = !!tg && !uiOpen;
     // 目標改變就代表有進度，重新計算閒置時間
     if (!tg || uiOpen || !gameStarted) { guideRefT = t; idleTier = 0; }
     if (tg && tg.key !== guideKey) { guideKey = tg.key; guideRefT = t; idleTier = 0; }
     beaconGroup.visible = active;
-    if (!active) { guidePin.classList.remove('show'); guideEdge.classList.remove('show'); aimHint.classList.remove('show'); aimRing.className = ''; return; }
+    if (!active) { getNavCompass().box.classList.remove('show'); guidePin.classList.remove('show'); guideEdge.classList.remove('show'); aimHint.classList.remove('show'); aimRing.className = ''; return; }
     const dist = Math.hypot(tg.x - player.x, tg.z - player.z);
     // 光柱：離很近時變淡，避免擋住物件；閒置提示時會閃
     beaconGroup.position.set(tg.x, 0, tg.z);
@@ -6293,39 +6393,38 @@ console.warn( 'Scripts "build/three.js" and "build/three.min.js" are deprecated 
     const k = (t * 0.8) % 1;
     floorRing2.scale.setScalar(1 + k * 1.6); floorRing2.material.opacity = 0.8 * (1 - k);
     floorRing.material.opacity = 0.6 + Math.sin(t * 4) * 0.3;
-    // 畫面上的目標標記 / 邊緣箭頭
-    _v.set(tg.x, tg.y + 1.1, tg.z).applyMatrix4(camera.matrixWorldInverse);
+    // 畫面上的目標標記 / 指路羅盤（v2：會先繞到門口，箭頭依面向方向指示）
+    const nav = navPoint(tg);
+    _v.set(nav.x, tg.y + 1.1, nav.z).applyMatrix4(camera.matrixWorldInverse);
     const behind = _v.z > 0;
-    const p = new THREE.Vector3(tg.x, tg.y + 1.1, tg.z).project(camera);
+    const p = new THREE.Vector3(nav.x, tg.y + 1.1, nav.z).project(camera);
     const W = window.innerWidth, H = window.innerHeight;
-    const onScreen = !behind && Math.abs(p.x) < 0.88 && Math.abs(p.y) < 0.8;
-    const dtxt = dist < 1.5 ? '' : '　' + Math.round(dist) + ' m';
+    const onScreen = !behind && Math.abs(p.x) < 0.85 && Math.abs(p.y) < 0.78;
+    const pathDist = nav.via !== undefined && (nav.x !== tg.x || nav.z !== tg.z) ? Math.hypot(nav.x - player.x, nav.z - player.z) + Math.hypot(tg.x - nav.x, tg.z - nav.z) : dist;
+    const dtxt = pathDist < 1.5 ? '' : '　' + Math.round(pathDist) + ' m';
+    const nameTxt = (nav.via ? nav.via + ' → ' : '') + tg.icon + ' ' + tg.name;
+    const aimed = isLookingAtTarget(tg);
+    const nearObj = tg.kind !== 'door' && dist < 4.2 && (nav.x === tg.x && nav.z === tg.z);
+    const NC = getNavCompass();
+    guideEdge.classList.remove('show');
     if (onScreen) {
-      guideEdge.classList.remove('show');
-      const near = dist < 4.2 && tg.kind !== 'door';
-      guidePin.classList.toggle('show', !isLookingAtTarget(tg));
+      NC.box.classList.remove('show');
+      guidePin.classList.toggle('show', !nearObj && !aimed);
       guidePin.style.transform = 'translate(' + ((p.x + 1) / 2 * W) + 'px,' + ((1 - p.y) / 2 * H) + 'px) translate(-50%, -100%)';
-      guidePinLabel.textContent = tg.icon + ' ' + (near ? '對準這裡！' : tg.name) + dtxt;
+      guidePinLabel.textContent = nameTxt + dtxt;
     } else {
       guidePin.classList.remove('show');
-      guideEdge.classList.add('show');
-      let ax = _v.x, ay = _v.y; if (behind) { ax = -ax; ay = -ay; if (Math.abs(ax) < 0.01) ax = 0.01; }
-      const ang = Math.atan2(ay, ax);
-      const mx = W / 2 - 70, my = H / 2 - 90;
-      const s = Math.min(mx / Math.abs(Math.cos(ang) || 1e-6), my / Math.abs(Math.sin(ang) || 1e-6));
-      const ex = W / 2 + Math.cos(ang) * s, ey = H / 2 - Math.sin(ang) * s;
-      const bw = guideEdge.offsetWidth || 200, bh = guideEdge.offsetHeight || 80;
-      const cx2 = Math.min(Math.max(ex, bw / 2 + 10), W - bw / 2 - 10); const phone = document.body.classList.contains('mobile'), topM = phone ? (W > H ? 70 : 118) : 96, botM = phone ? (W > H ? 120 : 250) : 130;
-      let cy2 = Math.min(Math.max(ey, topM + bh / 2), H - botM - bh / 2);
-      { const mm = document.getElementById('minimap-wrap').getBoundingClientRect(); if (!phone && cx2 + bw / 2 > mm.left - 6 && cy2 - bh / 2 < mm.bottom + 6) cy2 = Math.min(H - 130 - bh / 2, mm.bottom + 12 + bh / 2); }   // 不要蓋住小地圖
-      guideEdge.style.transform = 'translate(' + cx2 + 'px,' + cy2 + 'px) translate(-50%, -50%)';
-      guideEdgeArrow.style.transform = 'rotate(' + (-ang) + 'rad)';
-      guideEdgeLabel.textContent = (behind && Math.abs(_v.x) < Math.abs(_v.z) ? '↩ 轉身　' : '') + tg.icon + ' ' + tg.name + dtxt;
+      const dx = nav.x - player.x, dz = nav.z - player.z;
+      const fx = -Math.sin(player.yaw), fz = -Math.cos(player.yaw), rx = Math.cos(player.yaw), rz = -Math.sin(player.yaw);
+      const ang = Math.atan2(dx * rx + dz * rz, dx * fx + dz * fz);   // 0 = 正前方，正值 = 右邊
+      const deg = Math.abs(ang) * 180 / Math.PI;
+      const turn = deg < 30 ? '往前走' : deg > 140 ? '向後轉' : (ang > 0 ? '向右轉' : '向左轉');
+      NC.box.classList.add('show');
+      NC.arrow.style.transform = 'rotate(' + ang + 'rad)';
+      NC.label.textContent = turn + '・' + nameTxt + dtxt;
     }
-    // 靠近目標但還沒對準：提示把小球對準；已對準：金色光環
-    const aimed = isLookingAtTarget(tg);
-    const nearObj = tg.kind !== 'door' && dist < 4.2;
-    aimHint.classList.toggle('show', nearObj && !aimed);
+    // 靠近目標而且看得到：提示把小球對準；已對準：金色光環
+    aimHint.classList.toggle('show', nearObj && !aimed && onScreen);
     if (nearObj && !aimed) aimHint.innerHTML = document.body.classList.contains('mobile')
       ? '🎯 拖曳畫面，用<b>小球</b>對準「' + escHtml(tg.name.replace(/^線索：|^任務：/, '')) + '」'
       : '🎯 ' + (isTouch ? '在右半邊拖曳' : '移動滑鼠') + '，把 <b>中間的小球</b> 對準「' + escHtml(tg.name.replace(/^線索：|^任務：/, '')) + '」';
@@ -7010,6 +7109,125 @@ console.warn( 'Scripts "build/three.js" and "build/three.min.js" are deprecated 
   animate();
 
   // debug hook for automated testing (harmless in production)
+  
+  // =====================================================================
+  // ============ v2 回饋修正：遊戲前操作示範、指路（繞門口）、標籤減量 ============
+  // =====================================================================
+  // 下一個要走到的點：目標在別的房間時，先帶到門口，避免箭頭直接穿牆指過去
+  function navPoint(tg) {
+    const px = player.x, pz = player.z;
+    const fy = (x, z) => (typeof getFloorY === 'function' ? getFloorY(x, z) : 0);
+    const areas = ROOMS.map(r => ({ x1: Math.min(r.x1, r.x2), x2: Math.max(r.x1, r.x2), z1: r.z1, z2: r.z2, side: r.side, dz: (r.z1 + r.z2) / 2, floor: r.floor }));
+    if (typeof MR !== 'undefined' && MR) areas.push({ x1: MR.x1, x2: MR.x2, z1: MR.z1, z2: MR.z2, side: 'left', dz: (MR_DOOR_Z1 + MR_DOOR_Z2) / 2, floor: 1 });
+    const inA = (a, x, z) => x > a.x1 + 0.05 && x < a.x2 - 0.05 && z > a.z1 && z < a.z2;
+    const pf = fy(px, pz) > 1 ? 2 : 1;
+    const tf = tg.room ? tg.room.floor : (fy(tg.x, tg.z) > 1 ? 2 : 1);
+    const label = tg.kind === 'door' ? '' : '先到門口';
+    if (IS_MGR && pf !== tf && typeof EL !== 'undefined' && EL) {
+      return pf === 1 ? { x: 0, z: (EL.Z1A + EL.Z1B) / 2 + 0.3, via: '先搭電梯' } : { x: 0, z: (EL.Z2A + EL.Z2B) / 2 - 0.3, via: '先搭電梯' };
+    }
+    const pa = areas.find(a => a.floor === pf && inA(a, px, pz));
+    const ta = areas.find(a => a.floor === tf && inA(a, tg.x, tg.z));
+    if (pa === ta) return { x: tg.x, z: tg.z };
+    const door = a => ({ out: { x: a.side === 'left' ? CORR_X1 + 0.8 : CORR_X2 - 0.8, z: a.dz }, inn: { x: a.side === 'left' ? CORR_X1 - 0.9 : CORR_X2 + 0.9, z: a.dz } });
+    if (pa) {
+      const d = door(pa);
+      if (Math.hypot(d.inn.x - px, d.inn.z - pz) > 1.0 && Math.abs(pz - pa.dz) > 0.8) return { x: d.inn.x, z: d.inn.z, via: '先走到門口' };
+      return { x: d.out.x, z: d.out.z, via: '先走出門口' };
+    }
+    if (ta) {
+      const d = door(ta);
+      if (Math.hypot(d.out.x - px, d.out.z - pz) > 1.0) return { x: d.out.x, z: d.out.z, via: label };
+      return { x: d.inn.x, z: d.inn.z, via: label ? '進門' : '' };
+    }
+    return { x: tg.x, z: tg.z };
+  }
+  function getNavCompass() {
+    if (getNavCompass.el) return getNavCompass.el;
+    const box = document.createElement('div'); box.id = 'nav-compass';
+    box.innerHTML = '<div class="nc-arrow">⬆</div><div class="nc-label"></div>';
+    document.body.appendChild(box);
+    getNavCompass.el = { box, arrow: box.querySelector('.nc-arrow'), label: box.querySelector('.nc-label') };
+    return getNavCompass.el;
+  }
+  // 房間裡的浮動標籤：太近（會變超大、互相疊住）或太遠時隱藏；找到的線索 2.5 秒後收起標籤
+  function tidyLabels(t) {
+    Object.keys(roomClues).forEach(id => roomClues[id].forEach(o => {
+      if (!o.label) return;
+      const d = Math.hypot(o.x - player.x, o.z - player.z);
+      const doneHide = o.found && (t - (o.foundT || -99)) > 2.5;
+      o.label.visible = !doneHide && d > 1.4 && d < 13;
+      if (o.bubble && !o.found) o.bubble.visible = d > 1.2;
+    }));
+    Object.keys(missionMarkers).forEach(id => {
+      const m = missionMarkers[id]; if (!m || !m.visible) return;
+      const d = Math.hypot(m.position.x - player.x, m.position.z - player.z);
+      m.material.opacity = d < 1.6 ? 0.25 : 1;
+    });
+    if (gameStarted && !tut.active) controlsLegend.classList.add('mini');
+  }
+
+  // ---- 遊戲開始前的操作示範（可略過；說明視窗裡也能重看）----
+  const HOWTO_STEPS = [
+    { t: '1　移動', d: isTouch ? '用<b>左下角的搖桿</b>往想去的方向推，就能在辦公室裡走動。' : '用鍵盤 <b>W A S D</b>（或方向鍵）前後左右移動。',
+      s: isTouch ? '<div class="ht-joy"></div><div class="ht-map"><div class="corr"></div><div class="room" style="left:2%;top:8%"></div><div class="room" style="right:2%;top:8%"></div><div class="room" style="left:2%;bottom:8%"></div><div class="room" style="right:2%;bottom:8%"></div><div class="me"></div></div>'
+        : '<div class="ht-keys"><kbd class="press">W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd></div><div class="ht-map"><div class="corr"></div><div class="room" style="left:2%;top:8%"></div><div class="room" style="right:2%;top:8%"></div><div class="room" style="left:2%;bottom:8%"></div><div class="room" style="right:2%;bottom:8%"></div><div class="me"></div></div>' },
+    { t: '2　轉動視角、對準物件', d: isTouch ? '在<b>畫面右半邊拖曳</b>轉動視角。讓畫面<b>正中間的小球</b>對準物件，小球變成<b>黃色</b>就是對準了。' : '<b>移動滑鼠</b>轉動視角（先點一下畫面）。讓畫面<b>正中間的小球</b>對準物件，小球變成<b>黃色</b>就是對準了。',
+      s: '<div class="ht-view"><div class="ht-obj"><div class="ico">🔍</div><div class="ped"></div></div><div class="ht-ball"></div><div class="ht-mouse">' + (isTouch ? '<i>👆</i>右半邊拖曳' : '<i>🖱️</i>移動滑鼠') + '</div></div>' },
+    { t: '3　互動、查看線索', d: isTouch ? '對準後點右下角的<b>「查看」</b>按鈕，就能打開線索、和角色對話。' : '對準後按 <b>E</b> 或<b>滑鼠左鍵</b>，就能打開線索、和角色對話。',
+      s: '<div class="ht-view"><div class="ht-obj" style="animation:none;left:calc(50% - 35px)"><div class="ico">📧</div><div class="ped"></div></div><div class="ht-ball" style="animation:none;border-color:#ffd76a;background:rgba(255,215,106,0.65)"></div>' +
+         '<div class="ht-pop"><b>🔍 線索（1 / 3）寄錯人的郵件</b><br>📍 現場狀況：…<br>🔑 重點：發現個資外洩要立刻通報…</div>' +
+         '<div class="ht-ekey">' + (isTouch ? '<kbd class="press" style="min-width:64px">查看</kbd>' : '<kbd class="press">E</kbd> 或 滑鼠左鍵') + '</div></div>' },
+    { t: '4　跟著指引走', d: '畫面上方是<b>現在的目標</b>；地上的<b>金色光柱</b>是目的地。目標不在畫面裡時，下方的<b>黃色箭頭</b>會告訴你往哪轉，目標在別的房間時會先帶你走到門口。',
+      s: '<div class="ht-view"><div class="ht-obj-bar">第 1 關：個資管理　🔍 找線索（0 / 3）</div><div class="ht-beam"></div>' +
+         '<div style="position:absolute;left:50%;bottom:14px;transform:translateX(-50%);display:flex;align-items:center;gap:8px;padding:5px 14px 5px 5px;border-radius:999px;background:rgba(10,15,32,0.88);border:1.5px solid #ffd76a;white-space:nowrap">' +
+         '<span style="width:34px;height:34px;border-radius:50%;background:#ffd76a;color:#1b2242;display:flex;align-items:center;justify-content:center;font:900 20px/1 sans-serif;transform:rotate(40deg)">⬆</span><span style="color:#ffe9a8;font-size:13px;font-weight:700">向右轉・🚪 第 1 關：個資管理　6 m</span></div></div>' },
+    { t: '5　每一關怎麼過', d: '4 間訓練室依序解鎖。每一關都是同樣的流程，卡住時按 <b>' + (isTouch ? '右上角 ❓' : 'H') + '</b> 可以再看說明。',
+      s: '<div class="ht-flow"><div><b>🔍</b>找 3 個線索<br><small>（其中 1 個是角色對話）</small></div><span>➜</span><div><b>🎯</b>任務解鎖<br><small>找黃色「任務」牌</small></div><span>➜</span><div><b>🎮</b>完成 2 回合<br><small>小遊戲</small></div><span>➜</span><div><b>⭐</b>過關<br><small>下一關開門</small></div></div>' },
+  ];
+  if (IS_MGR) HOWTO_STEPS[4].d = '2 間主管訓練室依序解鎖（先搭電梯上 2F）。每一關都是同樣的流程，卡住時按 <b>' + (isTouch ? '右上角 ❓' : 'H') + '</b> 可以再看說明。';
+  const howtoEl = document.getElementById('howto');
+  let howtoStep = 0, howtoDone = false, howtoFromHelp = false;
+  try { howtoDone = localStorage.getItem('aery_howto_seen_' + (IS_MGR ? 'mgr' : 'emp')) === '1'; } catch (_) {}
+  function renderHowto() {
+    const s = HOWTO_STEPS[howtoStep];
+    document.getElementById('ht-title').textContent = s.t;
+    document.getElementById('ht-desc').innerHTML = s.d;
+    document.getElementById('ht-stage').innerHTML = s.s;
+    document.getElementById('ht-dots').innerHTML = HOWTO_STEPS.map((_, i) => '<span class="' + (i === howtoStep ? 'on' : '') + '"></span>').join('');
+    document.getElementById('ht-prev').disabled = howtoStep === 0;
+    const last = howtoStep === HOWTO_STEPS.length - 1;
+    document.getElementById('ht-next').textContent = last ? (howtoFromHelp ? '我知道了' : '▶ 開始遊戲') : '下一步';
+    document.getElementById('ht-skip').textContent = howtoFromHelp ? '關閉' : '略過說明';
+  }
+  function openHowto(fromHelp) { howtoFromHelp = !!fromHelp; howtoStep = 0; renderHowto(); howtoEl.classList.add('show'); }
+  function finishHowto() {
+    howtoEl.classList.remove('show');
+    if (howtoFromHelp) { tryRelock(); return; }
+    howtoDone = true;
+    try { localStorage.setItem('aery_howto_seen_' + (IS_MGR ? 'mgr' : 'emp'), '1'); } catch (_) {}
+    startBtn.click();   // 在使用者點擊的同一個動作裡開始遊戲（聲音、滑鼠鎖定才能正常啟動）
+  }
+  document.getElementById('ht-prev').addEventListener('click', () => { if (howtoStep > 0) { howtoStep--; renderHowto(); } });
+  document.getElementById('ht-next').addEventListener('click', () => { if (howtoStep < HOWTO_STEPS.length - 1) { howtoStep++; renderHowto(); } else finishHowto(); });
+  document.getElementById('ht-skip').addEventListener('click', finishHowto);
+  window.addEventListener('keydown', e => {
+    if (!howtoEl.classList.contains('show')) return;
+    e.stopPropagation();
+    if (e.key === 'ArrowRight' || e.key === 'Enter') document.getElementById('ht-next').click();
+    else if (e.key === 'ArrowLeft') document.getElementById('ht-prev').click();
+    else if (e.key === 'Escape') finishHowto();
+  }, true);
+  // 第一次按「開始遊戲」時先播操作示範（capture 階段攔下，示範結束再真的開始）
+  startBtn.addEventListener('click', e => {
+    if (howtoDone) return;
+    e.stopImmediatePropagation(); e.preventDefault();
+    openHowto(false);
+  }, true);
+  {
+    const ha = document.querySelector('#help-overlay .help-actions');
+    if (ha) { const b = document.createElement('button'); b.type = 'button'; b.textContent = '🎬 看操作示範'; b.addEventListener('click', () => { helpOverlay.classList.remove('show'); openHowto(true); }); ha.insertBefore(b, ha.firstChild); }
+  }
   window.__debug = { passedRooms, markMissionDone, finishTutorial, readSave, writeSave, applySave, SLIDES, BRIEF, startBriefing, failCount, LEVEL, roomClues, markClueFound, openClue, openNpc, requestMission, openMission, openFinalQuiz, startFinale, showStageClear, onLevelCleared, roundProgress, get finalGate() { return finalGate; }, roomGates, elev, doorA, doorB, elevatorTryRide, inCab, getFloorY, updateElevator, moveWithCollision, tut, tutorialDone, get tutWall() { return tutWall; }, replayTutorial, openHelp, closeHelp, get pointerLocked() { return pointerLocked; }, gems, collectGem, aeryChat, roomStars, passSigns, get fireworksDone() { return fireworksDone; }, player, keys, getFloorY, walls, ROOMS, moveWithCollision, interactables, camera, tryInteract, openInfoPanel, visitedRooms, triggerCompletion, get lookedAt() { return lookedAt; }, get uiOpen() { return uiOpen; }, get allRoomsCompleted() { return allRoomsCompleted; } };
 })();
 
