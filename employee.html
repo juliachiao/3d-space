@@ -6949,7 +6949,8 @@ console.warn( 'Scripts "build/three.js" and "build/three.min.js" are deprecated 
   }, true);
   // 第一次按「開始遊戲」時先播操作示範（capture 階段攔下，示範結束再真的開始）
   startBtn.addEventListener('click', e => {
-    if (howtoDone) return;
+    if (needModePick()) { e.stopImmediatePropagation(); e.preventDefault(); openModePicker(false); return; }   // v4：先選遊玩方式
+    if (howtoDone || easyMode) return;
     e.stopImmediatePropagation(); e.preventDefault();
     openHowto(false);
   }, true);
@@ -7151,7 +7152,336 @@ console.warn( 'Scripts "build/three.js" and "build/three.min.js" are deprecated 
     openDialogue({ title: o.title, lines: [line], color: o.color });
     panelTag.textContent = '☕ 休息角　' + o.room.name;
   }
-  window.__debug = { passedRooms, markMissionDone, finishTutorial, readSave, writeSave, applySave, SLIDES, BRIEF, startBriefing, failCount, LEVEL, roomClues, markClueFound, openClue, openNpc, requestMission, openMission, openFinalQuiz, startFinale, showStageClear, onLevelCleared, roundProgress, get finalGate() { return finalGate; }, roomGates, elev, doorA, doorB, elevatorTryRide, inCab, getFloorY, updateElevator, moveWithCollision, tut, tutorialDone, get tutWall() { return tutWall; }, replayTutorial, openHelp, closeHelp, get pointerLocked() { return pointerLocked; }, gems, collectGem, aeryChat, roomStars, passSigns, get fireworksDone() { return fireworksDone; }, player, keys, getFloorY, walls, ROOMS, moveWithCollision, interactables, camera, tryInteract, openInfoPanel, visitedRooms, triggerCompletion, get lookedAt() { return lookedAt; }, get uiOpen() { return uiOpen; }, get allRoomsCompleted() { return allRoomsCompleted; } };
+  // =====================================================================
+  // ============ v4 輕鬆模式：給不常玩 3D 遊戲的學習者 ============
+  //   ・開始前選擇「輕鬆模式／探索模式」（之後可在右上角切換）
+  //   ・輕鬆模式：不用 WASD、不用鎖滑鼠；按「帶我去」自動走到下一個目標並對準，
+  //     再按「查看」就能打開；也可以從「選關卡」直接傳送到房間門口
+  //   ・略過走路／轉頭教學與新人說明會，小地圖與操作表收起
+  //   ・字體大小 A／A+／A++ 三段切換（兩種模式都可用）
+  //   ・學習內容（線索、任務、測驗）兩種模式完全相同
+  // =====================================================================
+  const MODE_KEY = 'aery_play_mode_' + (IS_MGR ? 'mgr' : 'emp');
+  const FONT_KEY = 'aery_font_scale';
+  let playMode = null;
+  try { playMode = localStorage.getItem(MODE_KEY); } catch (_) {}
+  let easyMode = playMode === 'easy';
+  let fontScale = 0;
+  try { fontScale = parseInt(localStorage.getItem(FONT_KEY) || '0', 10) || 0; } catch (_) {}
+  {
+    const st = document.createElement('style');
+    st.textContent = `
+  #mode-picker { position: fixed; inset: 0; z-index: 210; display: none; align-items: center; justify-content: center; padding: 16px;
+    background: rgba(8,11,26,0.86); backdrop-filter: blur(4px); font-family: "Microsoft JhengHei","Noto Sans TC",sans-serif; }
+  #mode-picker.show { display: flex; }
+  #mode-picker .mp-box { width: min(860px, 100%); color: #eef2fb; text-align: center; }
+  #mode-picker h2 { font-size: 30px; margin: 0 0 8px; }
+  #mode-picker .mp-sub { color: #b9c3e0; font-size: 16px; margin: 0 0 26px; }
+  #mode-picker .mp-cards { display: flex; gap: 20px; flex-wrap: wrap; justify-content: center; }
+  #mode-picker .mp-card { flex: 1 1 320px; max-width: 400px; text-align: left; cursor: pointer; border-radius: 22px; padding: 26px 26px 22px;
+    background: #1d2550; border: 3px solid transparent; color: #eef2fb; font: inherit; transition: transform .15s, border-color .15s; }
+  #mode-picker .mp-card:hover, #mode-picker .mp-card:focus-visible { transform: translateY(-4px); border-color: #ffd76a; outline: none; }
+  #mode-picker .mp-icon { font-size: 44px; }
+  #mode-picker .mp-name { font-size: 26px; font-weight: 800; margin: 6px 0 4px; }
+  #mode-picker .mp-for { color: #ffd76a; font-size: 15px; font-weight: 700; margin-bottom: 12px; }
+  #mode-picker ul { margin: 0; padding-left: 20px; color: #d6dcf0; font-size: 15.5px; line-height: 1.7; }
+  #mode-picker .mp-note { margin-top: 22px; color: #8f9bc2; font-size: 14px; }
+  #mode-picker .mp-card.easy { background: linear-gradient(160deg, #24306a, #1d2550); }
+  #start-mode-line { margin-top: 12px; color: #cfd6ef; font-size: 14px; font-family: "Microsoft JhengHei",sans-serif; }
+  #start-mode-line button { margin-left: 6px; background: none; border: 1px solid #8aa0c8; color: #eef2fb; border-radius: 999px; padding: 3px 12px; cursor: pointer; font: inherit; }
+  .hud-pill { pointer-events: auto; height: 36px; padding: 0 12px; border-radius: 18px; border: 1px solid rgba(138,160,200,0.45);
+    background: rgba(18,24,48,0.75); color: #eef2fb; font: 700 14px/1 "Microsoft JhengHei",sans-serif; cursor: pointer; white-space: nowrap; }
+  .hud-pill.on { background: #ffd76a; color: #1b2242; border-color: #ffd76a; }
+  @media (max-width: 1180px) { .hud-pill .lbl { display: none; } .hud-pill { padding: 0 10px; } }
+  #easy-bar { position: fixed; left: 50%; bottom: 22px; transform: translateX(-50%); z-index: 22; display: none; gap: 10px; align-items: center;
+    font-family: "Microsoft JhengHei",sans-serif; }
+  body.easy.ingame #easy-bar { display: flex; }
+  body.briefing #easy-bar { display: none !important; }
+  #easy-bar button { border: none; cursor: pointer; border-radius: 999px; font: 800 18px/1 "Microsoft JhengHei",sans-serif; padding: 15px 22px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.35); white-space: nowrap; }
+  #easy-go { background: #ffd76a; color: #1b2242; max-width: 52vw; overflow: hidden; text-overflow: ellipsis; }
+  #easy-go.walking { background: #8fd3ff; }
+  #easy-look { background: #ff7eb6; color: #fff; display: none; }
+  #easy-look.show { display: inline-block; animation: easyPulse 1.2s infinite; }
+  #easy-rooms { background: rgba(18,24,48,0.9); color: #eef2fb; border: 1px solid rgba(138,160,200,0.5) !important; }
+  @keyframes easyPulse { 0%,100% { transform: scale(1); } 50% { transform: scale(1.07); } }
+  #easy-room-list { position: fixed; left: 50%; bottom: 86px; transform: translateX(-50%); z-index: 23; display: none; flex-direction: column; gap: 8px;
+    padding: 14px; border-radius: 18px; background: rgba(12,16,36,0.96); border: 1px solid rgba(138,160,200,0.45); min-width: 300px; font-family: "Microsoft JhengHei",sans-serif; }
+  #easy-room-list.show { display: flex; }
+  #easy-room-list .erl-title { color: #b9c3e0; font-size: 14px; margin-bottom: 2px; }
+  #easy-room-list button { text-align: left; border: none; border-radius: 12px; padding: 12px 14px; cursor: pointer; font: 700 17px/1.3 "Microsoft JhengHei",sans-serif;
+    background: #222c5c; color: #eef2fb; }
+  #easy-room-list button:disabled { opacity: 0.45; cursor: not-allowed; }
+  #easy-room-list button small { display: block; font-weight: 400; font-size: 13px; color: #b9c3e0; }
+  body.easy #minimap-wrap, body.easy #controls-legend, body.easy #lock-hint, body.easy #tutorial { display: none !important; }
+  body.easy #nav-compass { bottom: 96px; }
+  body.easy #interact-prompt { display: none !important; }
+  body.easy.mobile #easy-bar { bottom: calc(env(safe-area-inset-bottom, 0px) + 14px); }
+  body.easy.mobile #easy-bar button { font-size: 15px; padding: 12px 16px; }
+  body.easy.mobile #interact-btn-mobile { display: none !important; }
+  body.fs1 #panel-box, body.fs1 #aery-say, body.fs1 #objective, body.fs1 #hint-card, body.fs1 #nav-compass, body.fs1 #game-hint,
+  body.fs1 #help-overlay > *, body.fs1 #howto > *, body.fs1 #easy-bar, body.fs1 #easy-room-list, body.fs1 #stage-clear > * { zoom: 1.2; }
+  body.fs2 #panel-box, body.fs2 #aery-say, body.fs2 #objective, body.fs2 #hint-card, body.fs2 #nav-compass, body.fs2 #game-hint,
+  body.fs2 #help-overlay > *, body.fs2 #howto > *, body.fs2 #easy-bar, body.fs2 #easy-room-list, body.fs2 #stage-clear > * { zoom: 1.4; }
+  body.fs1 #panel-box, body.fs2 #panel-box { max-height: 84vh; overflow-y: auto; }
+`;
+    document.head.appendChild(st);
+  }
+
+  // ---- 字體大小 ----
+  const FONT_NAMES = ['A 標準', 'A+ 大', 'A++ 特大'];
+  function applyFont() {
+    document.body.classList.toggle('fs1', fontScale === 1);
+    document.body.classList.toggle('fs2', fontScale === 2);
+    if (fontBtn) { fontBtn.textContent = ['A', 'A+', 'A++'][fontScale]; fontBtn.title = '字體大小：' + FONT_NAMES[fontScale] + '（點擊切換）'; fontBtn.classList.toggle('on', fontScale > 0); }
+  }
+
+  // ---- 右上角：模式切換、字體大小 ----
+  const hudBtns = document.getElementById('help-btn') ? document.getElementById('help-btn').parentElement : null;
+  const modeBtn = document.createElement('button'); modeBtn.type = 'button'; modeBtn.className = 'hud-pill';
+  const fontBtn = document.createElement('button'); fontBtn.type = 'button'; fontBtn.className = 'hud-pill';
+  if (hudBtns) { hudBtns.insertBefore(fontBtn, hudBtns.firstChild); hudBtns.insertBefore(modeBtn, hudBtns.firstChild); }
+  fontBtn.addEventListener('click', e => { e.stopPropagation(); fontScale = (fontScale + 1) % 3; try { localStorage.setItem(FONT_KEY, String(fontScale)); } catch (_) {} applyFont(); showRouteHint('🔠 字體大小：' + FONT_NAMES[fontScale], 'font-' + fontScale); });
+  modeBtn.addEventListener('click', e => { e.stopPropagation(); setPlayMode(easyMode ? 'explore' : 'easy', true); });
+
+  // ---- 輕鬆模式下不鎖滑鼠（才能點畫面上的按鈕）；改成按住拖曳轉視角 ----
+  const _origLock = container.requestPointerLock ? container.requestPointerLock.bind(container) : null;
+  container.requestPointerLock = function () {
+    if (easyMode && !isTouch) return Promise.resolve();
+    return _origLock ? _origLock() : undefined;
+  };
+  let dragLook = null;
+  container.addEventListener('mousedown', e => {
+    if (!easyMode || isTouch || uiOpen || e.button !== 0) return;
+    dragLook = { x: e.clientX, y: e.clientY, moved: 0 };
+  });
+  window.addEventListener('mousemove', e => {
+    if (!dragLook) return;
+    const dx = e.clientX - dragLook.x, dy = e.clientY - dragLook.y;
+    dragLook.x = e.clientX; dragLook.y = e.clientY; dragLook.moved += Math.abs(dx) + Math.abs(dy);
+    player.yaw -= dx * 0.0045; player.pitch -= dy * 0.0045;
+    player.pitch = Math.max(-1.3, Math.min(1.3, player.pitch));
+    if (dragLook.moved > 6) autoWalk = null;
+  });
+  window.addEventListener('mouseup', () => {
+    if (!dragLook) return;
+    const click = dragLook.moved < 6; dragLook = null;
+    if (click && easyMode && !uiOpen && lookedAt) tryInteract();   // 輕鬆模式：直接點一下也能查看
+  });
+
+  // ---- 自動導航（帶我去）----
+  let autoWalk = null;
+  function interactableFor(tg) {
+    if (!tg) return null;
+    if (tg.kind === 'clue' || tg.kind === 'npc') return interactables.find(o => o.clue === tg.ref) || null;
+    if (tg.kind === 'mission') return interactables.find(o => o.kind === 'mission' && o.room === tg.room) || null;
+    if (tg.kind === 'final') return interactables.find(o => o.kind === 'final') || null;
+    if (tg.kind === 'seat') return interactables.find(o => o.kind === 'seat') || null;
+    return null;
+  }
+  const _aimV = new THREE.Vector3();
+  function faceToward(x, y, z) {
+    const dx = x - player.x, dz = z - player.z;
+    player.yaw = Math.atan2(-dx, -dz);
+    const eye = getFloorY(player.x, player.z) + EYE_HEIGHT;
+    player.pitch = Math.max(-1.2, Math.min(1.2, Math.atan2(y - eye, Math.hypot(dx, dz))));
+  }
+  function aimAtTarget(tg) {
+    const o = interactableFor(tg);
+    if (o && o.mesh) { o.mesh.getWorldPosition(_aimV); faceToward(_aimV.x, _aimV.y, _aimV.z); }
+    else faceToward(tg.x, (getFloorY(tg.x, tg.z) || 0) + 1.0, tg.z);
+  }
+  function startAutoWalk() {
+    if (!gameStarted || uiOpen || BRIEF.active) return;
+    const tg = guideTarget(); if (!tg) return;
+    roomListEl.classList.remove('show');
+    autoWalk = { stuckT: 0, t: 0 };
+    if (audioCtx && !soundMuted) { tone(520, 0, 0.1, 'sine', 0.05); tone(780, 0.1, 0.14, 'sine', 0.05); }
+  }
+  function easyTick(dt) {
+    if (!autoWalk) return;
+    if (uiOpen || BRIEF.active || !gameStarted) { autoWalk = null; return; }
+    const tg = guideTarget(); if (!tg) { autoWalk = null; return; }
+    autoWalk.t += dt;
+    if (autoWalk.t > 40) { autoWalk = null; return; }
+    const nav = navPoint(tg);
+    const atFinalLeg = nav.x === tg.x && nav.z === tg.z;
+    const dx = nav.x - player.x, dz = nav.z - player.z, d = Math.hypot(dx, dz);
+    const stopDist = tg.kind === 'door' ? 0.25 : 1.7;
+    if (atFinalLeg && d < stopDist) {
+      if (tg.kind === 'door') return;   // 走進房間後，目標會自動換成房內的線索，繼續走
+      aimAtTarget(tg); autoWalk = null;
+      showRouteHint('👉 到了！按下方「🔍 查看」打開', 'easy-arrive-' + tg.key);
+      return;
+    }
+    // 轉向前進方向（平滑），視線略往下
+    const want = Math.atan2(-dx, -dz);
+    let diff = want - player.yaw; diff = Math.atan2(Math.sin(diff), Math.cos(diff));
+    player.yaw += diff * Math.min(1, dt * 7);
+    player.pitch += (-0.1 - player.pitch) * Math.min(1, dt * 4);
+    if (Math.abs(diff) > 1.2) return;   // 先轉身再走
+    const step = Math.min(MOVE_SPEED * 1.15 * dt, d);
+    const ox = player.x, oz = player.z;
+    moveWithCollision(dx / d * step, dz / d * step);
+    const moved = Math.hypot(player.x - ox, player.z - oz);
+    if (moved < step * 0.3) {   // 被家具卡住：稍微滑過去
+      autoWalk.stuckT += dt;
+      if (autoWalk.stuckT > 0.5) { player.x += dx / d * step; player.z += dz / d * step; }
+    } else autoWalk.stuckT = 0;
+    stepTimer += dt;
+    if (stepTimer > 0.38) { stepTimer = 0; playSound('step'); }
+  }
+  window.addEventListener('keydown', e => {
+    if (['KeyW', 'KeyA', 'KeyS', 'KeyD', 'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(e.code)) autoWalk = null;
+    if (easyMode && gameStarted && !uiOpen && (e.code === 'KeyG' || e.code === 'Space') && !e.repeat) { e.preventDefault(); startAutoWalk(); }
+  });
+
+  // ---- 輕鬆模式的下方按鈕列 ----
+  const easyBar = document.createElement('div'); easyBar.id = 'easy-bar';
+  easyBar.innerHTML = '<button type="button" id="easy-rooms">🗺️ 選關卡</button><button type="button" id="easy-go">🧭 帶我去</button><button type="button" id="easy-look">🔍 查看</button>';
+  document.body.appendChild(easyBar);
+  const roomListEl = document.createElement('div'); roomListEl.id = 'easy-room-list';
+  document.body.appendChild(roomListEl);
+  const easyGo = easyBar.querySelector('#easy-go'), easyLook = easyBar.querySelector('#easy-look');
+  [easyBar, roomListEl].forEach(el => ['mousedown', 'mouseup', 'click', 'touchstart'].forEach(ev => el.addEventListener(ev, e => e.stopPropagation(), { passive: ev === 'touchstart' })));
+  easyGo.addEventListener('click', () => { if (autoWalk) autoWalk = null; else startAutoWalk(); });
+  easyLook.addEventListener('click', () => { if (lookedAt && !uiOpen) { autoWalk = null; tryInteract(); } });
+  easyBar.querySelector('#easy-rooms').addEventListener('click', () => {
+    if (roomListEl.classList.contains('show')) { roomListEl.classList.remove('show'); return; }
+    renderRoomList(); roomListEl.classList.add('show');
+  });
+  function roomDoorSpot(r) {
+    const cz = (r.z1 + r.z2) / 2;
+    return { x: r.side === 'left' ? CORR_X1 + 0.9 : CORR_X2 - 0.9, z: cz, fx: r.side === 'left' ? CORR_X1 - 2 : CORR_X2 + 2 };
+  }
+  function renderRoomList() {
+    roomListEl.innerHTML = '<div class="erl-title">直接傳送到房間門口（依序解鎖）</div>';
+    ROOMS.forEach((r, i) => {
+      const b = document.createElement('button'); b.type = 'button';
+      const ok = isRoomUnlocked(r) && r.floor === 1;
+      const state = passedRooms.has(r.id) ? '✓ 已過關' : ok ? '可以前往' : '🔒 尚未解鎖';
+      b.innerHTML = '🚪 第 ' + (i + 1) + ' 關：' + escHtml(r.name) + '<small>' + state + '</small>';
+      b.disabled = !ok;
+      b.addEventListener('click', () => {
+        const s = roomDoorSpot(r);
+        player.x = s.x; player.z = s.z; faceToward(s.fx, EYE_HEIGHT - 0.2, s.z);
+        autoWalk = null; roomListEl.classList.remove('show');
+        playSound('open');
+        showRouteHint('🚪 已到「' + r.name + '」門口，按「帶我去」繼續', 'easy-tp-' + r.id);
+      });
+      roomListEl.appendChild(b);
+    });
+  }
+  function updateEasyBar() {
+    document.body.classList.toggle('ingame', gameStarted && !LEVEL.finalDone);
+    if (!easyMode) return;
+    const tg = guideTarget();
+    const aimed = tg && isLookingAtTarget(tg);
+    easyLook.classList.toggle('show', !!lookedAt && !uiOpen);
+    if (lookedAt && !uiOpen) {
+      const name = lookedAt.kind === 'clue' ? '線索' : lookedAt.kind === 'npc' ? '對話' : lookedAt.kind === 'mission' ? '開始任務' : '查看';
+      easyLook.textContent = '🔍 ' + name;
+    }
+    let txt;
+    if (autoWalk) txt = '⏸ 停下來';
+    else if (!tg) txt = '🧭 帶我去';
+    else if (aimed) txt = '✓ 已對準目標';
+    else txt = '🧭 帶我去：' + tg.name;
+    if (easyGo.textContent !== txt) easyGo.textContent = txt;
+    easyGo.classList.toggle('walking', !!autoWalk);
+    easyGo.disabled = !tg && !autoWalk;
+  }
+  let _easyLast = performance.now();
+  (function easyLoop() {
+    requestAnimationFrame(easyLoop);
+    const now = performance.now(); const dt = Math.min((now - _easyLast) / 1000, 0.05); _easyLast = now;
+    if (easyMode) easyTick(dt);
+    updateEasyBar();
+  })();
+
+  // ---- 模式選擇畫面 ----
+  const picker = document.createElement('div'); picker.id = 'mode-picker';
+  picker.innerHTML = '<div class="mp-box"><h2>選擇你的遊玩方式</h2><p class="mp-sub">兩種方式的線索、任務和測驗完全一樣，只差在怎麼移動。之後也可以在右上角切換。</p>' +
+    '<div class="mp-cards">' +
+    '<button type="button" class="mp-card easy" data-mode="easy"><div class="mp-icon">🧭</div><div class="mp-name">輕鬆模式</div><div class="mp-for">不常玩遊戲、第一次接觸 3D 的人</div>' +
+    '<ul><li>不用學鍵盤操作，<b>按「帶我去」就自動走過去</b></li><li>到了按「查看」就能打開線索</li><li>可以從「選關卡」直接到房間門口</li><li>略過操作教學，馬上開始</li></ul></button>' +
+    '<button type="button" class="mp-card" data-mode="explore"><div class="mp-icon">🎮</div><div class="mp-name">探索模式</div><div class="mp-for">喜歡自己走走看看的人</div>' +
+    '<ul><li>用 WASD 和滑鼠自由移動</li><li>自己在辦公室裡找線索</li><li>開始前有 5 步驟操作示範</li><li>可以收集隱藏的知識寶石</li></ul></button>' +
+    '</div><div class="mp-note">右上角的「A+」可以放大文字</div></div>';
+  document.body.appendChild(picker);
+  let pickerFromGame = false;
+  function needModePick() { return !playMode; }
+  function openModePicker(fromGame) { pickerFromGame = !!fromGame; picker.classList.add('show'); }
+  picker.querySelectorAll('.mp-card').forEach(b => b.addEventListener('click', () => {
+    picker.classList.remove('show');
+    setPlayMode(b.dataset.mode, false);
+    if (!gameStarted) startBtn.click();   // 在同一個點擊動作裡開始遊戲（聲音才能啟動）
+  }));
+  // 開始畫面上的「目前模式／更換」
+  const modeLine = document.createElement('div'); modeLine.id = 'start-mode-line';
+  if (startBtn && startBtn.parentNode) startBtn.parentNode.insertBefore(modeLine, startBtn.nextSibling);
+  modeLine.addEventListener('click', e => { if (e.target.tagName === 'BUTTON') { e.stopPropagation(); openModePicker(false); } });
+
+  function easySkipTutorial() {
+    if (tutorialDone() && !tut.active) return;
+    tut.active = false; tut.step = 3;
+    setTutorialDone(true);
+    tutorialEl.classList.remove('show', 'complete');
+    openTutorialWall();
+  }
+  function setPlayMode(m, announce) {
+    playMode = m; easyMode = m === 'easy';
+    try { localStorage.setItem(MODE_KEY, m); } catch (_) {}
+    document.body.classList.toggle('easy', easyMode);
+    modeBtn.innerHTML = easyMode ? '🧭<span class="lbl"> 輕鬆模式</span>' : '🎮<span class="lbl"> 探索模式</span>';
+    modeBtn.title = '目前：' + (easyMode ? '輕鬆模式' : '探索模式') + '（點擊切換）';
+    modeBtn.classList.toggle('on', easyMode);
+    modeLine.innerHTML = '目前：' + (easyMode ? '🧭 輕鬆模式' : '🎮 探索模式') + '<button type="button">更換</button>';
+    autoWalk = null; roomListEl.classList.remove('show');
+    if (easyMode) {
+      if (pointerLocked) document.exitPointerLock();
+      if (gameStarted) easySkipTutorial();
+    }
+    if (announce && gameStarted) {
+      showRouteHint(easyMode ? '🧭 已切換到輕鬆模式：按下方「帶我去」自動前往' : '🎮 已切換到探索模式：點一下畫面，用 WASD 和滑鼠移動', 'mode-' + m);
+      if (!easyMode) tryRelock();
+    }
+  }
+  // 開始遊戲：輕鬆模式略過走路／轉頭教學和說明會，直接開門
+  startBtn.addEventListener('click', () => {
+    if (!easyMode) return;
+    setTimeout(easySkipTutorial, 400);
+    setTimeout(() => aerySay('這是輕鬆模式～不用學操作！按下方的「🧭 帶我去」，我會帶你走到下一個目標；到了再按「🔍 查看」就好。', 10), 1700);
+    setTimeout(() => showRouteHint('🧭 按下方「帶我去」，自動走到第 1 關', 'easy-start'), 1900);
+  });
+  // 輕鬆模式的提示文字：不要再叫使用者「用小球對準、按 E」
+  const _origStepText = stepText;
+  stepText = function (tg) {
+    if (!easyMode || !tg) return _origStepText(tg);
+    if (tg.kind === 'door') return tg.name + '的門已經開了！按下方「🧭 帶我去」，我帶你走過去～';
+    if (tg.kind === 'clue') return '這間房還差 ' + tg.left + ' 個線索！按下方「🧭 帶我去」自動走過去，到了再按「🔍 線索」。';
+    if (tg.kind === 'npc') return '去找' + tg.ref.data.name + '聊聊！按「🧭 帶我去」走過去，到了按「🔍 對話」。';
+    if (tg.kind === 'mission') return '任務解鎖了！按「🧭 帶我去」走到任務牌，再按「🔍 開始任務」。';
+    if (tg.kind === 'seat') return '按「🧭 帶我去」走到說明會座位。';
+    return '按「🧭 帶我去」走到綜合挑戰台，開始最終關！';
+  };
+  const _origHintCard = showHintCard;
+  showHintCard = function (tg) {
+    if (!easyMode || !tg) return _origHintCard(tg);
+    hintBody.innerHTML = '<div class="hc-now">現在的目標：<b>' + tg.icon + ' ' + escHtml(tg.name) + '</b></div>' +
+      '<div class="hc-step"><span>1</span><div>按畫面下方的<b>「🧭 帶我去」</b>，會自動走過去</div></div>' +
+      '<div class="hc-step"><span>2</span><div>到了以後按<b>「🔍 查看」</b>（或直接點一下畫面）</div></div>';
+    hintCard.classList.remove('show'); void hintCard.offsetWidth; hintCard.classList.add('show');
+    clearTimeout(showHintCard._t); showHintCard._t = setTimeout(() => hintCard.classList.remove('show'), 9000);
+  };
+  {
+    const chosen = playMode;
+    setPlayMode(chosen || 'explore', false);
+    if (!chosen) { playMode = null; modeLine.innerHTML = ''; try { localStorage.removeItem(MODE_KEY); } catch (_) {} }   // 還沒選過：開始時先跳出選擇畫面
+  }
+  applyFont();
+
+  window.__debug = { setPlayMode, startAutoWalk, get easyMode() { return easyMode; }, get autoWalk() { return autoWalk; }, guideTarget, stepText: (tg) => stepText(tg),  passedRooms, markMissionDone, finishTutorial, readSave, writeSave, applySave, SLIDES, BRIEF, startBriefing, failCount, LEVEL, roomClues, markClueFound, openClue, openNpc, requestMission, openMission, openFinalQuiz, startFinale, showStageClear, onLevelCleared, roundProgress, get finalGate() { return finalGate; }, roomGates, elev, doorA, doorB, elevatorTryRide, inCab, getFloorY, updateElevator, moveWithCollision, tut, tutorialDone, get tutWall() { return tutWall; }, replayTutorial, openHelp, closeHelp, get pointerLocked() { return pointerLocked; }, gems, collectGem, aeryChat, roomStars, passSigns, get fireworksDone() { return fireworksDone; }, player, keys, getFloorY, walls, ROOMS, moveWithCollision, interactables, camera, tryInteract, openInfoPanel, visitedRooms, triggerCompletion, get lookedAt() { return lookedAt; }, get uiOpen() { return uiOpen; }, get allRoomsCompleted() { return allRoomsCompleted; } };
 })();
 
 </script>
