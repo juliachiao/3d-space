@@ -7159,16 +7159,17 @@ console.warn( 'Scripts "build/three.js" and "build/three.min.js" are deprecated 
     panelTag.textContent = '☕ 休息角　' + o.room.name;
   }
   // =====================================================================
-  // ============ v5 點選模式（非 3D）：給不常玩遊戲的學習者 ============
-  //   ・開始前選擇「🖱️ 點選模式／🎮 3D 探索模式」（之後可隨時切換）
-  //   ・點選模式：每一關是一張辦公室情境圖，點發光的圓點就能打開線索、和角色對話，
-  //     找齊 3 個線索後按「開始任務」；不用移動、不用鍵盤、手機也能玩
-  //   ・線索、對話、任務小遊戲、最終關與 3D 模式完全相同，進度也共用
+  // ============ v6 聊天模式（非 3D）：給不常玩遊戲的學習者 ============
+  //   ・開始前選擇「💬 聊天模式／🎮 3D 探索模式」（之後可隨時切換）
+  //   ・聊天模式：像用 LINE 一樣跟 Aery 聊天破關。只要點畫面下方的按鈕，
+  //     不用移動、不用打字；小遊戲不計時，答錯會說明原因、可以再選一次
+  //   ・線索、角色對話、關卡解鎖、最終關與結業證書都和 3D 模式共用同一份進度
   //   ・字體大小 A／A+／A++ 三段切換（兩種模式都可用）
   // =====================================================================
   const IS_MGR_CONTENT = ROOMS.some(r => r.role === '主管人員');
-  const MODE_KEY = 'aery_play_mode_' + (IS_MGR_CONTENT ? 'mgr' : 'emp');
+  const MODE_KEY = 'aery_play_mode_' + (IS_MGR_CONTENT ? 'mgr' : 'emp');   // 存的值沿用 'point'，舊的點選模式玩家會直接進聊天模式
   const FONT_KEY = 'aery_font_scale';
+  const CHAT_SEEN_KEY = 'aery_chat_seen_' + (IS_MGR_CONTENT ? 'mgr' : 'emp');
   let playMode = null;
   try { playMode = localStorage.getItem(MODE_KEY); } catch (_) {}
   if (playMode && playMode !== 'point' && playMode !== 'explore') playMode = null;
@@ -7194,88 +7195,146 @@ console.warn( 'Scripts "build/three.js" and "build/three.min.js" are deprecated 
   #mode-picker .mp-for { color: #ffd76a; font-size: 16px; font-weight: 700; margin-bottom: 12px; }
   #mode-picker ul { margin: 0; padding-left: 20px; color: #d6dcf0; font-size: 16px; line-height: 1.75; }
   #mode-picker .mp-note { margin-top: 22px; color: #8f9bc2; font-size: 14px; }
-  #mode-picker .mp-card.pt { background: linear-gradient(160deg, #2a3778, #1d2550); }
+  #mode-picker .mp-card.pt { background: linear-gradient(160deg, #2a3778, #1d2550); border-color: #ffd76a; }
   #start-mode-line { margin-top: 12px; color: #cfd6ef; font-size: 14px; font-family: "Microsoft JhengHei",sans-serif; }
   #start-mode-line button { margin-left: 6px; background: none; border: 1px solid #8aa0c8; color: #eef2fb; border-radius: 999px; padding: 3px 12px; cursor: pointer; font: inherit; }
   .hud-pill { pointer-events: auto; height: 36px; padding: 0 12px; border-radius: 18px; border: 1px solid rgba(138,160,200,0.45);
-    background: rgba(18,24,48,0.75); color: #eef2fb; font: 700 14px/1 "Microsoft JhengHei",sans-serif; cursor: pointer; white-space: nowrap; }
+    background: rgba(12,17,40,0.72); color: #eef2fb; font: 700 14px "Microsoft JhengHei",sans-serif; cursor: pointer; display: inline-flex; align-items: center; gap: 4px; }
   .hud-pill.on { background: #ffd76a; color: #1b2242; border-color: #ffd76a; }
   @media (max-width: 1180px) { .hud-pill .lbl { display: none; } .hud-pill { padding: 0 10px; } }
 
-  /* ---- 點選模式畫面 ---- */
-  #pm { position: fixed; inset: 0; z-index: 45; display: none; flex-direction: column; color: #eef2fb;
-    background: radial-gradient(120% 120% at 70% 10%, #2a3366 0%, #161c3c 60%, #10142c 100%); font-family: "Microsoft JhengHei","Noto Sans TC",sans-serif; }
-  body.pm-on #pm { display: flex; }
-  #pm .pm-top { display: flex; align-items: center; gap: 16px; padding: 14px 22px; border-bottom: 1px solid rgba(138,160,200,0.2); }
-  #pm .pm-brand { font-size: 20px; font-weight: 800; }
-  #pm .pm-brand small { display: block; font-size: 13px; font-weight: 400; color: #8aa0c8; letter-spacing: 1px; }
-  #pm .pm-progress { flex: 1; display: flex; align-items: center; gap: 10px; justify-content: center; font-size: 15px; color: #cfd6ef; }
-  #pm .pm-bar { width: min(260px, 30vw); height: 10px; border-radius: 6px; background: rgba(255,255,255,0.12); overflow: hidden; }
-  #pm .pm-bar i { display: block; height: 100%; background: linear-gradient(90deg, #ffd76a, #ff7eb6); border-radius: 6px; transition: width .4s; }
-  #pm .pm-tools { display: flex; gap: 8px; }
-  #pm .pm-tools button { height: 40px; padding: 0 14px; border-radius: 20px; border: 1px solid rgba(138,160,200,0.5); background: rgba(18,24,48,0.8);
-    color: #eef2fb; font: 700 15px/1 inherit; font-family: inherit; cursor: pointer; white-space: nowrap; }
-  #pm .pm-tools button.on { background: #ffd76a; color: #1b2242; border-color: #ffd76a; }
-  #pm .pm-body { flex: 1; display: flex; gap: 20px; padding: 18px 22px 20px; min-height: 0; }
-  #pm .pm-levels { flex: 0 0 250px; display: flex; flex-direction: column; gap: 10px; overflow-y: auto; }
-  #pm .pm-levels .pm-lh { font-size: 14px; color: #8aa0c8; margin-bottom: 2px; }
-  #pm .pm-lv { text-align: left; border: 2px solid transparent; border-radius: 16px; padding: 12px 14px; background: rgba(255,255,255,0.06); color: #eef2fb;
-    font: inherit; cursor: pointer; display: flex; gap: 10px; align-items: center; }
-  #pm .pm-lv .n { flex: 0 0 34px; height: 34px; border-radius: 50%; background: rgba(255,255,255,0.12); display: flex; align-items: center; justify-content: center; font-weight: 800; }
-  #pm .pm-lv b { display: block; font-size: 16px; line-height: 1.3; }
-  #pm .pm-lv small { font-size: 13px; color: #b9c3e0; }
-  #pm .pm-lv.cur { border-color: #ffd76a; background: rgba(255,215,106,0.12); }
-  #pm .pm-lv.done .n { background: #4fd48a; color: #10331f; }
-  #pm .pm-lv.lock { opacity: 0.45; cursor: not-allowed; }
-  #pm .pm-main { flex: 1; display: flex; flex-direction: column; min-width: 0; min-height: 0; }
-  #pm .pm-head h2 { margin: 0; font-size: 26px; }
-  #pm .pm-step { margin: 6px 0 12px; font-size: 18px; color: #ffe9a8; font-weight: 700; }
-  #pm .pm-stagewrap { flex: 1; min-height: 0; display: flex; align-items: flex-start; justify-content: center; }
-  #pm .pm-stage { position: relative; height: 100%; max-width: 100%; aspect-ratio: var(--ar, 16/9); border-radius: 18px; overflow: hidden;
-    box-shadow: 0 16px 48px rgba(0,0,0,0.45); background: #222a55; }
-  #pm .pm-stage img { width: 100%; height: 100%; display: block; object-fit: cover; }
-  #pm .pm-spot { position: absolute; transform: translate(-50%, -50%); border: none; background: none; cursor: pointer; padding: 0;
-    display: flex; flex-direction: column; align-items: center; gap: 6px; font-family: inherit; }
-  #pm .pm-dot { width: 58px; height: 58px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 28px;
-    background: #ffd76a; color: #1b2242; border: 4px solid #fff; box-shadow: 0 0 0 0 rgba(255,215,106,0.7); animation: pmPulse 1.6s infinite; }
-  #pm .pm-tag { padding: 6px 12px; border-radius: 999px; background: rgba(10,15,32,0.88); color: #ffe9a8; font-size: 15px; font-weight: 700; white-space: nowrap;
-    border: 1.5px solid #ffd76a; }
-  #pm .pm-spot.found .pm-dot { background: #4fd48a; color: #fff; animation: none; }
-  #pm .pm-spot.found .pm-tag { color: #bff2d3; border-color: #4fd48a; }
-  #pm .pm-spot.mission .pm-dot { background: #ff7eb6; color: #fff; width: 70px; height: 70px; font-size: 34px; }
-  #pm .pm-spot.mission .pm-tag { background: #ff7eb6; color: #fff; border-color: #fff; font-size: 17px; }
-  #pm .pm-spot:hover .pm-dot { transform: scale(1.1); }
-  @keyframes pmPulse { 0% { box-shadow: 0 0 0 0 rgba(255,215,106,0.75); } 70% { box-shadow: 0 0 0 18px rgba(255,215,106,0); } 100% { box-shadow: 0 0 0 0 rgba(255,215,106,0); } }
-  #pm .pm-checks { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; margin-top: 14px; }
-  #pm .pm-chip { padding: 9px 14px; border-radius: 999px; background: rgba(255,255,255,0.08); font-size: 15px; color: #cfd6ef; }
-  #pm .pm-chip.ok { background: rgba(79,212,138,0.18); color: #bff2d3; }
-  #pm .pm-cta { margin-left: auto; border: none; border-radius: 999px; padding: 14px 26px; font: 800 18px/1 inherit; font-family: inherit; cursor: pointer;
-    background: #ff7eb6; color: #fff; box-shadow: 0 8px 24px rgba(255,126,182,0.35); }
-  #pm .pm-cta.gold { background: #ffd76a; color: #1b2242; box-shadow: 0 8px 24px rgba(255,215,106,0.3); }
-  #pm .pm-cta:disabled { background: rgba(255,255,255,0.15); color: #8f9bc2; box-shadow: none; cursor: default; }
-  #pm .pm-final { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; gap: 14px; }
-  #pm .pm-final .big { font-size: 64px; }
-  #pm .pm-final h2 { font-size: 30px; margin: 0; }
-  #pm .pm-final p { color: #cfd6ef; font-size: 18px; max-width: 560px; line-height: 1.6; margin: 0; }
-  body.pm-on #aery-say { z-index: 46 !important; top: auto !important; bottom: 22px !important; left: 22px !important; right: auto !important; max-width: 250px !important; }
+  /* ---- 聊天模式畫面 ---- */
+  #cm { --cfs: 17px; --ink: #2e3a4e; --ink2: #5f6d82; --line: #d8dfea; --brand: #6c5ce7; --brand-d: #5143c4; --brand-s: #efecff;
+    --me: #4a5e80; --ok: #2f9e6b; --ok-s: #e4f5ec; --bad: #d0574e; --bad-s: #fbe9e7; --warn: #c98a1b; --warn-s: #fff4dc; --chap: #6c5ce7;
+    position: fixed; inset: 0; z-index: 45; display: none; flex-direction: column; background: #eef1f7; color: var(--ink);
+    font: var(--cfs)/1.6 "PingFang TC","Microsoft JhengHei","Noto Sans TC",sans-serif; }
+  body.pm-on #cm { display: flex; }
+  body.fs1 #cm { --cfs: 19.5px; } body.fs2 #cm { --cfs: 22px; }
+  #cm button { font: inherit; color: inherit; }
+  #cm .cm-top { flex: none; background: #fff; border-bottom: 1px solid var(--line); }
+  #cm .cm-row { display: flex; align-items: center; gap: .6em; padding: .55em 1em; max-width: 860px; margin: 0 auto; }
+  #cm .cm-av-top { width: 2.4em; height: 2.4em; flex: none; }
+  #cm .cm-title { flex: 1; min-width: 0; }
+  #cm .cm-title b { display: block; font-size: 1.02em; line-height: 1.3; }
+  #cm .cm-title span { display: block; font-size: .76em; color: var(--ink2); }
+  #cm .cm-tools { display: flex; gap: .35em; }
+  #cm .cm-tool { border: 1px solid var(--line); background: #fff; border-radius: .7em; height: 2.4em; min-width: 2.6em; padding: 0 .7em; cursor: pointer; font-weight: 700; font-size: .85em; white-space: nowrap; }
+  #cm .cm-tool:hover { border-color: var(--brand); color: var(--brand); }
+  #cm .cm-steps { display: flex; gap: .35em; padding: 0 1em .6em; max-width: 860px; margin: 0 auto; overflow-x: auto; scrollbar-width: none; }
+  #cm .cm-steps::-webkit-scrollbar { display: none; }
+  #cm .cm-step { flex: 1 0 auto; display: flex; align-items: center; justify-content: center; gap: .3em; padding: .3em .65em; border-radius: 999px;
+    background: #f1f3f8; color: #9aa5b6; font-size: .78em; font-weight: 700; white-space: nowrap; border: 1.5px solid transparent; }
+  #cm .cm-step .n { width: 1.3em; height: 1.3em; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; background: #dfe4ee; color: #fff; font-size: .85em; }
+  #cm .cm-step.now { background: var(--brand-s); color: var(--brand-d); border-color: var(--brand); }
+  #cm .cm-step.now .n { background: var(--brand); }
+  #cm .cm-step.done { background: var(--ok-s); color: var(--ok); }
+  #cm .cm-step.done .n { background: var(--ok); }
+  #cm .cm-log { flex: 1; overflow-y: auto; -webkit-overflow-scrolling: touch; padding: 1em 0 .5em; }
+  #cm .cm-inner { max-width: 860px; margin: 0 auto; padding: 0 1em; display: flex; flex-direction: column; gap: .7em; }
+  #cm .row { display: flex; gap: .55em; align-items: flex-end; animation: cmPop .22s ease-out; }
+  #cm .row.me { justify-content: flex-end; }
+  @keyframes cmPop { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+  #cm .av { width: 2.3em; height: 2.3em; flex: none; border-radius: 50%; }
+  #cm .av-npc { display: flex; align-items: center; justify-content: center; color: #fff; font-weight: 800; font-size: .95em; }
+  #cm .av-gap { width: 2.3em; flex: none; }
+  #cm .msg { max-width: min(36em, 82%); }
+  #cm .row.is-card .msg { flex: 1; min-width: 0; max-width: 36em; }
+  #cm .who { font-size: .75em; color: var(--ink2); margin: 0 0 .2em .2em; }
+  #cm .bubble { background: #fff; border: 1px solid var(--line); border-radius: 1.1em 1.1em 1.1em .3em; padding: .62em .9em; word-break: break-word; }
+  #cm .row.npc .bubble { background: #fffaf0; border-color: #f0dfbd; }
+  #cm .row.me .bubble { background: var(--me); color: #fff; border-color: var(--me); border-radius: 1.1em 1.1em .3em 1.1em; }
+  #cm .bubble b { color: var(--brand-d); }
+  #cm .row.me .bubble b { color: #fff; }
+  #cm .bubble.ok { background: var(--ok-s); border-color: #bfe5cf; } #cm .bubble.ok b { color: var(--ok); }
+  #cm .bubble.bad { background: var(--bad-s); border-color: #f2c7c2; } #cm .bubble.bad b { color: var(--bad); }
+  #cm .typing .bubble { display: inline-flex; gap: .3em; padding: .8em 1em; }
+  #cm .typing i { width: .45em; height: .45em; border-radius: 50%; background: #b5bfcf; animation: cmBlink 1s infinite; }
+  #cm .typing i:nth-child(2) { animation-delay: .15s; } #cm .typing i:nth-child(3) { animation-delay: .3s; }
+  @keyframes cmBlink { 0%, 80%, 100% { opacity: .3; } 40% { opacity: 1; } }
+  #cm .card { background: #fff; border: 1px solid var(--line); border-radius: 1em; padding: .85em 1em; width: 100%; }
+  #cm .card-title { font-weight: 800; margin-bottom: .35em; display: flex; align-items: center; gap: .4em; }
+  #cm .card-sub { font-size: .8em; color: var(--ink2); }
+  #cm .banner { align-self: center; text-align: center; background: var(--chap); color: #fff; border-radius: 1em; padding: .7em 1.4em; margin: .6em 0 .2em; box-shadow: 0 6px 18px rgba(60,50,140,.18); }
+  #cm .banner small { display: block; font-size: .76em; opacity: .9; letter-spacing: .1em; }
+  #cm .banner b { font-size: 1.18em; }
+  #cm .howto ol { margin: .3em 0 .4em; padding-left: 1.4em; } #cm .howto li { margin: .25em 0; }
+  #cm .howto .tip { font-size: .85em; color: var(--ink2); background: #f5f7fb; border-radius: .6em; padding: .45em .7em; }
+  #cm .clue { border-left: 5px solid var(--chap); }
+  #cm .clue .ico { font-size: 1.5em; }
+  #cm .clue .key { margin-top: .5em; background: var(--warn-s); border-radius: .6em; padding: .5em .7em; }
+  #cm .clue .key b { color: var(--warn); }
+  #cm .item { display: flex; align-items: center; gap: .8em; }
+  #cm .item .big { font-size: 2.1em; }
+  #cm .item .name { font-size: 1.08em; font-weight: 800; }
+  #cm .item .res { margin-top: .2em; font-size: .85em; font-weight: 700; }
+  #cm .item .res.ok { color: var(--ok); } #cm .item .res.bad { color: var(--bad); }
+  #cm .legend { display: grid; gap: .4em; margin-top: .3em; }
+  #cm .legend div { background: #f5f7fb; border-radius: .6em; padding: .4em .7em; font-size: .92em; }
+  #cm .tiles { display: grid; gap: .5em; margin-top: .6em; }
+  #cm .tiles.grid { grid-template-columns: repeat(auto-fill, minmax(7em, 1fr)); }
+  #cm .tiles.list { grid-template-columns: 1fr; }
+  #cm .tile { position: relative; border: 2px solid var(--line); background: #fff; border-radius: .8em; padding: .6em .7em; cursor: pointer; text-align: left; line-height: 1.45; }
+  #cm .tile:hover:not(:disabled) { border-color: #b8b0f2; }
+  #cm .tile:disabled { cursor: default; }
+  #cm .tile.sel { border-color: var(--brand); background: var(--brand-s); }
+  #cm .tile.sel::after { content: "✓"; position: absolute; top: .3em; right: .45em; width: 1.3em; height: 1.3em; border-radius: 50%; background: var(--brand); color: #fff; font-size: .75em; display: flex; align-items: center; justify-content: center; font-weight: 800; }
+  #cm .tile .t-ico { font-size: 1.6em; display: block; }
+  #cm .tile .t-txt { font-weight: 700; }
+  #cm .tile .t-note { display: none; margin-top: .35em; font-size: .8em; font-weight: 700; }
+  #cm .tile.g-ok { border-color: var(--ok); background: var(--ok-s); }
+  #cm .tile.g-miss { border-color: var(--warn); background: var(--warn-s); }
+  #cm .tile.g-bad { border-color: var(--bad); background: var(--bad-s); }
+  #cm .tile.g-ok::after, #cm .tile.g-miss::after, #cm .tile.g-bad::after { content: none; }
+  #cm .tile.g-ok .t-note { display: block; color: var(--ok); }
+  #cm .tile.g-miss .t-note { display: block; color: var(--warn); }
+  #cm .tile.g-bad .t-note { display: block; color: var(--bad); }
+  #cm .tile.g-dim { opacity: .55; }
+  #cm .tile.rowtile { display: grid; grid-template-columns: 6.2em 1fr; gap: .6em; align-items: center; }
+  #cm .rowtile .lab { font-weight: 800; }
+  #cm .rowtile .val { font-family: ui-monospace, Menlo, Consolas, monospace; font-size: .9em; color: var(--ink2); }
+  #cm .rowtile.sel .val { background: #1e2430; color: #1e2430; border-radius: .3em; }
+  #cm .rowtile .t-note, #cm .mail .t-note { grid-column: 1 / -1; }
+  #cm .mail { display: grid; grid-template-columns: 1.6em 1fr; gap: .5em; align-items: center; }
+  #cm .mail .addr { font-family: ui-monospace, Menlo, Consolas, monospace; font-size: .85em; color: var(--ink2); word-break: break-all; }
+  #cm .mail .subj { font-weight: 700; }
+  #cm .route { display: flex; flex-wrap: wrap; gap: .35em; align-items: center; min-height: 2.2em; margin-top: .4em; padding: .4em; border-radius: .6em; background: #f5f7fb; }
+  #cm .route .ph { color: #a0aabb; font-size: .85em; }
+  #cm .route .r { background: var(--ok); color: #fff; border-radius: 999px; padding: .2em .65em; font-size: .85em; font-weight: 700; }
+  #cm .route .arrow { color: #a0aabb; }
+  #cm .tile .badge { position: absolute; top: .35em; right: .45em; width: 1.4em; height: 1.4em; border-radius: 50%; background: var(--ok); color: #fff; font-size: .78em; font-weight: 800; display: flex; align-items: center; justify-content: center; }
+  #cm .tile.placed { border-color: var(--ok); background: var(--ok-s); }
+  #cm .wrap { text-align: center; border: 2px solid var(--chap); }
+  #cm .wrap .stars { font-size: 2em; letter-spacing: .25em; color: #f2b632; }
+  #cm .wrap .stars .off { color: #dfe3ea; }
+  #cm .wrap .point { margin-top: .6em; background: #f5f7fb; border-radius: .7em; padding: .6em .8em; text-align: left; }
+  #cm .wrap .point small { display: block; color: var(--ink2); font-size: .78em; font-weight: 700; margin-bottom: .15em; }
+  #cm .cm-dock { flex: none; background: #fff; border-top: 1px solid var(--line); padding: .65em 1em calc(.75em + env(safe-area-inset-bottom)); }
+  #cm .cm-dock-in { max-width: 860px; margin: 0 auto; }
+  #cm .cm-hint { font-size: .8em; color: var(--ink2); margin-bottom: .45em; display: flex; align-items: center; gap: .35em; min-height: 1.2em; }
+  #cm .cm-hint .dot { width: .5em; height: .5em; border-radius: 50%; background: var(--brand); animation: cmBlink 1.2s infinite; }
+  #cm .opts { display: flex; flex-wrap: wrap; gap: .5em; }
+  #cm .opt { flex: 1 1 15em; min-height: 3em; border: 2px solid var(--brand); background: #fff; color: var(--brand-d); border-radius: .9em; padding: .55em .9em; font-weight: 700; cursor: pointer; text-align: left; line-height: 1.45; }
+  #cm .opt:hover:not(:disabled) { background: var(--brand-s); }
+  #cm .opt.primary { background: var(--brand); color: #fff; text-align: center; }
+  #cm .opt.primary:hover:not(:disabled) { background: var(--brand-d); }
+  #cm .opt.center { text-align: center; }
+  #cm .opt.ghost { flex: 0 1 auto; border-color: var(--line); color: var(--ink2); text-align: center; }
+  #cm .opt.ghost:hover:not(:disabled) { background: #f5f7fb; }
+  #cm .opt:disabled { opacity: .4; cursor: default; }
+  body.pm-on #aery-say, body.pm-on #objective, body.pm-on #route-hint, body.pm-on #hint-card { display: none !important; }
   body.pm-on #vignette { display: none; }
-  @media (max-width: 860px) {
-    #pm .pm-top { flex-wrap: wrap; padding: 10px 12px; gap: 8px; }
-    #pm .pm-progress { order: 3; flex-basis: 100%; justify-content: flex-start; }
-    #pm .pm-body { flex-direction: column; padding: 10px 12px; gap: 10px; }
-    #pm .pm-levels { flex: 0 0 auto; flex-direction: row; overflow-x: auto; }
-    #pm .pm-levels .pm-lh { display: none; }
-    #pm .pm-lv { flex: 0 0 auto; padding: 8px 10px; }
-    #pm .pm-lv small { display: none; }
-    #pm .pm-stage { height: auto; width: 100%; }
-    #pm .pm-dot { width: 44px; height: 44px; font-size: 22px; }
-    #pm .pm-tag { font-size: 12px; padding: 4px 8px; }
-    #pm .pm-cta { margin-left: 0; width: 100%; }
+  @media (max-width: 560px) {
+    #cm .cm-row { padding: .5em .75em; } #cm .cm-steps { padding: 0 .75em .55em; } #cm .cm-inner { padding: 0 .75em; }
+    #cm .cm-dock { padding-left: .75em; padding-right: .75em; }
+    #cm .cm-tool .lbl { display: none; }
+    #cm .cm-title span { display: none; } #cm .cm-title b { font-size: .92em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    #cm .msg { max-width: 86%; }
+    #cm .opt { flex-basis: 100%; } #cm .opt.ghost { flex-basis: auto; }
   }
   body.fs1 #panel-box, body.fs1 #aery-say, body.fs1 #objective, body.fs1 #hint-card, body.fs1 #nav-compass, body.fs1 #game-hint,
-  body.fs1 #help-overlay > *, body.fs1 #howto > *, body.fs1 #stage-clear > *, body.fs1 #pm .pm-head, body.fs1 #pm .pm-levels, body.fs1 #pm .pm-checks, body.fs1 #pm .pm-tag { zoom: 1.2; }
+  body.fs1 #help-overlay > *, body.fs1 #howto > *, body.fs1 #stage-clear > * { zoom: 1.2; }
   body.fs2 #panel-box, body.fs2 #aery-say, body.fs2 #objective, body.fs2 #hint-card, body.fs2 #nav-compass, body.fs2 #game-hint,
-  body.fs2 #help-overlay > *, body.fs2 #howto > *, body.fs2 #stage-clear > *, body.fs2 #pm .pm-head, body.fs2 #pm .pm-levels, body.fs2 #pm .pm-checks, body.fs2 #pm .pm-tag { zoom: 1.4; }
+  body.fs2 #help-overlay > *, body.fs2 #howto > *, body.fs2 #stage-clear > * { zoom: 1.4; }
   body.fs1 #panel-box, body.fs2 #panel-box { max-height: 84vh; overflow-y: auto; }
 `;
     document.head.appendChild(st);
@@ -7291,220 +7350,496 @@ console.warn( 'Scripts "build/three.js" and "build/three.min.js" are deprecated 
   }
   function cycleFont(e) { if (e) e.stopPropagation(); fontScale = (fontScale + 1) % 3; try { localStorage.setItem(FONT_KEY, String(fontScale)); } catch (_) {} applyFont(); }
 
-  // ---- 3D 模式右上角：切換到點選模式、字體大小 ----
+  // ---- 3D 模式右上角：切換到聊天模式、字體大小 ----
   const hudBtns = document.getElementById('help-btn') ? document.getElementById('help-btn').parentElement : null;
   const modeBtn = document.createElement('button'); modeBtn.type = 'button'; modeBtn.className = 'hud-pill';
-  modeBtn.innerHTML = '🖱️<span class="lbl"> 改用點選模式</span>'; modeBtn.title = '不用操作 3D，點一點就能完成';
+  modeBtn.innerHTML = '💬<span class="lbl"> 改用聊天模式</span>'; modeBtn.title = '不用操作 3D，跟 Aery 聊天就能完成';
   const fontBtn = document.createElement('button'); fontBtn.type = 'button'; fontBtn.className = 'hud-pill'; fontBtns.push(fontBtn);
   if (hudBtns) { hudBtns.insertBefore(fontBtn, hudBtns.firstChild); hudBtns.insertBefore(modeBtn, hudBtns.firstChild); }
   fontBtn.addEventListener('click', e => { cycleFont(e); showRouteHint('🔠 字體大小：' + FONT_NAMES[fontScale], 'font-' + fontScale); });
   modeBtn.addEventListener('click', e => { e.stopPropagation(); setPlayMode('point'); });
 
-  // 點選模式不鎖滑鼠（才能點畫面上的按鈕）
+  // 聊天模式不鎖滑鼠（才能點畫面上的按鈕）
   const _origLock = container.requestPointerLock ? container.requestPointerLock.bind(container) : null;
   container.requestPointerLock = function () {
     if (pointMode) return Promise.resolve();
     return _origLock ? _origLock() : undefined;
   };
 
-  // ---- 點選模式畫面 ----
-  const pm = document.createElement('div'); pm.id = 'pm';
-  pm.innerHTML =
-    '<div class="pm-top"><div class="pm-brand">Aery 訓練空間・' + ROLE_TXT + '<small>🖱️ 點選模式・點一點就能完成</small></div>' +
-    '<div class="pm-progress"><span class="pm-ptxt"></span><div class="pm-bar"><i></i></div></div>' +
-    '<div class="pm-tools"><button type="button" class="pm-font"></button><button type="button" class="pm-sound">🔊</button><button type="button" class="pm-3d">🎮 改玩 3D</button></div></div>' +
-    '<div class="pm-body"><div class="pm-levels"></div><div class="pm-main"></div></div>';
-  document.body.appendChild(pm);
-  const pmLevels = pm.querySelector('.pm-levels'), pmMain = pm.querySelector('.pm-main');
-  const pmFont = pm.querySelector('.pm-font'); fontBtns.push(pmFont);
-  pmFont.addEventListener('click', cycleFont);
-  pm.querySelector('.pm-3d').addEventListener('click', () => setPlayMode('explore'));
-  pm.querySelector('.pm-sound').addEventListener('click', e => { soundToggle.click(); e.currentTarget.textContent = soundMuted ? '🔇' : '🔊'; });
-  ['mousedown', 'mouseup', 'click'].forEach(ev => pm.addEventListener(ev, e => e.stopPropagation()));
+  // =====================================================================
+  // 聊天模式：每一關的開場白、聊天小遊戲（全部不計時）、本關重點
+  // （線索與角色對話直接沿用 3D 模式的 CLUE_DATA，兩種模式內容一致）
+  // =====================================================================
+  const CHAT_ROOMS = {
+    pdpa: {
+      intro: '辦公室每天都在處理客戶和同事的資料，一不小心就可能外洩。先來看看發生了什麼事。',
+      point: '用的時候上鎖、用完確實碎掉、加密檔的密碼要分開給。',
+      game: { type: 'sort', intro: '換你來整理文件！我每次拿出一份文件，請點下面的箱子，決定它要放哪裡。',
+        hint: '先問自己兩個問題：這份文件有沒有個人資料？如果有，現在還在使用嗎？',
+        bins: {
+          lock:    { icon: '🔒', name: '上鎖櫃', rule: '還在使用、有個資的文件', why: '還在使用、含有個資的文件，要收進上鎖櫃保管。' },
+          shred:   { icon: '✂️', name: '碎紙機', rule: '已經用完、有個資的文件', why: '目的已經結束的個資，要用碎紙機銷毀，不能直接回收。' },
+          recycle: { icon: '♻️', name: '回收箱', rule: '完全沒有個資的文件', why: '只有不含任何個人資料的文件，才可以直接回收。' } },
+        items: [
+          { icon: '📋', name: '進行中的客戶合約', bin: 'lock' }, { icon: '🩺', name: '員工健康檢查報告', bin: 'lock' },
+          { icon: '📑', name: '已結案的客戶名單', bin: 'shred' }, { icon: '📄', name: '未錄取者的履歷', bin: 'shred' },
+          { icon: '📘', name: '產品型錄', bin: 'recycle' }, { icon: '📝', name: '空白申請表', bin: 'recycle' } ] },
+    },
+    osh: {
+      intro: '辦公室看起來很安全，其實藏著不少小危險。記住口訣<b>「看、避、報」</b>：看見風險、先避開、再通報。',
+      point: '看、避、報：看見風險 → 先讓大家避開 → 通報處理。',
+      game: { type: 'pick', layout: 'grid', intro: '來做一次辦公室巡檢吧！下面有 9 樣東西，請<b>點出所有有危險的</b>，選好後按「送出檢查」。',
+        hint: '想想看：哪些東西可能讓人滑倒、絆倒、觸電，或是起火？',
+        items: [
+          { icon: '💧', text: '地板濕滑', good: true, note: '擺警示牌，並通知清潔' }, { icon: '🪴', text: '窗邊的盆栽', good: false, note: '沒有危險' },
+          { icon: '🔌', text: '電線橫越走道', good: true, note: '用線槽固定，或改走牆邊' }, { icon: '☕', text: '桌上的咖啡杯', good: false, note: '沒有危險' },
+          { icon: '📦', text: '紙箱堵住逃生門', good: true, note: '立刻清除，保持通道暢通' }, { icon: '🧯', text: '掛好的滅火器', good: false, note: '這是安全設備' },
+          { icon: '⚡', text: '插座插滿電器', good: true, note: '分散用電，必要時通報總務' }, { icon: '📚', text: '整齊的書架', good: false, note: '沒有危險' },
+          { icon: '🔥', text: '電暖器貼著紙箱', good: true, note: '保持距離，離開時關電源' } ] },
+    },
+    ai_policy: {
+      intro: 'AI 工具很好用，但貼進去的資料可能被保存，甚至拿去訓練模型。用之前要先想清楚：哪些資料不能交給 AI？',
+      point: '先去識別化 → 再交給 AI → 結果要自己查證。',
+      game: { type: 'pick', layout: 'table', intro: '主管請你用 AI 分析「<b>各縣市、各年齡層的購買偏好</b>」。請<b>點選不該交給 AI 的欄位</b>把它塗黑，分析需要的資料要留著。',
+        hint: '分析「縣市」和「年齡層」的偏好時，需要知道客戶是誰嗎？能直接認出一個人的資料，就要塗黑。',
+        items: [
+          { text: '姓名', sub: '王大明、林小華', good: true, note: '能直接認出是誰，分析用不到' },
+          { text: '身分證字號', sub: 'A123456789', good: true, note: '高度敏感，絕對不能輸入外部 AI' },
+          { text: '居住縣市', sub: '臺北市、臺中市', good: false, note: '分析需要，單獨無法認出是誰' },
+          { text: '手機號碼', sub: '0912-345-678', good: true, note: '能直接聯絡並認出本人' },
+          { text: '年齡層', sub: '30–39 歲', good: false, note: '分析需要，已經是區間不是生日' },
+          { text: '購買品項', sub: '筆記型電腦', good: false, note: '這次分析的核心資料' } ] },
+    },
+    infosec: {
+      intro: '駭客最常用的方法，就是寄一封看起來很真的信，騙你點連結。記住口訣<b>「疑、查、報」</b>：先懷疑、再查證、有問題就通報。',
+      point: '疑、查、報：先懷疑 → 換管道查證 → 通報資安窗口。',
+      game: { type: 'pick', layout: 'mail', intro: '你的收件匣來了 7 封信，其中藏著釣魚信。公司的網域是 <b>' + COMPANY_DOMAIN + '</b>，請<b>點出所有釣魚信</b>，選好後按「送出檢查」。',
+        hint: '仔細看 @ 後面的每一個字：有沒有多一個字母、把 o 換成 0，或在後面偷偷接了別的網域？',
+        items: [
+          { icon: '✉️', text: '10 月教育訓練公告', sub: 'hr@' + COMPANY_DOMAIN, good: false, note: '公司網域，正常的信' },
+          { icon: '✉️', text: '信箱將於今日停用', sub: 'it-support@systex-mail.com', good: true, note: '網域是 systex-mail.com，還用「今日停用」催你' },
+          { icon: '✉️', text: '週六系統維護通知', sub: 'it-service@' + COMPANY_DOMAIN, good: false, note: '公司網域，正常的信' },
+          { icon: '✉️', text: '年終獎金試算表', sub: 'hr@systtex.com.tw', good: true, note: '「systtex」多了一個 t，是仿冒網域' },
+          { icon: '✉️', text: '3 封郵件遭隔離', sub: 'no-reply@micros0ft-365.com', good: true, note: '把字母 o 換成數字 0' },
+          { icon: '✉️', text: '本月報帳截止提醒', sub: 'finance@' + COMPANY_DOMAIN, good: false, note: '公司網域，正常的信' },
+          { icon: '✉️', text: '密碼即將到期', sub: 'it@systex.com.tw-login.net', good: true, note: '真正的網域是最後面的 -login.net' } ] },
+    },
+    bullying: {
+      intro: '身為主管，你常常是第一個接住員工的人。先來看看團隊裡發生了什麼事。',
+      point: '接住、記錄、通報、保密、防報復。霸凌不限上對下，同事之間也算。',
+      game: { type: 'pick', layout: 'grid', intro: '小誠的事要怎麼處理？下面有 8 個做法，請<b>點出所有主管該做的正確做法</b>，選好後按「送出檢查」。',
+        hint: '好的處理有幾個關鍵：重視當事人、留下紀錄、走正式程序、保密，還有防止報復。',
+        items: [
+          { icon: '👂', text: '認真聆聽、記錄事實', good: true, note: '處理的第一步' }, { icon: '😅', text: '「只是開玩笑啦」', good: false, note: '把霸凌合理化' },
+          { icon: '📨', text: '依程序通報人資', good: true, note: '走公司的正式程序' }, { icon: '🤝', text: '私下勸兩人和解', good: false, note: '不能取代正式程序' },
+          { icon: '🤐', text: '申訴內容全程保密', good: true, note: '保護當事人' }, { icon: '📢', text: '跟全組說明事件', good: false, note: '違反保密原則' },
+          { icon: '👀', text: '留意是否被報復', good: true, note: '結案後也要持續關心' }, { icon: '🚚', text: '直接把申訴人調走', good: false, note: '可能對申訴人不利' } ] },
+    },
+    harassment: {
+      intro: '主管最重要的一句話：<b>「一知悉，就要處理」</b>，不必等當事人正式提出書面申訴。',
+      point: '知悉 → 保護 → 受理 → 保密調查 → 懲處追蹤。',
+      game: { type: 'order', intro: '請依照正確順序，<b>一個一個點出</b>處理性騷擾的 5 個步驟。小心，裡面藏了 2 個錯誤做法！',
+        hint: '先「知道」才能處理；知道之後第一件事是保護當事人，最後才是懲處和追蹤。',
+        steps: [
+          { icon: '👂', text: '知悉情事', note: '不必等正式的書面申訴' }, { icon: '🛡️', text: '立即保護', note: '例如避免雙方接觸，並尊重當事人意願' },
+          { icon: '📝', text: '受理申訴', note: '受理並依規定辦理通報' }, { icon: '🔍', text: '保密調查', note: '由申訴處理委員會調查，全程保密' },
+          { icon: '⚖️', text: '懲處追蹤', note: '依結果懲處，並追蹤是否再發生或被報復' } ],
+        traps: [ { icon: '✉️', text: '等書面申訴', note: '知悉就要啟動處理，不必等書面申訴。' }, { icon: '🤝', text: '勸雙方和解', note: '私下和解不能取代正式程序。' } ] },
+    },
+    case_sim: {
+      intro: '主管常遇到的難題：這到底是<b>霸凌</b>、<b>性騷擾</b>，還是<b>正常的管理</b>？',
+      point: '先看目的和方式：合理、尊重是管理；持續貶抑是霸凌；與性有關、違反意願是性騷擾。',
+      game: { type: 'sort', intro: '我會給你 6 個案件，每次拿出一個，請點下面的分類。',
+        hint: '有合理目的、用尊重的方式提出，是正常管理；持續貶抑或排擠是霸凌；跟性或性別有關、違反對方意願的言行是性騷擾。',
+        bins: {
+          bully:  { icon: '😣', name: '職場霸凌', rule: '持續貶抑、排擠、羞辱', why: '持續性的貶抑、排擠、羞辱或孤立，讓人身心受傷；不限上對下，同事之間也算。' },
+          harass: { icon: '🚫', name: '性騷擾', rule: '與性或性別有關、違反意願', why: '與性或性別有關、違反對方意願的言行，包括訊息、玩笑、評論身材與碰觸。' },
+          manage: { icon: '📋', name: '正常管理', rule: '合理目的、尊重的方式', why: '有合理目的、依程序、以尊重的方式進行的管理行為，不算霸凌。' } },
+        items: [
+          { icon: '💬', name: '在群組裡長期嘲諷同事', bin: 'bully' }, { icon: '🚪', name: '故意不通知某人開會', bin: 'bully' },
+          { icon: '📱', name: '一直傳曖昧訊息給同事', bin: 'harass' }, { icon: '🍷', name: '以升遷為條件要求約會', bin: 'harass' },
+          { icon: '⏰', name: '要求常遲到的員工改善', bin: 'manage' }, { icon: '📝', name: '指正報告裡的錯誤', bin: 'manage' } ] },
+    },
+  };
+  const CHAT_COLORS = ['#6f7fd0', '#3f9e88', '#c98a1b', '#c96f84', '#c9844a', '#7a6fc9'];
+  const chatColor = r => CHAT_COLORS[levelIndex(r.id) % CHAT_COLORS.length];
 
-  let pmRoomId = null;          // 目前看的關卡
-  const snapCache = {};         // 每間房的情境圖
-  const snapCam = new THREE.PerspectiveCamera(70, 16 / 9, 0.1, 120);
-  function roomTargets(r) {
-    const y0 = r.floor === 1 ? 0 : FLOOR2_Y;
-    const list = (roomClues[r.id] || []).map(c => ({ type: c.kind === 'npc' ? 'npc' : 'clue', ref: c, x: c.x, y: y0 + (c.kind === 'npc' ? 1.25 : 1.15), z: c.z }));
-    const m = missionMarkers[r.id];
-    if (m) list.push({ type: 'mission', x: m.position.x, y: y0 + 1.1, z: m.position.z });
-    return list;
+  // ---- 聊天畫面 ----
+  const AERY_SVG = '<svg viewBox="0 0 60 60" aria-hidden="true"><circle cx="30" cy="30" r="30" fill="#ffe1d4"/><line x1="30" y1="12" x2="30" y2="7" stroke="#4a3a33" stroke-width="2" stroke-linecap="round"/><circle cx="30" cy="6" r="3" fill="#e8826a" stroke="#4a3a33" stroke-width="1.5"/><rect x="9" y="22" width="5" height="12" rx="2.5" fill="#f2b6a3" stroke="#4a3a33" stroke-width="1.5"/><rect x="46" y="22" width="5" height="12" rx="2.5" fill="#f2b6a3" stroke="#4a3a33" stroke-width="1.5"/><rect x="12" y="12" width="36" height="30" rx="12" fill="#9cc4e8" stroke="#4a3a33" stroke-width="2"/><rect x="17" y="18" width="26" height="17" rx="8" fill="#2f3b4a"/><path d="M21.5 26q2.5-3 5 0M33.5 26q2.5-3 5 0" fill="none" stroke="#8ff0d0" stroke-width="2" stroke-linecap="round"/><path d="M27 29.5q3 2.5 6 0" fill="none" stroke="#8ff0d0" stroke-width="2" stroke-linecap="round"/><rect x="20" y="42" width="20" height="14" rx="6" fill="#cfe2f6" stroke="#4a3a33" stroke-width="2"/></svg>';
+  const cm = document.createElement('div'); cm.id = 'cm';
+  cm.innerHTML =
+    '<div class="cm-top"><div class="cm-row"><span class="cm-av-top">' + AERY_SVG + '</span>' +
+    '<div class="cm-title"><b>Aery 聊天闖關・' + ROLE_TXT + '</b><span>💬 聊天模式・點下面的按鈕就能回答</span></div>' +
+    '<div class="cm-tools"><button type="button" class="cm-tool cm-font"></button><button type="button" class="cm-tool cm-sound">🔊</button>' +
+    '<button type="button" class="cm-tool cm-3d">🎮<span class="lbl"> 改玩 3D</span></button></div></div>' +
+    '<nav class="cm-steps" aria-label="闖關進度"></nav></div>' +
+    '<div class="cm-log" aria-live="polite"><div class="cm-inner"></div></div>' +
+    '<div class="cm-dock"><div class="cm-dock-in"><div class="cm-hint"></div><div class="opts"></div></div></div>';
+  document.body.appendChild(cm);
+  const $cmLog = cm.querySelector('.cm-log'), $cmIn = cm.querySelector('.cm-inner'), $cmOpts = cm.querySelector('.opts'), $cmHint = cm.querySelector('.cm-hint'), $cmSteps = cm.querySelector('.cm-steps');
+  const cmFont = cm.querySelector('.cm-font'); fontBtns.push(cmFont);
+  cmFont.addEventListener('click', e => { cycleFont(e); cmScroll(); });
+  cm.querySelector('.cm-3d').addEventListener('click', () => setPlayMode('explore'));
+  cm.querySelector('.cm-sound').addEventListener('click', e => { soundToggle.click(); e.currentTarget.textContent = soundMuted ? '🔇' : '🔊'; });
+  ['mousedown', 'mouseup', 'click', 'keydown'].forEach(ev => cm.addEventListener(ev, e => e.stopPropagation()));
+
+  // ---- 聊天引擎 ----
+  let chatRun = 0;                       // 換模式時遞增，舊的對話流程就會自動停止
+  const CHAT_STOP = { stop: true };
+  const cmReduced = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const cmSleep = ms => new Promise(r => setTimeout(r, cmReduced ? Math.min(ms, 120) : ms));
+  const cmStrip = s => String(s).replace(/<[^>]+>/g, '');
+  function cmScroll() { requestAnimationFrame(() => { $cmLog.scrollTop = $cmLog.scrollHeight; }); }
+  function cmEl(tag, cls, html) { const e = document.createElement(tag); if (cls) e.className = cls; if (html != null) e.innerHTML = html; return e; }
+  function cmCheck(tok) { if (tok !== chatRun) throw CHAT_STOP; }
+  const cmAv = () => '<span class="av">' + AERY_SVG + '</span>';
+  const npcAv = n => '<div class="av av-npc" style="background:' + n.color + '">' + escHtml(n.name.slice(0, 1)) + '</div>';
+  function cmRow(kind, inner, o) {
+    o = o || {};
+    const row = cmEl('div', 'row ' + kind);
+    if (kind === 'aery') row.innerHTML = o.noAvatar ? '<div class="av-gap"></div>' : cmAv();
+    if (kind === 'npc') row.innerHTML = npcAv(o.npc);
+    const msg = cmEl('div', 'msg');
+    if (o.who) msg.appendChild(cmEl('div', 'who', escHtml(o.who)));
+    if (typeof inner === 'string') msg.appendChild(cmEl('div', 'bubble' + (o.tone ? ' ' + o.tone : ''), inner));
+    else msg.appendChild(inner);
+    row.appendChild(msg);
+    $cmIn.appendChild(row); cmScroll();
+    return row;
   }
-  // 從門口上方往房間裡拍一張「情境圖」，並算出每個線索在圖上的位置
-  function snapRoom(r) {
-    if (snapCache[r.id]) return snapCache[r.id];
-    const y0 = r.floor === 1 ? 0 : FLOOR2_Y;
-    const tg = roomTargets(r);
-    const doorX = r.side === 'left' ? Math.max(r.x1, r.x2) - 0.35 : Math.min(r.x1, r.x2) + 0.35;
-    const cz = (r.z1 + r.z2) / 2;
-    const cx = tg.reduce((s, p) => s + p.x, 0) / tg.length, czT = tg.reduce((s, p) => s + p.z, 0) / tg.length;
-    const cv = renderer.domElement, ar = cv.width / cv.height || 16 / 9;
-    snapCam.aspect = ar; snapCam.position.set(doorX, y0 + WALL_H1 - 0.45, cz);
-    let fov = 62, pts = [];
-    for (; fov <= 96; fov += 4) {
-      snapCam.fov = fov; snapCam.updateProjectionMatrix();
-      snapCam.lookAt(cx, y0 + 0.7, czT); snapCam.updateMatrixWorld();
-      pts = tg.map(p => { const v = new THREE.Vector3(p.x, p.y, p.z).project(snapCam); return { ...p, u: (v.x + 1) / 2, v: (1 - v.y) / 2 }; });
-      if (pts.every(p => p.u > 0.07 && p.u < 0.93 && p.v > 0.1 && p.v < 0.9)) break;
+  async function cmTyping(text, who) {
+    const tok = chatRun;
+    const row = cmEl('div', 'row typing', (who ? npcAv(who) : cmAv()) + '<div class="msg"><div class="bubble"><i></i><i></i><i></i></div></div>');
+    $cmIn.appendChild(row); cmScroll();
+    await cmSleep(Math.min(1200, 380 + cmStrip(text).length * 14));
+    row.remove(); cmCheck(tok);
+  }
+  async function say(html, tone) { await cmTyping(html); return cmRow('aery', html, { tone }); }
+  async function npcSay(n, line) { await cmTyping(line, n); return cmRow('npc', escHtml(line), { npc: n, who: n.name }); }
+  const meSay = t => cmRow('me', escHtml(t));
+  async function cmCard(node) { const tok = chatRun; await cmSleep(250); cmCheck(tok); const r = cmRow('aery', node, { noAvatar: true }); r.classList.add('is-card'); return r; }
+  function cmSetHint(t) { $cmHint.innerHTML = t ? '<span class="dot"></span>' + t : ''; }
+  function cmClearDock() { $cmOpts.innerHTML = ''; cmSetHint(''); }
+  function cmAsk(choices, o) {
+    o = o || {};
+    return new Promise(resolve => {
+      $cmOpts.innerHTML = '';
+      cmSetHint(o.hint || '請點下面的按鈕');
+      choices.forEach((c, i) => {
+        const b = cmEl('button', 'opt ' + (c.cls || ''), escHtml(c.label)); b.type = 'button';
+        if (c.disabled) b.disabled = true;
+        b.onclick = () => { cmClearDock(); playSound('open'); if (c.echo !== false) meSay(c.echoText || c.label); resolve(c.value != null ? c.value : i); };
+        $cmOpts.appendChild(b);
+      });
+      (o.extras || []).forEach(x => { const b = cmEl('button', 'opt ghost', escHtml(x.label)); b.type = 'button'; b.onclick = () => x.onClick(b); $cmOpts.appendChild(b); });
+    });
+  }
+  const hintBtn = text => ({ label: '💡 給我提示', onClick: async b => { b.disabled = true; try { await say('💡 ' + text); } catch (_) {} b.disabled = false; } });
+  const cmShuffle = a => { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
+
+  // ---- 進度列：每一關＋最終關 ----
+  function cmRenderSteps(nowId) {
+    const items = ROOMS.map((r, i) => ({ id: r.id, label: r.name.replace(/(與實務|管理辦法|通識|預防舉措|防治)$/, ''), done: passedRooms.has(r.id), n: i + 1 }))
+      .concat([{ id: '__final', label: '最終關', done: LEVEL.finalDone, n: '🏁' }]);
+    $cmSteps.innerHTML = items.map(x => '<div class="cm-step ' + (x.id === nowId ? 'now' : x.done ? 'done' : '') + '"><span class="n">' + (x.done && x.id !== nowId ? '✓' : x.n) + '</span>' + escHtml(x.label) + '</div>').join('');
+    const cur = $cmSteps.querySelector('.now'); if (cur && cur.scrollIntoView) cur.scrollIntoView({ inline: 'center', block: 'nearest' });
+  }
+
+  // ---- 聊天小遊戲 ----
+  const CHAT_GAMES = {};
+  CHAT_GAMES.sort = async function (g) {
+    let miss = 0;
+    const legend = cmEl('div', 'card', '<div class="card-title">📦 分類規則</div><div class="legend">' +
+      Object.values(g.bins).map(b => '<div>' + b.icon + ' <b>' + escHtml(b.name) + '</b>：' + escHtml(b.rule) + '</div>').join('') + '</div>');
+    await cmCard(legend);
+    const items = cmShuffle(g.items);
+    for (let i = 0; i < items.length; i++) {
+      const it = items[i];
+      const c = cmEl('div', 'card', '<div class="card-sub">第 ' + (i + 1) + ' / ' + items.length + ' 個</div><div class="item"><span class="big">' + it.icon + '</span><div><div class="name">' + escHtml(it.name) + '</div><div class="res"></div></div></div>');
+      await cmCard(c);
+      const pick = await cmAsk(Object.keys(g.bins).map(k => ({ label: g.bins[k].icon + ' ' + g.bins[k].name, value: k, cls: 'center' })), { hint: '這個要放哪裡？', extras: [hintBtn(g.hint)] });
+      const right = g.bins[it.bin], res = c.querySelector('.res');
+      if (pick === it.bin) { res.className = 'res ok'; res.textContent = '✓ 正確，放進' + right.name; playSound('correct'); }
+      else {
+        miss++; res.className = 'res bad'; res.textContent = '✕ 應該放進' + right.name; playSound('wrong');
+        await say('這個應該放進 ' + right.icon + ' <b>' + escHtml(right.name) + '</b>。' + escHtml(right.why), 'bad');
+      }
     }
-    // 拍照時先藏起 3D 標籤，畫面比較乾淨
-    const hidden = [];
-    const hide = o => { if (o && o.visible) { o.visible = false; hidden.push(o); } };
-    (roomClues[r.id] || []).forEach(c => { hide(c.label); hide(c.bubble); });
-    Object.values(missionMarkers).forEach(hide);
-    hide(beaconGroup);
-    renderer.render(scene, snapCam);
-    let url = '';
-    try { url = renderer.domElement.toDataURL('image/jpeg', 0.86); } catch (_) {}
-    hidden.forEach(o => { o.visible = true; });
-    // 圓點太近時互相推開，避免標籤疊在一起
-    for (let it = 0; it < 40; it++) {
-      for (let i = 0; i < pts.length; i++) for (let j = i + 1; j < pts.length; j++) {
-        const a = pts[i], b = pts[j];
-        // 每個圓點＋標籤大約佔 寬 0.2 × 高 0.17（以圖片比例計），兩個方框重疊就往重疊較少的方向推開
-        const W = 0.2, H = 0.17;
-        const dx = b.u - a.u, dy = b.v - a.v;
-        const ox = W - Math.abs(dx), oy = H - Math.abs(dy);
-        if (ox > 0 && oy > 0) {
-          if (ox < oy) { const s = (dx >= 0 ? 1 : -1) * ox / 2; a.u -= s; b.u += s; }
-          else { const s = (dy >= 0 ? 1 : -1) * oy / 2; a.v -= s; b.v += s; }
+    await say(miss === 0 ? '全部分對了，太厲害了！🎉' : '分完了！錯的那幾個，記得再看一下說明喔。', miss === 0 ? 'ok' : '');
+    return miss;
+  };
+  CHAT_GAMES.pick = async function (g) {
+    const layout = g.layout || 'grid';
+    const c = cmEl('div', 'card'), grid = cmEl('div', 'tiles ' + (layout === 'grid' ? 'grid' : 'list'));
+    const tiles = g.items.map(it => {
+      const t = cmEl('button', 'tile' + (layout === 'table' ? ' rowtile' : layout === 'mail' ? ' mail' : '')); t.type = 'button';
+      t.setAttribute('aria-pressed', 'false');
+      if (layout === 'table') t.innerHTML = '<span class="lab">' + escHtml(it.text) + '</span><span class="val">' + escHtml(it.sub) + '</span><span class="t-note"></span>';
+      else if (layout === 'mail') t.innerHTML = '<span>' + it.icon + '</span><span><span class="subj">' + escHtml(it.text) + '</span><br><span class="addr">' + escHtml(it.sub) + '</span></span><span class="t-note"></span>';
+      else t.innerHTML = '<span class="t-ico">' + it.icon + '</span><span class="t-txt">' + escHtml(it.text) + '</span><span class="t-note"></span>';
+      grid.appendChild(t); return t;
+    });
+    c.appendChild(grid);
+    await cmCard(c);
+    let submit = null;
+    const count = () => tiles.filter(t => t.classList.contains('sel')).length;
+    tiles.forEach(t => t.onclick = () => {
+      const on = !t.classList.contains('sel');
+      t.classList.toggle('sel', on); t.setAttribute('aria-pressed', on ? 'true' : 'false'); playSound('open');
+      if (submit) submit.disabled = count() === 0;
+      cmSetHint(count() ? '已選 ' + count() + ' 個，選好了就按「送出檢查」' : '點上面的項目來選擇');
+    });
+    const wait = cmAsk([{ label: '✅ 送出檢查', cls: 'primary', echoText: '我選好了！', disabled: true }], { hint: '點上面的項目來選擇', extras: [hintBtn(g.hint)] });
+    submit = $cmOpts.querySelector('.opt.primary');
+    await wait;
+    let miss = 0, wrong = 0;
+    g.items.forEach((it, i) => {
+      const t = tiles[i], sel = t.classList.contains('sel'), note = t.querySelector('.t-note');
+      t.disabled = true; t.classList.remove('sel');
+      if (it.good && sel) { t.classList.add('g-ok'); note.textContent = '✓ ' + it.note; }
+      else if (it.good) { miss++; t.classList.add('g-miss'); note.textContent = '漏掉了：' + it.note; }
+      else if (sel) { wrong++; t.classList.add('g-bad'); note.textContent = '✕ 不用選：' + it.note; }
+      else t.classList.add('g-dim');
+    });
+    cmScroll();
+    playSound(miss + wrong === 0 ? 'correct' : 'wrong');
+    if (miss + wrong === 0) await say('全部答對了，太厲害了！🎉 每個項目下面都有小說明，可以看一下。', 'ok');
+    else await say('差一點點！' + [miss ? '漏掉 <b>' + miss + '</b> 個（黃色）' : '', wrong ? '多選了 <b>' + wrong + '</b> 個（紅色）' : ''].filter(Boolean).join('，') + '。每個項目下面都有說明，看完再繼續就好。');
+    return miss + wrong;
+  };
+  CHAT_GAMES.order = async function (g) {
+    const c = cmEl('div', 'card', '<div class="card-title">處理路線</div><div class="route"><span class="ph">依序點下面的步驟，路線會出現在這裡</span></div>');
+    const grid = cmEl('div', 'tiles grid');
+    const all = cmShuffle(g.steps.map((s, i) => ({ s, i })).concat(g.traps.map(s => ({ s, trap: true }))));
+    const tiles = all.map(x => { const t = cmEl('button', 'tile', '<span class="t-ico">' + x.s.icon + '</span><span class="t-txt">' + escHtml(x.s.text) + '</span><span class="t-note"></span>'); t.type = 'button'; grid.appendChild(t); return t; });
+    c.appendChild(grid);
+    await cmCard(c);
+    const route = c.querySelector('.route'), tok = chatRun;
+    let next = 0, miss = 0, busy = false, told = false;
+    const wrongAt = new Set();
+    return new Promise((resolve, reject) => {
+      $cmOpts.innerHTML = ''; cmSetHint('請點出第 1 步');
+      const hb = hintBtn(g.hint), b = cmEl('button', 'opt ghost', escHtml(hb.label)); b.type = 'button'; b.onclick = () => hb.onClick(b); $cmOpts.appendChild(b);
+      all.forEach((x, k) => tiles[k].onclick = async () => {
+        if (busy || tok !== chatRun) return;
+        const t = tiles[k], note = t.querySelector('.t-note');
+        try {
+          if (x.trap) {
+            busy = true; miss++; playSound('wrong');
+            t.disabled = true; t.classList.add('g-bad'); note.textContent = '✕ 這是錯誤做法';
+            await say('「' + escHtml(x.s.text) + '」是錯誤做法：' + escHtml(x.s.note), 'bad');
+            busy = false; return;
+          }
+          if (x.i !== next) {
+            if (!wrongAt.has(next)) { miss++; wrongAt.add(next); }
+            playSound('wrong');
+            t.classList.add('g-bad'); note.textContent = '還不是這一步';
+            setTimeout(() => { t.classList.remove('g-bad'); note.textContent = ''; }, 1400);
+            if (!told) { told = true; busy = true; await say('「' + escHtml(x.s.text) + '」還不是這一步喔。想想看，在這之前要先做什麼？不確定的話可以按「💡 給我提示」。'); busy = false; }
+            return;
+          }
+          playSound('correct');
+          t.disabled = true; t.classList.add('placed');
+          t.insertAdjacentHTML('beforeend', '<span class="badge">' + (next + 1) + '</span>');
+          note.style.display = 'block'; note.style.color = 'var(--ok)'; note.textContent = x.s.note;
+          if (next === 0) route.innerHTML = '';
+          route.insertAdjacentHTML('beforeend', (next ? '<span class="arrow">→</span>' : '') + '<span class="r">' + escHtml(x.s.text) + '</span>');
+          next++;
+          if (next === g.steps.length) {
+            tiles.forEach(tt => { tt.disabled = true; });
+            cmClearDock();
+            await say(miss === 0 ? '一步都沒錯，完美！🎉' : '路線完成了！整條處理流程就是上面這 ' + g.steps.length + ' 步。', miss === 0 ? 'ok' : '');
+            resolve(miss);
+          } else cmSetHint('很好！請點出第 ' + (next + 1) + ' 步');
+        } catch (e) { reject(e); }
+      });
+    });
+  };
+
+  // ---- 一關的流程：線索 → 角色對話 → 小遊戲 → 過關（進度寫回遊戲本體，和 3D 模式共用）----
+  const starsOf = m => m <= 1 ? 3 : m <= 3 ? 2 : 1;
+  async function chatRoom(r, replay) {
+    const idx = levelIndex(r.id), cr = CHAT_ROOMS[r.id] || {}, color = chatColor(r);
+    cm.style.setProperty('--chap', color);
+    cmRenderSteps(r.id);
+    const bn = cmEl('div', 'banner', '<small>第 ' + (idx + 1) + ' 關 / 共 ' + ROOMS.length + ' 關</small><b>' + escHtml(r.name) + '</b>');
+    bn.style.background = color; $cmIn.appendChild(bn); cmScroll();
+    let miss = 0;
+    const list = roomClues[r.id] || [];
+    const clues = list.filter(c => c.kind !== 'npc' && !c.found), npcs = list.filter(c => c.kind === 'npc' && !c.found);
+    if (!replay) {
+      await say('第 ' + (idx + 1) + ' 關是「' + escHtml(r.name) + '」。' + (cr.intro ? '<br>' + cr.intro : ''));
+      const got = list.filter(c => c.found).length;
+      if (got && got < list.length) await say('這關你已經完成 ' + got + ' 個線索了，我們接著看剩下的。');
+      if (clues.length) await say('先來看 ' + clues.length + ' 個線索 🔍');
+      for (let i = 0; i < clues.length; i++) {
+        const c = clues[i], d = c.data;
+        const lines = d.lines || [];
+        const body = lines.map(l => /^🔑/.test(l) ? '<div class="key"><b>🔑 重點：</b>' + escHtml(l.replace(/^🔑\s*重點[:：]\s*/, '')) + '</div>' : '<div>' + escHtml(l.replace(/^📍\s*現場狀況[:：]\s*/, '')) + '</div>').join('');
+        await cmCard(cmEl('div', 'card clue', '<div class="card-sub">線索 ' + (i + 1) + ' / ' + clues.length + '</div><div class="card-title"><span class="ico">' + (d.icon || '🔍') + '</span>' + escHtml(d.title) + '</div>' + body));
+        await cmAsk([{ label: i < clues.length - 1 ? '看懂了，下一個線索 →' : '看懂了 👍', cls: 'primary' }], { hint: '看完線索後點下面的按鈕' });
+        markClueFound(c);
+      }
+      for (const c of npcs) {
+        const d = c.data, steps = d.steps || [{ line: d.line, options: d.options }];
+        const who = { name: d.isAery ? 'Aery' : d.name, color: '#' + (d.color || 0x5a80b8).toString(16).padStart(6, '0') };
+        if (d.isAery) await say((d.title || 'Aery 想考考你') + '！');
+        else await say('咦，<b>' + escHtml(d.name) + '</b>傳訊息給你了，幫幫' + (d.female ? '她' : '他') + '吧！');
+        for (const st of steps) {
+          const line = String(st.line || '').replace(/^「|」$/g, '');
+          if (d.isAery) await say(escHtml(line)); else await npcSay(who, line);
+          const opts = cmShuffle(st.options), tried = new Set();
+          while (true) {
+            const k = await cmAsk(opts.map((o, i) => ({ label: o.text, value: i, disabled: tried.has(i) })), { hint: d.isAery ? '選一個答案' : '你會怎麼回？' });
+            const o = opts[k];
+            if (o.ok) { playSound('correct'); await say('✅ ' + escHtml(o.why), 'ok'); break; }
+            miss++; tried.add(k); playSound('wrong');
+            await say('🤔 ' + escHtml(o.why) + '<br>再選一次看看？', 'bad');
+          }
         }
+        markClueFound(c);
       }
-      pts.forEach(p => { p.u = Math.max(0.09, Math.min(0.91, p.u)); p.v = Math.max(0.1, Math.min(0.88, p.v)); });
     }
-    const shot = { url, ar, pts };
-    if (url && url.length > 2000) snapCache[r.id] = shot;
-    return shot;
-  }
-  function curRoom() {
-    let r = ROOMS.find(x => x.id === pmRoomId);
-    if (!r || !isRoomUnlocked(r)) r = ROOMS.find(x => !passedRooms.has(x.id) && isRoomUnlocked(x)) || null;
-    return r;
-  }
-  function stepLine(r) {
-    if (!r) return '';
-    const left = 3 - cluesFound(r.id);
-    if (missionDone.has(r.id)) return '✅ 這一關已經過關了！可以再玩一次任務，或從左邊選下一關。';
-    if (left > 0) return '👉 點圖上<b>發光的圓點</b>，找齊 3 個線索（還差 ' + left + ' 個）';
-    return '🎯 線索找齊了！按下方<b>「開始任務」</b>挑戰小遊戲（共 2 回合）';
-  }
-  let pmSig = '';
-  function renderPm(force) {
-    if (!pointMode) return;
-    const r = curRoom();
-    const total = ROOMS.length;
-    const passed = ROOMS.filter(x => passedRooms.has(x.id)).length;
-    const sig = [r && r.id, passed, LEVEL.finalOpen, LEVEL.finalDone, fontScale, ROOMS.map(x => cluesFound(x.id) + ':' + (roundProgress[x.id] || 1) + ':' + isRoomUnlocked(x)).join(',')].join('|');
-    if (!force && sig === pmSig) return;
-    pmSig = sig;
-    pm.querySelector('.pm-ptxt').textContent = '進度：已過 ' + passed + ' / ' + total + ' 關' + (LEVEL.finalDone ? '・最終關完成 🎉' : '');
-    pm.querySelector('.pm-bar i').style.width = Math.round((passed + (LEVEL.finalDone ? 1 : 0)) / (total + 1) * 100) + '%';
-    // 左側關卡列表
-    pmLevels.innerHTML = '<div class="pm-lh">關卡（依序解鎖）</div>';
-    ROOMS.forEach((x, i) => {
-      const done = passedRooms.has(x.id), lock = !isRoomUnlocked(x);
-      const b = document.createElement('button'); b.type = 'button';
-      b.className = 'pm-lv' + (done ? ' done' : '') + (lock ? ' lock' : '') + (r && r.id === x.id ? ' cur' : '');
-      b.innerHTML = '<span class="n">' + (done ? '✓' : lock ? '🔒' : (i + 1)) + '</span><span><b>第 ' + (i + 1) + ' 關：' + escHtml(x.name) + '</b><small>' +
-        (done ? '已過關' : lock ? '完成上一關後解鎖' : '線索 ' + cluesFound(x.id) + ' / 3') + '</small></span>';
-      if (!lock) b.addEventListener('click', () => { pmRoomId = x.id; renderPm(true); });
-      pmLevels.appendChild(b);
-    });
-    {
-      const b = document.createElement('button'); b.type = 'button';
-      const open = LEVEL.finalOpen;
-      b.className = 'pm-lv' + (LEVEL.finalDone ? ' done' : '') + (open ? '' : ' lock') + (!r && open ? ' cur' : '');
-      b.innerHTML = '<span class="n">' + (LEVEL.finalDone ? '✓' : open ? '🏁' : '🔒') + '</span><span><b>最終關：綜合挑戰</b><small>' + (LEVEL.finalDone ? '已完成' : open ? '可以挑戰' : '通過所有關卡後開放') + '</small></span>';
-      if (open) b.addEventListener('click', () => { pmRoomId = '__final'; renderPm(true); });
-      pmLevels.appendChild(b);
+    // 小遊戲
+    const g = cr.game;
+    if (g && CHAT_GAMES[g.type]) {
+      await say((replay ? '再挑戰一次小遊戲！' : '接下來是小遊戲 🎮 ') + g.intro);
+      miss += await CHAT_GAMES[g.type](g);
     }
-    // 主畫面
-    if (pmRoomId === '__final' || !r) {
-      pmMain.innerHTML = '<div class="pm-final"><div class="big">' + (LEVEL.finalDone ? '🎉' : '🏁') + '</div><h2>' + (LEVEL.finalDone ? '恭喜全數破關！' : '最終關：綜合挑戰') + '</h2>' +
-        '<p>' + (LEVEL.finalDone ? '你已經完成所有關卡和最終挑戰。可以從左邊回到任一關複習，或再挑戰一次最終關。' : '所有單元混合出題的快問快答，答對 ' + FINAL_PASS + ' 題以上就全數破關！') + '</p>' +
-        '<button type="button" class="pm-cta gold">' + (LEVEL.finalDone ? '🔁 再挑戰一次' : '🏁 開始最終關') + '</button></div>';
-      pmMain.querySelector('.pm-cta').addEventListener('click', () => openFinalQuiz());
-      return;
-    }
-    const shot = snapRoom(r);
-    const ready = cluesReady(r.id), done = missionDone.has(r.id);
-    pmMain.innerHTML = '<div class="pm-head"><h2>第 ' + (levelIndex(r.id) + 1) + ' 關：' + escHtml(r.name) + '</h2><div class="pm-step">' + stepLine(r) + '</div></div>' +
-      '<div class="pm-stagewrap"><div class="pm-stage" style="--ar:' + shot.ar.toFixed(4) + '">' + (shot.url ? '<img alt="' + escHtml(r.name) + '的辦公室情境圖" src="' + shot.url + '">' : '') + '</div></div>' +
-      '<div class="pm-checks"></div>';
-    const stage = pmMain.querySelector('.pm-stage'), checks = pmMain.querySelector('.pm-checks');
-    let n = 0;
-    shot.pts.forEach(p => {
-      if (p.type === 'mission' && !ready) return;
-      const b = document.createElement('button'); b.type = 'button';
-      b.style.left = (p.u * 100) + '%'; b.style.top = (p.v * 100) + '%';
-      if (p.type === 'mission') {
-        b.className = 'pm-spot mission';
-        b.innerHTML = '<span class="pm-dot">🎯</span><span class="pm-tag">' + (done ? '再玩一次任務' : '開始任務') + '</span>';
-        b.addEventListener('click', () => requestMission(r));
-      } else {
-        n++;
-        const c = p.ref, f = c.found;
-        b.className = 'pm-spot' + (f ? ' found' : '');
-        const name = c.kind === 'npc' ? '跟' + c.data.name + '聊聊' : c.data.title;
-        b.innerHTML = '<span class="pm-dot">' + (f ? '✓' : (c.kind === 'npc' ? '💬' : n)) + '</span><span class="pm-tag">' + (c.kind === 'npc' ? '💬 ' : '🔍 ') + escHtml(name) + '</span>';
-        b.addEventListener('click', () => { playSound('open'); c.kind === 'npc' ? openNpc(c) : openClue(c); });
-      }
-      stage.appendChild(b);
-    });
-    (roomClues[r.id] || []).forEach(c => {
-      const s = document.createElement('span'); s.className = 'pm-chip' + (c.found ? ' ok' : '');
-      s.textContent = (c.found ? '✓ ' : '○ ') + (c.kind === 'npc' ? '💬 ' + c.data.name : '🔍 ' + c.data.title);
-      checks.appendChild(s);
-    });
-    const cta = document.createElement('button'); cta.type = 'button'; cta.className = 'pm-cta';
-    if (done) {
-      const nx = ROOMS.find(x => !passedRooms.has(x.id) && isRoomUnlocked(x));
-      cta.className += ' gold';
-      cta.textContent = nx ? '下一關：' + nx.name + ' ▶' : (LEVEL.finalOpen ? '前往最終關 ▶' : '✓ 已過關');
-      cta.addEventListener('click', () => { pmRoomId = nx ? nx.id : '__final'; renderPm(true); });
-    } else if (ready) {
-      cta.textContent = '🎯 開始任務：' + MISSIONS[r.id].title + '（第 ' + (roundProgress[r.id] || 1) + ' / 2 回合）';
-      cta.addEventListener('click', () => requestMission(r));
-    } else {
-      cta.textContent = '🔒 找齊 3 個線索後開始任務'; cta.disabled = true;
-    }
-    checks.appendChild(cta);
+    const stars = starsOf(miss);
+    const firstTime = !passedRooms.has(r.id);
+    roundProgress[r.id] = 1;
+    markMissionDone(r.id, stars);
+    if (firstTime) onLevelCleared(r, stars);
+    playSound('complete');
+    try { writeSave(true); } catch (_) {}
+    cmRenderSteps(r.id);
+    const best = roomStars[r.id] || stars;
+    await cmCard(cmEl('div', 'card wrap', '<div class="card-title" style="justify-content:center">🎉 第 ' + (idx + 1) + ' 關過關！</div>' +
+      '<div class="stars">' + '★'.repeat(stars) + '<span class="off">' + '★'.repeat(3 - stars) + '</span></div>' +
+      (best > stars ? '<div class="card-sub">這關最高紀錄：' + best + ' 顆星</div>' : '') +
+      '<div class="point"><small>本關重點</small>' + escHtml(cr.point || r.desc || '') + '</div>'));
   }
-  setInterval(() => renderPm(false), 400);
-  window.addEventListener('resize', () => { Object.keys(snapCache).forEach(k => delete snapCache[k]); if (pointMode) renderPm(true); });
 
-  // 點選模式：線索結尾的提示改成「按開始任務」，Aery 不再說「走到、對準、按 E」
-  const _origOpenClue = openClue;
-  openClue = function (c) {
-    if (!pointMode) return _origOpenClue(c);
-    const others = roomClues[c.room.id].filter(x => !x.found && x !== c);
-    const tail = others.length
-      ? '🧩 記住上面的「重點」，任務小遊戲會用到！還差 ' + others.length + ' 個：' + others.map(x => x.kind === 'npc' ? '💬 跟' + x.data.name + '聊聊' : '🔍 ' + x.data.title).join('、')
-      : '✅ 3 個線索都找齊了！關掉這個視窗後，按「🎯 開始任務」挑戰小遊戲。';
-    const lines = c.data.lines.map((l, i) => (i === 0 && !/^📍/.test(l)) ? '📍 現場狀況：' + l : l).concat([tail]);
-    openDialogue({ title: c.data.title, lines, color: c.room.color });
-    markClueFound(c);
-    panelTag.textContent = '🔍 線索（' + cluesFound(c.room.id) + ' / 3）　' + c.room.name;
-  };
+  // ---- 最終關：不計時，答錯會說明；沒過的話，答錯的題目再給一次機會 ----
+  async function chatFinal() {
+    cmRenderSteps('__final');
+    cm.style.setProperty('--chap', '#6c5ce7');
+    const bn = cmEl('div', 'banner', '<small>最後一關</small><b>最終關：綜合挑戰</b>'); bn.style.background = '#6c5ce7';
+    $cmIn.appendChild(bn); cmScroll();
+    if (!LEVEL.finalOpen) openFinalGate();
+    await say('最後是綜合挑戰！一共 <b>' + FINAL_QUIZ.length + '</b> 題，<b>不計時</b>，答對 <b>' + FINAL_PASS + '</b> 題以上就全數破關，可以領結業證書。');
+    let score = 0;
+    const wrongQs = [];
+    for (let i = 0; i < FINAL_QUIZ.length; i++) {
+      const q = FINAL_QUIZ[i];
+      await cmCard(cmEl('div', 'card', '<div class="card-sub">第 ' + (i + 1) + ' / ' + FINAL_QUIZ.length + ' 題</div><div class="card-title">' + escHtml(q.q) + '</div>'));
+      const k = await cmAsk(q.a.map((t, j) => ({ label: t, value: j })), { hint: '選一個答案' });
+      if (k === q.c) { score++; playSound('correct'); await say('✅ 答對了！' + escHtml(q.why), 'ok'); }
+      else { wrongQs.push(q); playSound('wrong'); await say('正確答案是「<b>' + escHtml(q.a[q.c]) + '</b>」。' + escHtml(q.why), 'bad'); }
+    }
+    await say('答對 <b>' + score + ' / ' + FINAL_QUIZ.length + '</b> 題！');
+    if (score < FINAL_PASS && wrongQs.length) {
+      await say('還差 ' + (FINAL_PASS - score) + ' 題。剛剛答錯的 ' + wrongQs.length + ' 題，我再給你一次機會！');
+      for (const q of wrongQs) {
+        await cmCard(cmEl('div', 'card', '<div class="card-sub">再一次機會</div><div class="card-title">' + escHtml(q.q) + '</div>'));
+        const k = await cmAsk(q.a.map((t, j) => ({ label: t, value: j })), { hint: '選一個答案' });
+        if (k === q.c) { score++; playSound('correct'); await say('✅ 這次答對了！', 'ok'); }
+        else { playSound('wrong'); await say('正確答案是「<b>' + escHtml(q.a[q.c]) + '</b>」。' + escHtml(q.why), 'bad'); }
+      }
+      await say('現在一共答對 <b>' + score + '</b> 題。');
+    }
+    LEVEL.finalScore = Math.max(LEVEL.finalScore, score);
+    if (score < FINAL_PASS) {
+      await say('還差一點點！每題的說明都看過了，再挑戰一次一定沒問題 💪');
+      await cmAsk([{ label: '🔁 再挑戰一次最終關', cls: 'primary' }]);
+      return chatFinal();
+    }
+    try { writeSave(true); } catch (_) {}
+    await say('🏁 綜合挑戰通過！你已經完成所有關卡了 🎉');
+    await cmAsk([{ label: '🏆 領取破關獎勵！', cls: 'primary' }], { hint: '點下面的按鈕領取結業證書' });
+    startFinale();
+    cmRenderSteps('__final');
+  }
+
+  // ---- 全部完成後：看證書、或回去複習任一關 ----
+  async function chatDone() {
+    cmRenderSteps(null);
+    while (true) {
+      const v = await cmAsk([
+        { label: '🎓 看我的結業證書', value: 'cert', cls: 'primary' },
+        { label: '🔁 再玩一次某一關的小遊戲', value: 'replay', cls: 'center' },
+        { label: '🎮 去 3D 辦公室逛逛', value: '3d', cls: 'center' }], { hint: '已經全數破關，可以自由選擇' });
+      if (v === 'cert') { openCert(); continue; }
+      if (v === '3d') { setPlayMode('explore'); return; }
+      const k = await cmAsk(ROOMS.map((r, i) => ({ label: '第 ' + (i + 1) + ' 關：' + r.name, value: i })).concat([{ label: '← 算了', value: -1, cls: 'center' }]), { hint: '要玩哪一關？' });
+      if (k >= 0) { await chatRoom(ROOMS[k], true); await say('這關的星星會保留最高紀錄喔！'); }
+    }
+  }
+
+  // ---- 開場與主流程（依目前進度接著玩）----
+  async function chatMain() {
+    const tok = chatRun;
+    $cmIn.innerHTML = ''; cmClearDock();
+    let seen = false; try { seen = localStorage.getItem(CHAT_SEEN_KEY) === '1'; } catch (_) {}
+    const started = passedRooms.size > 0 || ROOMS.some(r => cluesFound(r.id) > 0);
+    if (!seen) {
+      await say('嗨！我是 <b>Aery</b>，你的職場法規小幫手 👋');
+      await say('接下來我們用聊天的方式，一起闖過 <b>' + ROOMS.length + ' 個關卡</b>和最終關，大約 ' + (ROOMS.length * 2 + 5) + ' 分鐘就能完成。');
+      await cmCard(cmEl('div', 'card howto', '<div class="card-title">📖 怎麼玩？</div><ol>' +
+        '<li>看我傳給你的訊息和線索</li><li>點<b>畫面最下方</b>的按鈕來回答</li><li>答錯沒關係，我會告訴你原因，也可以再試一次</li></ol>' +
+        '<div class="tip">字太小嗎？點右上角的「A」可以放大。不用打字，也不會計時，慢慢來就好。</div>'));
+      await say('先試試看：點下面的按鈕，我們就開始囉！');
+      await cmAsk([{ label: '好，開始！', cls: 'primary' }], { hint: '👇 按這裡開始' });
+      try { localStorage.setItem(CHAT_SEEN_KEY, '1'); } catch (_) {}
+    } else if (LEVEL.finalDone) {
+      await say('歡迎回來！你已經完成全部關卡了 🎉');
+    } else if (started) {
+      const r = ROOMS.find(x => !passedRooms.has(x.id) && isRoomUnlocked(x));
+      await say('歡迎回來！我們從' + (r ? '第 ' + (levelIndex(r.id) + 1) + ' 關「' + escHtml(r.name) + '」' : '最終關') + '接著玩。');
+      await cmAsk([{ label: '好，繼續！', cls: 'primary' }]);
+    } else {
+      await say('嗨，歡迎回來！點下面的按鈕，我們從第 1 關開始。');
+      await cmAsk([{ label: '好，開始！', cls: 'primary' }]);
+    }
+    cmCheck(tok);
+    while (!LEVEL.finalDone) {
+      const r = ROOMS.find(x => !passedRooms.has(x.id) && isRoomUnlocked(x));
+      if (r) {
+        await chatRoom(r, false);
+        const nx = ROOMS.find(x => !passedRooms.has(x.id) && isRoomUnlocked(x));
+        await cmAsk([{ label: nx ? '前往第 ' + (levelIndex(nx.id) + 1) + ' 關 →' : '前往最終關 →', cls: 'primary' }], { hint: '準備好就繼續' });
+      } else {
+        await chatFinal();
+      }
+    }
+    await chatDone();
+  }
+  function startChat() {
+    chatRun++;
+    chatMain().catch(e => { if (e !== CHAT_STOP) { console.error(e); cmSetHint(''); cmRow('aery', '抱歉，遊戲出了一點問題，請重新整理頁面再試一次。', { tone: 'bad' }); } });
+  }
+  function stopChat() { chatRun++; cmClearDock(); }
+
+  // 聊天模式時：Aery 都在聊天室裡說話，3D 的提示、過關動畫先不顯示
   const _origAerySay = aerySay;
-  aerySay = function (text, secs) {
-    if (pointMode && typeof text === 'string' && /光柱|小球|按 ?E|點右下角|WASD|走廊|走到|箭頭|門打開|走進|電梯|往前走|會議室|座位|對準|任務」牌|牌的物件|找頭上|房間裡/.test(text)) return;
-    return _origAerySay(text, secs);
-  };
+  aerySay = function (text, secs) { if (pointMode && gameStarted) return; return _origAerySay(text, secs); };
   const _origHintCard = showHintCard;
   showHintCard = function (tg) { if (pointMode) return; return _origHintCard(tg); };
+  const _origStageClear = showStageClear;
+  showStageClear = function (room, stars) { if (pointMode && gameStarted) return; return _origStageClear(room, stars); };
+  const _origRouteHint = showRouteHint;
+  showRouteHint = function (text, zone) { if (pointMode && gameStarted) return; return _origRouteHint(text, zone); };
 
   // ---- 模式選擇畫面 ----
   const picker = document.createElement('div'); picker.id = 'mode-picker';
-  picker.innerHTML = '<div class="mp-box"><h2>選擇你的學習方式</h2><p class="mp-sub">兩種方式的線索、任務和測驗完全一樣，進度也會共用，之後可以隨時切換。</p>' +
+  picker.innerHTML = '<div class="mp-box"><h2>選擇你的學習方式</h2><p class="mp-sub">兩種方式的線索和測驗內容一樣，進度也會共用，之後可以隨時切換。</p>' +
     '<div class="mp-cards">' +
-    '<button type="button" class="mp-card pt" data-mode="point"><div class="mp-icon">🖱️</div><div class="mp-name">點選模式</div><div class="mp-for">不常玩遊戲的人，推薦選這個</div>' +
-    '<ul><li><b>不用移動、不用鍵盤</b>，只要用滑鼠點一點</li><li>每一關是一張辦公室情境圖</li><li>點圖上<b>發光的圓點</b>就能看線索</li><li>找齊線索後按「開始任務」</li></ul></button>' +
+    '<button type="button" class="mp-card pt" data-mode="point"><div class="mp-icon">💬</div><div class="mp-name">聊天模式</div><div class="mp-for">不常玩遊戲的人，推薦選這個</div>' +
+    '<ul><li>跟 Aery <b>聊天就能破關</b>，像用 LINE 一樣</li><li>只要點下方的按鈕回答，<b>不用移動、不用打字</b></li><li>小遊戲<b>不計時</b>，答錯會告訴你原因</li><li>電腦、手機都能玩</li></ul></button>' +
     '<button type="button" class="mp-card" data-mode="explore"><div class="mp-icon">🎮</div><div class="mp-name">3D 探索模式</div><div class="mp-for">喜歡自己走走看看的人</div>' +
     '<ul><li>用 WASD 和滑鼠在 3D 辦公室自由移動</li><li>自己在房間裡找線索</li><li>開始前有 5 步驟操作示範</li><li>可以收集隱藏的知識寶石</li></ul></button>' +
-    '</div><div class="mp-note">兩種模式都可以用「A+」放大文字</div></div>';
+    '</div><div class="mp-note">兩種模式都可以用「A」按鈕放大文字</div></div>';
   document.body.appendChild(picker);
   function needModePick() { return !playMode; }
   function openModePicker() { picker.classList.add('show'); }
@@ -7525,25 +7860,26 @@ console.warn( 'Scripts "build/three.js" and "build/three.min.js" are deprecated 
     openTutorialWall();
   }
   function setPlayMode(m) {
+    const was = pointMode && gameStarted;
     playMode = m; pointMode = m === 'point';
     try { localStorage.setItem(MODE_KEY, m); } catch (_) {}
-    modeLine.innerHTML = '目前：' + (pointMode ? '🖱️ 點選模式' : '🎮 3D 探索模式') + '<button type="button">更換</button>';
+    modeLine.innerHTML = '目前：' + (pointMode ? '💬 聊天模式' : '🎮 3D 探索模式') + '<button type="button">更換</button>';
     window.__aeryPointMode = pointMode && gameStarted;
     document.body.classList.toggle('pm-on', pointMode && gameStarted);
     if (pointMode) {
       if (pointerLocked) document.exitPointerLock();
-      if (gameStarted) { skipTutorialForPoint(); pmRoomId = null; renderPm(true); }
-    } else if (gameStarted) {
-      showRouteHint('🎮 3D 探索模式：點一下畫面，用 WASD 和滑鼠移動', 'mode-explore');
+      if (gameStarted && !was) { skipTutorialForPoint(); startChat(); }
+    } else {
+      if (was) stopChat();
+      if (gameStarted) showRouteHint('🎮 3D 探索模式：點一下畫面，用 WASD 和滑鼠移動', 'mode-explore');
     }
   }
-  // 開始遊戲：點選模式略過 3D 操作教學與說明會，直接打開點選畫面
+  // 開始遊戲：聊天模式略過 3D 操作教學與說明會，直接打開聊天畫面
   startBtn.addEventListener('click', () => {
     if (!pointMode) return;
     window.__aeryPointMode = true;
     document.body.classList.add('pm-on');
-    setTimeout(() => { skipTutorialForPoint(); renderPm(true); }, 350);
-    setTimeout(() => _origAerySay('歡迎！這是點選模式～點圖上發光的圓點看線索，找齊 3 個就能開始任務。', 8), 1200);
+    setTimeout(() => { skipTutorialForPoint(); startChat(); }, 350);
   });
   {
     const chosen = playMode;
@@ -7552,7 +7888,7 @@ console.warn( 'Scripts "build/three.js" and "build/three.min.js" are deprecated 
   }
   applyFont();
 
-  window.__debug = { setPlayMode, get pointMode() { return pointMode; }, renderPm, snapRoom,  passedRooms, markMissionDone, finishTutorial, readSave, writeSave, applySave, SLIDES, BRIEF, startBriefing, failCount, LEVEL, roomClues, markClueFound, openClue, openNpc, requestMission, openMission, openFinalQuiz, startFinale, showStageClear, onLevelCleared, roundProgress, get finalGate() { return finalGate; }, roomGates, elev, doorA, doorB, elevatorTryRide, inCab, getFloorY, updateElevator, moveWithCollision, tut, tutorialDone, get tutWall() { return tutWall; }, replayTutorial, openHelp, closeHelp, get pointerLocked() { return pointerLocked; }, gems, collectGem, aeryChat, roomStars, passSigns, get fireworksDone() { return fireworksDone; }, player, keys, getFloorY, walls, ROOMS, moveWithCollision, interactables, camera, tryInteract, openInfoPanel, visitedRooms, triggerCompletion, get lookedAt() { return lookedAt; }, get uiOpen() { return uiOpen; }, get allRoomsCompleted() { return allRoomsCompleted; } };
+  window.__debug = { setPlayMode, get pointMode() { return pointMode; }, startChat, stopChat,  passedRooms, markMissionDone, finishTutorial, readSave, writeSave, applySave, SLIDES, BRIEF, startBriefing, failCount, LEVEL, roomClues, markClueFound, openClue, openNpc, requestMission, openMission, openFinalQuiz, startFinale, showStageClear, onLevelCleared, roundProgress, get finalGate() { return finalGate; }, roomGates, elev, doorA, doorB, elevatorTryRide, inCab, getFloorY, updateElevator, moveWithCollision, tut, tutorialDone, get tutWall() { return tutWall; }, replayTutorial, openHelp, closeHelp, get pointerLocked() { return pointerLocked; }, gems, collectGem, aeryChat, roomStars, passSigns, get fireworksDone() { return fireworksDone; }, player, keys, getFloorY, walls, ROOMS, moveWithCollision, interactables, camera, tryInteract, openInfoPanel, visitedRooms, triggerCompletion, get lookedAt() { return lookedAt; }, get uiOpen() { return uiOpen; }, get allRoomsCompleted() { return allRoomsCompleted; } };
 })();
 
 </script>
