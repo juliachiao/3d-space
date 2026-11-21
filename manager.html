@@ -7470,7 +7470,10 @@ console.warn( 'Scripts "build/three.js" and "build/three.min.js" are deprecated 
   #mode-picker .mp-for { color: #ffd76a; font-size: 16px; font-weight: 700; margin-bottom: 12px; }
   #mode-picker ul { margin: 0; padding-left: 20px; color: #d6dcf0; font-size: 16px; line-height: 1.75; }
   #mode-picker .mp-note { margin-top: 22px; color: #8f9bc2; font-size: 14px; }
-  #mode-picker .mp-card.pt { background: linear-gradient(160deg, #2a3778, #1d2550); border-color: #ffd76a; }
+  #mode-picker .mp-card.pt { position: relative; background: linear-gradient(160deg, #2a3778, #1d2550); border-color: #ffd76a; }
+  #mode-picker .mp-badge { position: absolute; top: 18px; right: 18px; background: #ffd76a; color: #1b2242; font-size: 15px; font-weight: 800; padding: 5px 14px; border-radius: 999px; }
+  #mode-picker .mp-time { margin-top: 14px; color: #b9c3e0; font-size: 15px; }
+  #mode-picker .mp-cert { display: inline-block; margin: 0 0 24px; padding: 8px 18px; border-radius: 999px; background: rgba(79,212,138,0.16); color: #bff2d3; font-size: 16px; font-weight: 700; }
   #start-mode-line { margin-top: 12px; color: #cfd6ef; font-size: 14px; font-family: "Microsoft JhengHei",sans-serif; }
   #start-mode-line button { margin-left: 6px; background: none; border: 1px solid #8aa0c8; color: #eef2fb; border-radius: 999px; padding: 3px 12px; cursor: pointer; font: inherit; }
   .hud-pill { pointer-events: auto; height: 36px; padding: 0 12px; border-radius: 18px; border: 1px solid rgba(138,160,200,0.45);
@@ -8108,16 +8111,19 @@ console.warn( 'Scripts "build/three.js" and "build/three.min.js" are deprecated 
 
   // ---- 模式選擇畫面 ----
   const picker = document.createElement('div'); picker.id = 'mode-picker';
-  picker.innerHTML = '<div class="mp-box"><h2>選擇你的學習方式</h2><p class="mp-sub">兩種方式的線索和測驗內容一樣，進度也會共用，之後可以隨時切換。</p>' +
+  picker.innerHTML = '<div class="mp-box"><h2>選擇你的學習方式</h2><p class="mp-sub">兩種方式的學習內容一樣，進度也會共用，之後可以隨時切換。</p>' +
+    '<div class="mp-cert">🎓 兩種模式都能完成全部關卡、領取結業證書</div>' +
     '<div class="mp-cards">' +
-    '<button type="button" class="mp-card pt" data-mode="point"><div class="mp-icon">💬</div><div class="mp-name">聊天模式</div><div class="mp-for">不常玩遊戲的人，推薦選這個</div>' +
-    '<ul><li>跟 Aery <b>聊天就能破關</b>，像用 LINE 一樣</li><li>只要點下方的按鈕回答，<b>不用移動、不用打字</b></li><li>小遊戲<b>不計時</b>，答錯會告訴你原因</li><li>電腦、手機都能玩</li></ul></button>' +
-    '<button type="button" class="mp-card" data-mode="explore"><div class="mp-icon">🎮</div><div class="mp-name">3D 探索模式</div><div class="mp-for">喜歡自己走走看看的人</div>' +
-    '<ul><li>用 WASD 和滑鼠在 3D 辦公室自由移動</li><li>自己在房間裡找線索</li><li>開始前有 5 步驟操作示範</li><li>可以收集隱藏的知識寶石</li></ul></button>' +
+    '<button type="button" class="mp-card pt" data-mode="point"><span class="mp-badge">⭐ 推薦</span><div class="mp-icon">💬</div><div class="mp-name">聊天模式</div><div class="mp-for">第一次玩、不常玩遊戲的人，選這個就對了</div>' +
+    '<ul><li>跟 Aery <b>聊天就能破關</b>，像用 LINE 一樣</li><li>只要點下方的按鈕回答，<b>不用移動、不用打字</b></li><li>小遊戲<b>不計時</b>，答錯會告訴你原因</li><li>電腦、手機都能玩</li></ul>' +
+    '<div class="mp-time">⏱️ 約 ' + (ROOMS.length * 3) + '～' + (ROOMS.length * 3 + 5) + ' 分鐘</div></button>' +
+    '<button type="button" class="mp-card" data-mode="explore"><div class="mp-icon">🎮</div><div class="mp-name">3D 探索模式</div><div class="mp-for">常玩遊戲、喜歡自己走走看看的人</div>' +
+    '<ul><li>用 WASD 和滑鼠在 3D 辦公室自由移動</li><li>自己在房間裡找線索</li><li>開始前有 5 步驟操作示範</li><li>可以收集隱藏的知識寶石</li></ul>' +
+    '<div class="mp-time">⌨️ 需要用鍵盤和滑鼠，建議用電腦</div></button>' +
     '</div><div class="mp-note">兩種模式都可以用「A」按鈕放大文字</div></div>';
   document.body.appendChild(picker);
   function needModePick() { return !playMode; }
-  function openModePicker() { picker.classList.add('show'); }
+  function openModePicker() { picker.classList.add('show'); setTimeout(() => { const c = picker.querySelector('.mp-card.pt'); if (c) c.focus({ preventScroll: true }); }, 50); }
   picker.querySelectorAll('.mp-card').forEach(b => b.addEventListener('click', () => {
     picker.classList.remove('show');
     setPlayMode(b.dataset.mode);
