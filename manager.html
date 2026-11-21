@@ -503,7 +503,7 @@
   @media (max-width: 600px) { #aery-say { top: 76px; left: 12px; max-width: calc(100vw - 24px); font-size: 12.5px; } }
   @media (max-width: 480px) { #panel-box { padding: 18px 16px; } #panel-overlay { padding: 0 8px 12px; } }
 
-  /* ===================== 關卡制：目標提示、STAGE CLEAR、最終關、破關特效、結業證書 ===================== */
+  /* ===================== 關卡制：目標提示、STAGE CLEAR、最終關、破關特效、闖關完成證明 ===================== */
   #objective { position: absolute; top: 18px; left: 50%; transform: translateX(-50%); z-index: 11; pointer-events: none;
     padding: 9px 20px; border-radius: 30px; background: rgba(10,15,32,0.86); border: 1.5px solid rgba(255,215,106,0.7);
     color: #eef2fb; font: 700 14.5px/1.4 "PingFang TC","Microsoft JhengHei",sans-serif; white-space: nowrap;
@@ -872,13 +872,13 @@
 <div id="finale"><div class="fn-rays"></div><div class="fn-dim"></div><canvas id="finale-canvas"></canvas><div class="fn-flash"></div>
   <div class="fn-box"><div class="fn-trophy">🏆</div><div class="fn-title">全數破關！</div>
   <div class="fn-sub">恭喜完成主管訓練全部 3 大關卡與最終綜合挑戰</div><div class="fn-stats" id="fn-stats"></div>
-  <button class="fn-btn" id="fn-cert-btn">🎓 領取結業證書</button></div></div>
+  <button class="fn-btn" id="fn-cert-btn">🎓 領取闖關完成證明</button></div></div>
 <div id="cert-overlay"><div id="cert-card">
-  <h2>🎓 結業證書</h2>
-  <label for="cert-name">請輸入你的名字（會印在證書上）</label>
+  <h2>🎓 闖關完成證明</h2>
+  <label for="cert-name">請輸入你的名字（會印在證明上）</label>
   <input id="cert-name" maxlength="20" placeholder="例如：王小明" autocomplete="name">
   <canvas id="cert-canvas" width="1600" height="1130"></canvas>
-  <div class="cert-actions"><button class="primary" id="cert-download">⬇️ 下載證書（PNG）</button><button id="cert-close">繼續探索</button></div>
+  <div class="cert-actions"><button class="primary" id="cert-download">⬇️ 下載證明（PNG）</button><button id="cert-close">繼續探索</button></div>
 </div></div>
 
 <div id="lock-hint"><div class="lock-card"><div class="lock-icon">🖱️</div><div><b>點一下畫面，繼續探索</b><br><small>滑鼠會用來轉動視角・隨時按 <kbd>Esc</kbd> 叫回游標</small></div></div></div>
@@ -898,7 +898,7 @@
     <div class="help-grid">
       <section>
         <h3>🎯 目標</h3>
-        <p>3 間訓練室是<b>第 1～3 關，依序解鎖</b>。每一關先找齊 3 個 🔍 線索（其中一個是跟角色對話），任務才會出現；任務小遊戲有<b>兩個回合</b>，都過了才算破關。</p><p>3 關全破後，走廊盡頭的<b>最終關「綜合挑戰」</b>開啟，答對 8 題以上就全數破關，還能領取結業證書！</p>
+        <p>3 間訓練室是<b>第 1～3 關，依序解鎖</b>。每一關先找齊 3 個 🔍 線索（其中一個是跟角色對話），任務才會出現；任務小遊戲有<b>兩個回合</b>，都過了才算破關。</p><p>3 關全破後，走廊盡頭的<b>最終關「綜合挑戰」</b>開啟，答對 8 題以上就全數破關，還能領取闖關完成證明！</p>
         <p>額外挑戰：每關最多拿 ⭐⭐⭐，大樓裡還藏著 4 顆 💎 知識寶石。畫面上方隨時會顯示你現在的目標，<b>金色光柱</b>和<b>黃色箭頭</b>會帶你走到下一個地方。</p>
       </section>
       <section class="help-desktop">
@@ -3354,7 +3354,7 @@ console.warn( 'Scripts "build/three.js" and "build/three.min.js" are deprecated 
     '覺得音樂太大聲或太小聲？按右上角的 🎵 可以切換音量。',
     '職場法律不難，難的是「遇到的時候記得」。我們一起加油！',
     '每破一關，房間的燈光都會變亮，下一關的門也會打開！',
-    '最終關是主管情境快問快答，破關還有結業證書可以下載喔！',
+    '最終關是主管情境快問快答，破關還有闖關完成證明可以下載喔！',
   ];
   let aeryChatIdx = 0, aerySpinBoost = 0;
   function aeryChat() {
@@ -6149,7 +6149,7 @@ console.warn( 'Scripts "build/three.js" and "build/three.min.js" are deprecated 
   }
   document.getElementById('fn-cert-btn').addEventListener('click', () => { finaleEl.classList.remove('show'); openCert(); });
 
-  // ---------- 結業證書 ----------
+  // ---------- 闖關完成證明 ----------
   const certOverlay = document.getElementById('cert-overlay');
   const certCanvas = document.getElementById('cert-canvas');
   const certName = document.getElementById('cert-name');
@@ -6165,8 +6165,8 @@ console.warn( 'Scripts "build/three.js" and "build/three.min.js" are deprecated 
     c.textAlign = 'center'; c.textBaseline = 'middle';
     c.fillStyle = '#9fb4e0'; c.font = 'bold 34px ' + GFONT; c.fillText('SYSTEX 精誠資訊　職場法律必修課・主管篇', W / 2, 150);
     const gold = c.createLinearGradient(0, 200, 0, 300); gold.addColorStop(0, '#fff3c4'); gold.addColorStop(0.5, '#ffd76a'); gold.addColorStop(1, '#c98a1e');
-    c.fillStyle = gold; c.font = '900 108px ' + GFONT; c.fillText('結 業 證 書', W / 2, 262);
-    c.fillStyle = '#e0c878'; c.font = '600 32px Georgia, "Times New Roman", serif'; c.fillText('C E R T I F I C A T E   O F   C O M P L E T I O N', W / 2, 352);
+    c.fillStyle = gold; c.font = '900 108px ' + GFONT; c.fillText('闖 關 完 成 證 明', W / 2, 262);
+    c.fillStyle = '#e0c878'; c.font = '600 32px Georgia, "Times New Roman", serif'; c.fillText('C E R T I F I C A T E   O F   A C H I E V E M E N T', W / 2, 352);
     c.fillStyle = '#cfe0ff'; c.font = '34px ' + GFONT; c.fillText('茲證明', W / 2, 438);
     c.fillStyle = '#ffffff'; let fs = 92; do { c.font = '900 ' + fs + 'px ' + GFONT; fs -= 4; } while (c.measureText(name).width > 1100 && fs > 40);
     c.fillText(name, W / 2, 530);
@@ -6205,7 +6205,7 @@ console.warn( 'Scripts "build/three.js" and "build/three.min.js" are deprecated 
   document.getElementById('cert-download').addEventListener('click', () => {
     if (!certName.value.trim()) { certName.focus(); certName.style.borderColor = '#e06a6a'; setTimeout(() => { certName.style.borderColor = ''; }, 1200); return; }
     drawCert();
-    const fname = 'Aery結業證書_' + certName.value.trim().replace(/[\\/:*?"<>|]/g, '') + '.png';
+    const fname = 'Aery闖關完成證明_' + certName.value.trim().replace(/[\\/:*?"<>|]/g, '') + '.png';
     certCanvas.toBlob(blob => {
       const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = fname;
       document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(a.href), 2000);
@@ -6222,7 +6222,7 @@ console.warn( 'Scripts "build/three.js" and "build/three.min.js" are deprecated 
   function pulseObjective() { objectiveEl.classList.remove('pulse'); void objectiveEl.offsetWidth; objectiveEl.classList.add('pulse'); }
   function currentObjective() {
     if (tut.active) return '<span class="ob-lv">📽️ 主管說明會</span>跟著金色光柱到大廳旁的會議室，對準發光的座位' + (isTouch ? '點「查看」' : '按 E') + '坐下';
-    if (LEVEL.finalDone) return '<span class="ob-lv">🏆 全數破關</span>恭喜！可以領取結業證書';
+    if (LEVEL.finalDone) return '<span class="ob-lv">🏆 全數破關</span>恭喜！可以領取闖關完成證明';
     const L = ROOMS.findIndex(r => !passedRooms.has(r.id));
     if (L < 0) return '<span class="ob-lv">🏁 最終關</span>到走廊盡頭的「綜合挑戰台」，答對 ' + FINAL_PASS + ' 題破關！';
     const r = ROOMS[L], inRoom = player.x >= Math.min(r.x1, r.x2) && player.x <= Math.max(r.x1, r.x2) && player.z >= r.z1 && player.z <= r.z2;
@@ -6608,7 +6608,7 @@ console.warn( 'Scripts "build/three.js" and "build/three.min.js" are deprecated 
     });
     if (st > 2.0) { c.globalAlpha = easeOut((st - 2) / 0.4); txt(c, '➜', 815, 250, 60, '#ff7a3d', 900); c.globalAlpha = 1; }
     if (card(c, 850, 150, 140, 200, '#fff1b8', pop(st, 2.3))) { emo(c, '🏁', 70, 70, 54); txt(c, '最終關', 70, 130, 28, '#a0620a', 900); emo(c, '🎓', 70, 172, 34); c.restore(); }
-    if (st > 3) { c.globalAlpha = easeOut((st - 3) / 0.5); txt(c, '全部破關 → 領取結業證書！', W / 2, 440, 40, '#ff7a3d', 900); c.globalAlpha = 1; }
+    if (st > 3) { c.globalAlpha = easeOut((st - 3) / 0.5); txt(c, '全部破關 → 領取闖關完成證明！', W / 2, 440, 40, '#ff7a3d', 900); c.globalAlpha = 1; }
   }
   function slideDuty(c, W, H, st) {
     sBg(c, W, H, '#e6f4ff', '#fff0e3');
@@ -6955,7 +6955,7 @@ console.warn( 'Scripts "build/three.js" and "build/three.min.js" are deprecated 
       startBtn.addEventListener('click', () => {   // 在原本的開始流程之後執行
         if (!resume) return;
         applySave(save);
-        setTimeout(() => aerySay(LEVEL.finalDone ? '歡迎回來！你已經全數破關了，可以繼續逛逛，或到最終關領取結業證書～'
+        setTimeout(() => aerySay(LEVEL.finalDone ? '歡迎回來！你已經全數破關了，可以繼續逛逛，或到最終關領取闖關完成證明～'
           : '歡迎回來！已經幫你接回上次的進度：' + lv + '，跟著金色光柱繼續出發吧！', 9), 1300);
       });
     }
@@ -7438,7 +7438,7 @@ console.warn( 'Scripts "build/three.js" and "build/three.min.js" are deprecated 
   //   ・開始前選擇「💬 聊天模式／🎮 3D 探索模式」（之後可隨時切換）
   //   ・聊天模式：像用 LINE 一樣跟 Aery 聊天破關。只要點畫面下方的按鈕，
   //     不用移動、不用打字；小遊戲不計時，答錯會說明原因、可以再選一次
-  //   ・線索、角色對話、關卡解鎖、最終關與結業證書都和 3D 模式共用同一份進度
+  //   ・線索、角色對話、關卡解鎖、最終關與闖關完成證明都和 3D 模式共用同一份進度
   //   ・字體大小 A／A+／A++ 三段切換（兩種模式都可用）
   // =====================================================================
   const IS_MGR_CONTENT = ROOMS.some(r => r.role === '主管人員');
@@ -8006,7 +8006,7 @@ console.warn( 'Scripts "build/three.js" and "build/three.min.js" are deprecated 
     const bn = cmEl('div', 'banner', '<small>最後一關</small><b>最終關：綜合挑戰</b>'); bn.style.background = '#6c5ce7';
     $cmIn.appendChild(bn); cmScroll();
     if (!LEVEL.finalOpen) openFinalGate();
-    await say('最後是綜合挑戰！一共 <b>' + FINAL_QUIZ.length + '</b> 題，<b>不計時</b>，答對 <b>' + FINAL_PASS + '</b> 題以上就全數破關，可以領結業證書。');
+    await say('最後是綜合挑戰！一共 <b>' + FINAL_QUIZ.length + '</b> 題，<b>不計時</b>，答對 <b>' + FINAL_PASS + '</b> 題以上就全數破關，可以領闖關完成證明。');
     let score = 0;
     const wrongQs = [];
     for (let i = 0; i < FINAL_QUIZ.length; i++) {
@@ -8035,7 +8035,7 @@ console.warn( 'Scripts "build/three.js" and "build/three.min.js" are deprecated 
     }
     try { writeSave(true); } catch (_) {}
     await say('🏁 綜合挑戰通過！你已經完成所有關卡了 🎉');
-    await cmAsk([{ label: '🏆 領取破關獎勵！', cls: 'primary' }], { hint: '點下面的按鈕領取結業證書' });
+    await cmAsk([{ label: '🏆 領取破關獎勵！', cls: 'primary' }], { hint: '點下面的按鈕領取闖關完成證明' });
     startFinale();
     cmRenderSteps('__final');
   }
@@ -8045,7 +8045,7 @@ console.warn( 'Scripts "build/three.js" and "build/three.min.js" are deprecated 
     cmRenderSteps(null);
     while (true) {
       const v = await cmAsk([
-        { label: '🎓 看我的結業證書', value: 'cert', cls: 'primary' },
+        { label: '🎓 看我的闖關完成證明', value: 'cert', cls: 'primary' },
         { label: '🔁 再玩一次某一關的小遊戲', value: 'replay', cls: 'center' },
         { label: '🎮 去 3D 辦公室逛逛', value: '3d', cls: 'center' }], { hint: '已經全數破關，可以自由選擇' });
       if (v === 'cert') { openCert(); continue; }
@@ -8111,8 +8111,8 @@ console.warn( 'Scripts "build/three.js" and "build/three.min.js" are deprecated 
 
   // ---- 模式選擇畫面 ----
   const picker = document.createElement('div'); picker.id = 'mode-picker';
-  picker.innerHTML = '<div class="mp-box"><h2>選擇你的學習方式</h2><p class="mp-sub">兩種方式的學習內容一樣，進度也會共用，之後可以隨時切換。</p>' +
-    '<div class="mp-cert">🎓 兩種模式都能完成全部關卡、領取結業證書</div>' +
+  picker.innerHTML = '<div class="mp-box"><h2>選擇你的遊戲方式</h2><p class="mp-sub">兩種方式的學習內容一樣，進度也會共用，之後可以隨時切換。</p>' +
+    '<div class="mp-cert">📘 這是複習用的遊戲（選修），不玩也不影響完課</div>' +
     '<div class="mp-cards">' +
     '<button type="button" class="mp-card pt" data-mode="point"><span class="mp-badge">⭐ 推薦</span><div class="mp-icon">💬</div><div class="mp-name">聊天模式</div><div class="mp-for">第一次玩、不常玩遊戲的人，選這個就對了</div>' +
     '<ul><li>跟 Aery <b>聊天就能破關</b>，像用 LINE 一樣</li><li>只要點下方的按鈕回答，<b>不用移動、不用打字</b></li><li>小遊戲<b>不計時</b>，答錯會告訴你原因</li><li>電腦、手機都能玩</li></ul>' +
