@@ -509,6 +509,7 @@
     color: #eef2fb; font: 700 14.5px/1.4 "PingFang TC","Microsoft JhengHei",sans-serif; white-space: nowrap;
     box-shadow: 0 6px 24px rgba(0,0,0,0.35), 0 0 18px rgba(255,215,106,0.18); opacity: 0; transition: opacity .3s; }
   #objective.show { opacity: 1; }
+  @media (min-width: 641px) and (max-width: 1500px) { #objective { top: 66px; font-size: 13.5px; } }
   #objective.below-tut { top: 178px; }
   @media (max-width: 640px) { #objective.below-tut { top: auto; bottom: 320px; } }
   #objective .ob-lv { color: #ffd76a; margin-right: 8px; }
@@ -3168,6 +3169,7 @@ console.warn( 'Scripts "build/three.js" and "build/three.min.js" are deprecated 
   let aeryHideT = null, lastProgressT = 0;
   function aerySay(text, secs) {
     if (!aeryBubble) return;
+    { const hc = document.getElementById('hint-card'); if (hc && hc.classList.contains('show')) return; }   // 大提示卡開著時不再疊一個
     aeryText.textContent = text;
     aeryBubble.classList.add('show');
     clearTimeout(aeryHideT);
@@ -5331,8 +5333,8 @@ console.warn( 'Scripts "build/three.js" and "build/three.min.js" are deprecated 
   const CLUE_DATA = {
     pdpa: {
       clues: [
-        { icon: '🗂️', title: '攤在桌上的客戶資料', lines: ['小強把一疊客戶資料攤在桌上，人就去開會了。', '🔑 重點：含個資的文件不用時要收進上鎖櫃，離開座位前把桌面清空（淨桌原則），避免被不相關的人看到。'] },
-        { icon: '📧', title: '寄錯人的郵件', lines: ['有同事不小心把客戶名單寄給了錯誤的收件者。', '🔑 重點：發現個資外洩要立刻通報主管與個資窗口。依《個人資料保護法》，個資被竊取、洩漏時，要查明後以適當方式通知當事人。'] },
+        { icon: '🗂️', title: '攤在桌上的客戶資料', lines: ['小強把一疊客戶資料攤在桌上，人就去開會了。', '🔑 重點：有客戶資料的文件，不用時就鎖進櫃子。離開座位前把桌面收乾淨，別讓路過的人看到。'] },
+        { icon: '📧', title: '寄錯人的郵件', lines: ['有同事不小心把客戶名單寄給了錯誤的收件者。', '🔑 重點：寄錯了不要自己默默處理，馬上告訴主管和個資窗口。公司查清楚後，要通知資料被外洩的客戶（個資法的規定）。'] },
       ],
       npc: { name: '小強', color: 0x5a80b8,
         line: '「我要把客戶合約寄給廠商，檔案已經加密了，密碼就寫在同一封信裡，這樣就安全了吧？」',
@@ -5344,8 +5346,8 @@ console.warn( 'Scripts "build/three.js" and "build/three.min.js" are deprecated 
     },
     osh: {
       clues: [
-        { icon: '🪜', title: '想拿高處的箱子', lines: ['有人想站上有輪子的辦公椅，去拿櫃子最上層的箱子。', '🔑 重點：拿高處物品要用穩固的踏梯，不要站在椅子或疊高的紙箱上，跌倒是辦公室最常見的職災之一。'] },
-        { icon: '🚪', title: '被堵住的逃生門', lines: ['逃生門前面堆了好幾個紙箱。', '🔑 重點：逃生門和逃生通道要隨時保持暢通，看到堵塞就要清除或通報總務，緊急時才逃得出去。'] },
+        { icon: '🪜', title: '想拿高處的箱子', lines: ['有人想踩上有輪子的辦公椅，去拿櫃子最上面的箱子。', '🔑 重點：拿高處的東西請用穩固的踏梯，不要踩椅子或紙箱。在辦公室裡，跌倒是最常見的意外。'] },
+        { icon: '🚪', title: '被堵住的逃生門', lines: ['逃生門前面堆了好幾個紙箱。', '🔑 重點：逃生門前面不能堆東西。看到被堵住，就搬開或告訴總務，不然真的出事時會逃不出去。'] },
       ],
       npc: { name: '小誠', color: 0x2e8b57,
         line: '「茶水間剛剛有人打翻水，地板濕濕的還沒人處理……我等一下再弄好了。」',
@@ -5357,8 +5359,8 @@ console.warn( 'Scripts "build/three.js" and "build/three.min.js" are deprecated 
     },
     ai_policy: {
       clues: [
-        { icon: '📋', title: '輸入 AI 前先檢查', lines: ['一份準備貼進 AI 工具的文件，裡面有客戶姓名和尚未公開的報價。', '🔑 重點：客戶個資與公司機密（未公開的財務資料、合約內容、程式碼等）不能輸入未經公司核准的外部 AI 工具。'] },
-        { icon: '✅', title: 'AI 寫的報告', lines: ['AI 幫忙寫好了一份市場分析，看起來很完整。', '🔑 重點：AI 產出的內容可能有錯誤，對外使用前一定要人工審閱、查證，最後的責任在使用的人身上。'] },
+        { icon: '📋', title: '輸入 AI 前先檢查', lines: ['有人準備把一份文件貼進 AI 工具，裡面有客戶姓名和還沒公開的報價。', '🔑 重點：客戶資料和公司機密（報價、合約、程式碼等）不能貼進公司沒核准的 AI 工具。不確定能不能貼，就先不要貼。'] },
+        { icon: '✅', title: 'AI 寫的報告', lines: ['AI 幫忙寫好了一份市場分析，看起來很完整。', '🔑 重點：AI 寫的東西可能有錯。拿出去用之前，自己要先看過、查證過；出錯的話，責任在用的人身上。'] },
       ],
       npc: { name: '小妤', color: 0xc9a227, female: true,
         line: '「主管要我分析客戶的購買偏好，我直接把整份客戶名單（有姓名、電話）貼給 AI，這樣最快吧？」',
@@ -5370,8 +5372,8 @@ console.warn( 'Scripts "build/three.js" and "build/three.min.js" are deprecated 
     },
     infosec: {
       clues: [
-        { icon: '🎣', title: '可疑的「帳戶異常」信', lines: ['一封寫著「您的帳戶異常，請立即點擊連結驗證」的信。', '🔑 重點：先看寄件者網域，不點連結、不開附件、不輸入帳密；有疑慮就通報資安窗口。'] },
-        { icon: '🔑', title: '螢幕旁的便利貼', lines: ['有人把系統密碼寫在便利貼上，就貼在螢幕旁邊。', '🔑 重點：密碼不要寫下來貼著，不同帳號用不同密碼，並開啟多重驗證（MFA）。'] },
+        { icon: '🎣', title: '可疑的「帳戶異常」信', lines: ['一封寫著「您的帳戶異常，請立即點擊連結驗證」的信。', '🔑 重點：先看寄件人的信箱是不是公司或官方的。不點連結、不開附件、不輸入帳號密碼；覺得怪怪的就告訴資安窗口。'] },
+        { icon: '🔑', title: '螢幕旁的便利貼', lines: ['有人把系統密碼寫在便利貼上，就貼在螢幕旁邊。', '🔑 重點：密碼不要寫在紙上貼著。每個帳號用不同的密碼，能開「多重驗證」（登入時再用手機確認一次）就打開。'] },
       ],
       npc: { name: 'Aery', color: 0x5a80b8, isAery: true, title: 'Aery 想考考你',
         line: '「我剛剛看到你的手機跳出一則訊息：自稱『主管』的人說很急，要你馬上去買禮物卡，把序號拍照傳給他！你會怎麼做？」',
@@ -6152,6 +6154,7 @@ console.warn( 'Scripts "build/three.js" and "build/three.min.js" are deprecated 
       (tg.kind === 'door' ? '<div class="hc-step"><span>2</span><div>走進房間後，再照畫面上方的目標提示進行</div></div>'
         : '<div class="hc-step"><span>2</span><div>' + (isTouch ? '在右半邊拖曳' : '移動滑鼠') + '，讓<b>畫面中間的小球</b>對準物件（小球會變成<b>黃色</b>）</div></div>' +
           '<div class="hc-step"><span>3</span><div>' + (isTouch ? '點右下角的<b>「查看」</b>按鈕' : '按 <kbd>E</kbd> 或<b>滑鼠左鍵</b>') + '互動</div></div>');
+    if (aeryBubble) aeryBubble.classList.remove('show');   // 同一時間只留一個提示
     hintCard.classList.remove('show'); void hintCard.offsetWidth; hintCard.classList.add('show');
     clearTimeout(showHintCard._t); showHintCard._t = setTimeout(() => hintCard.classList.remove('show'), 9000);
     if (audioCtx && !soundMuted) { tone(660, 0, 0.12, 'sine', 0.05); tone(880, 0.12, 0.18, 'sine', 0.05); }
@@ -6162,7 +6165,7 @@ console.warn( 'Scripts "build/three.js" and "build/three.min.js" are deprecated 
   let guideKey = '', guideRefT = 0, idleTier = 0, beaconFlashT = -99;
   function updateWayfinding(dt, t) {
     const tg = guideTarget();
-    tidyLabels(t);
+    tidyLabels(t, tg);
     const active = !!tg && !uiOpen;
     // 目標改變就代表有進度，重新計算閒置時間
     if (!tg || uiOpen || !gameStarted) { guideRefT = t; idleTier = 0; }
@@ -6208,7 +6211,7 @@ console.warn( 'Scripts "build/three.js" and "build/three.min.js" are deprecated 
       NC.label.textContent = turn + '・' + nameTxt + dtxt;
     }
     // 靠近目標而且看得到：提示把小球對準；已對準：金色光環
-    aimHint.classList.toggle('show', nearObj && !aimed && onScreen);
+    aimHint.classList.toggle('show', nearObj && !aimed && onScreen && !lookedAt);   // 已經對準別的東西時，交給互動提示，不疊兩個
     if (nearObj && !aimed) aimHint.innerHTML = document.body.classList.contains('mobile')
       ? '🎯 拖曳畫面，用<b>小球</b>對準「' + escHtml(tg.name.replace(/^線索：|^任務：/, '')) + '」'
       : '🎯 ' + (isTouch ? '在右半邊拖曳' : '移動滑鼠') + '，把 <b>中間的小球</b> 對準「' + escHtml(tg.name.replace(/^線索：|^任務：/, '')) + '」';
@@ -6849,7 +6852,28 @@ console.warn( 'Scripts "build/three.js" and "build/three.min.js" are deprecated 
   // ============ v2 回饋修正：遊戲前操作示範、指路（繞門口）、標籤減量 ============
   // =====================================================================
   // 下一個要走到的點：目標在別的房間時，先帶到門口，避免箭頭直接穿牆指過去
+  // v3：走廊上有隔間牆（大廳→走廊、走廊→最終關），門口在正中間。
+  //     如果直線會穿過隔間牆，就先把箭頭指向門口，不會指著牆走
   function navPoint(tg) {
+    const n = navPointBase(tg);
+    if (n.via === '先搭電梯') return n;
+    const px = player.x, pz = player.z;
+    const pf = (typeof getFloorY === 'function' && getFloorY(px, pz) > 1) ? 2 : 1;
+    const cross = (ax, az, bx, bz, w) => {
+      const d = (x1, z1, x2, z2, x, z) => (x2 - x1) * (z - z1) - (z2 - z1) * (x - x1);
+      return d(w.x1, w.z1, w.x2, w.z2, ax, az) * d(w.x1, w.z1, w.x2, w.z2, bx, bz) < 0 &&
+             d(ax, az, bx, bz, w.x1, w.z1) * d(ax, az, bx, bz, w.x2, w.z2) < 0;
+    };
+    const wall = walls.find(w => (w.floor || 1) === pf && Math.abs(w.z1 - w.z2) < 0.01 &&
+      Math.max(Math.abs(w.x1), Math.abs(w.x2)) <= CORR_X2 + 0.1 && Math.min(Math.abs(w.x1), Math.abs(w.x2)) >= 0.6 &&
+      cross(px, pz, n.x, n.z, w));
+    if (!wall) return n;
+    const s = n.z > pz ? 1 : -1;
+    // 站在門口旁邊（還沒對準門口）時，先指向門口這一側；對準之後再指向門的另一邊
+    if (Math.abs(px) > 0.8) return { x: 0, z: wall.z1 - s * 0.7, via: '先走到前面的門口' };
+    return { x: 0, z: wall.z1 + s * 0.9, via: '先走到前面的門口' };
+  }
+  function navPointBase(tg) {
     const px = player.x, pz = player.z;
     const fy = (x, z) => (typeof getFloorY === 'function' ? getFloorY(x, z) : 0);
     const areas = ROOMS.map(r => ({ x1: Math.min(r.x1, r.x2), x2: Math.max(r.x1, r.x2), z1: r.z1, z2: r.z2, side: r.side, dz: (r.z1 + r.z2) / 2, floor: r.floor }));
@@ -6886,13 +6910,17 @@ console.warn( 'Scripts "build/three.js" and "build/three.min.js" are deprecated 
     return getNavCompass.el;
   }
   // 房間裡的浮動標籤：太近（會變超大、互相疊住）或太遠時隱藏；找到的線索 2.5 秒後收起標籤
-  function tidyLabels(t) {
+  // v2：房間裡只留「現在要找的那一個」的名牌，其他線索名牌先收起來，畫面不會疊成一團
+  function tidyLabels(t, tg) {
+    const inR = ROOMS.find(r => player.x >= Math.min(r.x1, r.x2) && player.x <= Math.max(r.x1, r.x2) && player.z >= r.z1 && player.z <= r.z2);
+    const focus = lookedAt && lookedAt.clue ? lookedAt.clue : (tg && tg.ref) || null;
     Object.keys(roomClues).forEach(id => roomClues[id].forEach(o => {
       if (!o.label) return;
       const d = Math.hypot(o.x - player.x, o.z - player.z);
       const doneHide = o.found && (t - (o.foundT || -99)) > 2.5;
-      o.label.visible = !doneHide && d > 1.4 && d < 13;
-      if (o.bubble && !o.found) o.bubble.visible = d > 1.2;
+      const quiet = inR && o.room === inR && !o.found && focus && o !== focus;
+      o.label.visible = !doneHide && !quiet && d > 1.4 && d < 13;
+      if (o.bubble && !o.found) o.bubble.visible = d > 1.2 && !(quiet && lookedAt);
     }));
     Object.keys(missionMarkers).forEach(id => {
       const m = missionMarkers[id]; if (!m || !m.visible) return;
