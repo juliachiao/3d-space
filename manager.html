@@ -509,6 +509,7 @@
     color: #eef2fb; font: 700 14.5px/1.4 "PingFang TC","Microsoft JhengHei",sans-serif; white-space: nowrap;
     box-shadow: 0 6px 24px rgba(0,0,0,0.35), 0 0 18px rgba(255,215,106,0.18); opacity: 0; transition: opacity .3s; }
   #objective.show { opacity: 1; }
+  @media (min-width: 641px) and (max-width: 1500px) { #objective { top: 66px; font-size: 13.5px; } }
   #objective.below-tut { top: 178px; }
   @media (max-width: 640px) { #objective.below-tut { top: auto; bottom: 320px; } }
   #objective .ob-lv { color: #ffd76a; margin-right: 8px; }
@@ -3340,6 +3341,7 @@ console.warn( 'Scripts "build/three.js" and "build/three.min.js" are deprecated 
   let aeryHideT = null, lastProgressT = 0;
   function aerySay(text, secs) {
     if (!aeryBubble) return;
+    { const hc = document.getElementById('hint-card'); if (hc && hc.classList.contains('show')) return; }   // 大提示卡開著時不再疊一個
     aeryText.textContent = text;
     aeryBubble.classList.add('show');
     clearTimeout(aeryHideT);
@@ -5533,8 +5535,8 @@ console.warn( 'Scripts "build/three.js" and "build/three.min.js" are deprecated 
   const CLUE_DATA = {
     bullying: {
       clues: [
-        { icon: '💬', title: '群組裡的嘲諷訊息', lines: ['團隊群組裡，阿哲一再用「開玩笑」的方式貶低小誠，其他人跟著起鬨。', '🔑 重點：職場霸凌通常是「持續性」的貶抑、排擠或羞辱，讓人身心受到傷害；用玩笑包裝也一樣。'] },
-        { icon: '🪑', title: '被「忘記」的會議通知', lines: ['小誠的名字一再從會議通知名單上「不小心」被漏掉。', '🔑 重點：霸凌不只是罵人，刻意孤立、排擠也算；而且不限上對下，同事之間也可能發生。'] },
+        { icon: '💬', title: '群組裡的嘲諷訊息', lines: ['團隊群組裡，阿哲常常用「開玩笑」的口氣笑小誠，其他人也跟著起鬨。', '🔑 重點：一直貶低、排擠或羞辱同一個人，讓對方身心受傷，就是職場霸凌。說是「開玩笑」也一樣算。'] },
+        { icon: '🪑', title: '被「忘記」的會議通知', lines: ['小誠的名字一次又一次「不小心」沒出現在會議通知裡。', '🔑 重點：霸凌不只是罵人，故意不讓人參與、把人孤立起來也算。而且不只主管對部屬，同事之間也會發生。'] },
       ],
       npc: { name: '小誠', color: 0xff8a5c, title: '小誠來找你反映', steps: [
         { line: '「主管……阿哲一直在群組笑我，開會也不讓我講話，我真的很難受。」', options: [
@@ -5553,8 +5555,8 @@ console.warn( 'Scripts "build/three.js" and "build/three.min.js" are deprecated 
     },
     harassment: {
       clues: [
-        { icon: '📮', title: '申訴信箱裡的匿名信', lines: ['人資信箱收到一封匿名信，提到某位同事常被說讓人不舒服的話。', '🔑 重點：主管只要「知悉」疑似性騷擾，就要採取立即有效的處理，不必等當事人正式提出書面申訴。'] },
-        { icon: '🤐', title: '「私下處理就好」的便條', lines: ['便條上寫著：「這件事別鬧大，私下處理就好。」', '🔑 重點：不能壓案，也不能勸當事人和解；要依公司的性騷擾防治規定處理，並且全程保密。'] },
+        { icon: '📮', title: '申訴信箱裡的匿名信', lines: ['人資信箱收到一封匿名信，說某位同事常常被講讓人不舒服的話。', '🔑 重點：主管只要「知道」可能有性騷擾，就要馬上處理。不用等當事人正式寫申訴書。'] },
+        { icon: '🤐', title: '「私下處理就好」的便條', lines: ['便條上寫著：「這件事別鬧大，私下處理就好。」', '🔑 重點：不能把事情壓下來，也不能勸當事人「算了、和好就好」。要照公司的性騷擾處理規定走，而且全程保密。'] },
       ],
       npc: { name: '小妤', color: 0x3fa9f5, female: true, title: '小妤來找你求助', steps: [
         { line: '「主管……經理常在大家面前評論我的身材，還說『想升遷就陪我吃飯』。」', options: [
@@ -5573,8 +5575,8 @@ console.warn( 'Scripts "build/three.js" and "build/three.min.js" are deprecated 
     },
     case_sim: {
       clues: [
-        { icon: '🗂️', title: '案件分類手冊', lines: ['手冊上寫著：遇到案件，先判斷它屬於哪一種。', '🔑 重點：持續性的貶抑、排擠、羞辱 → 職場霸凌；與性或性別有關、違反意願的言行 → 性騷擾；有合理目的的管理 → 正常管理。'] },
-        { icon: '⚖️', title: '管理還是霸凌？', lines: ['有位主管擔心：「我要求部屬改進，會不會被說是霸凌？」', '🔑 重點：基於合理目的、以尊重的方式提出要求，是正常管理；刻意羞辱、針對個人、持續打壓，才是霸凌。'] },
+        { icon: '🗂️', title: '案件分類手冊', lines: ['手冊上寫著：遇到員工反映的事，先判斷是哪一種。', '🔑 重點：一直貶低、排擠、羞辱 → 職場霸凌；跟性或性別有關、對方不願意的言行 → 性騷擾；有正當理由、好好講的要求 → 正常管理。'] },
+        { icon: '⚖️', title: '管理還是霸凌？', lines: ['有位主管擔心：「我要求部屬改進，會不會被說是霸凌？」', '🔑 重點：為了工作需要、用尊重的方式要求改進，是正常管理。故意羞辱、針對某個人、一直打壓，才是霸凌。'] },
       ],
       npc: { name: 'Aery', color: 0x5a80b8, isAery: true, title: 'Aery 的隨堂考', steps: [
         { line: '「我是 Aery！來考考你：員工 A 說主管每週都當眾罵他『廢物』，這是？」', options: [
@@ -6378,6 +6380,7 @@ console.warn( 'Scripts "build/three.js" and "build/three.min.js" are deprecated 
       (tg.kind === 'door' ? '<div class="hc-step"><span>2</span><div>走進房間後，再照畫面上方的目標提示進行</div></div>'
         : '<div class="hc-step"><span>2</span><div>' + (isTouch ? '在右半邊拖曳' : '移動滑鼠') + '，讓<b>畫面中間的小球</b>對準物件（小球會變成<b>黃色</b>）</div></div>' +
           '<div class="hc-step"><span>3</span><div>' + (isTouch ? '點右下角的<b>「查看」</b>按鈕' : '按 <kbd>E</kbd> 或<b>滑鼠左鍵</b>') + '互動</div></div>');
+    if (aeryBubble) aeryBubble.classList.remove('show');   // 同一時間只留一個提示
     hintCard.classList.remove('show'); void hintCard.offsetWidth; hintCard.classList.add('show');
     clearTimeout(showHintCard._t); showHintCard._t = setTimeout(() => hintCard.classList.remove('show'), 9000);
     if (audioCtx && !soundMuted) { tone(660, 0, 0.12, 'sine', 0.05); tone(880, 0.12, 0.18, 'sine', 0.05); }
@@ -6388,7 +6391,7 @@ console.warn( 'Scripts "build/three.js" and "build/three.min.js" are deprecated 
   let guideKey = '', guideRefT = 0, idleTier = 0, beaconFlashT = -99;
   function updateWayfinding(dt, t) {
     const tg = guideTarget();
-    tidyLabels(t);
+    tidyLabels(t, tg);
     const active = !!tg && !uiOpen;
     // 目標改變就代表有進度，重新計算閒置時間
     if (!tg || uiOpen || !gameStarted) { guideRefT = t; idleTier = 0; }
@@ -6434,7 +6437,7 @@ console.warn( 'Scripts "build/three.js" and "build/three.min.js" are deprecated 
       NC.label.textContent = turn + '・' + nameTxt + dtxt;
     }
     // 靠近目標而且看得到：提示把小球對準；已對準：金色光環
-    aimHint.classList.toggle('show', nearObj && !aimed && onScreen);
+    aimHint.classList.toggle('show', nearObj && !aimed && onScreen && !lookedAt);   // 已經對準別的東西時，交給互動提示，不疊兩個
     if (nearObj && !aimed) aimHint.innerHTML = document.body.classList.contains('mobile')
       ? '🎯 拖曳畫面，用<b>小球</b>對準「' + escHtml(tg.name.replace(/^線索：|^任務：/, '')) + '」'
       : '🎯 ' + (isTouch ? '在右半邊拖曳' : '移動滑鼠') + '，把 <b>中間的小球</b> 對準「' + escHtml(tg.name.replace(/^線索：|^任務：/, '')) + '」';
@@ -7124,7 +7127,28 @@ console.warn( 'Scripts "build/three.js" and "build/three.min.js" are deprecated 
   // ============ v2 回饋修正：遊戲前操作示範、指路（繞門口）、標籤減量 ============
   // =====================================================================
   // 下一個要走到的點：目標在別的房間時，先帶到門口，避免箭頭直接穿牆指過去
+  // v3：走廊上有隔間牆（大廳→走廊、走廊→最終關），門口在正中間。
+  //     如果直線會穿過隔間牆，就先把箭頭指向門口，不會指著牆走
   function navPoint(tg) {
+    const n = navPointBase(tg);
+    if (n.via === '先搭電梯') return n;
+    const px = player.x, pz = player.z;
+    const pf = (typeof getFloorY === 'function' && getFloorY(px, pz) > 1) ? 2 : 1;
+    const cross = (ax, az, bx, bz, w) => {
+      const d = (x1, z1, x2, z2, x, z) => (x2 - x1) * (z - z1) - (z2 - z1) * (x - x1);
+      return d(w.x1, w.z1, w.x2, w.z2, ax, az) * d(w.x1, w.z1, w.x2, w.z2, bx, bz) < 0 &&
+             d(ax, az, bx, bz, w.x1, w.z1) * d(ax, az, bx, bz, w.x2, w.z2) < 0;
+    };
+    const wall = walls.find(w => (w.floor || 1) === pf && Math.abs(w.z1 - w.z2) < 0.01 &&
+      Math.max(Math.abs(w.x1), Math.abs(w.x2)) <= CORR_X2 + 0.1 && Math.min(Math.abs(w.x1), Math.abs(w.x2)) >= 0.6 &&
+      cross(px, pz, n.x, n.z, w));
+    if (!wall) return n;
+    const s = n.z > pz ? 1 : -1;
+    // 站在門口旁邊（還沒對準門口）時，先指向門口這一側；對準之後再指向門的另一邊
+    if (Math.abs(px) > 0.8) return { x: 0, z: wall.z1 - s * 0.7, via: '先走到前面的門口' };
+    return { x: 0, z: wall.z1 + s * 0.9, via: '先走到前面的門口' };
+  }
+  function navPointBase(tg) {
     const px = player.x, pz = player.z;
     const fy = (x, z) => (typeof getFloorY === 'function' ? getFloorY(x, z) : 0);
     const areas = ROOMS.map(r => ({ x1: Math.min(r.x1, r.x2), x2: Math.max(r.x1, r.x2), z1: r.z1, z2: r.z2, side: r.side, dz: (r.z1 + r.z2) / 2, floor: r.floor }));
@@ -7161,13 +7185,17 @@ console.warn( 'Scripts "build/three.js" and "build/three.min.js" are deprecated 
     return getNavCompass.el;
   }
   // 房間裡的浮動標籤：太近（會變超大、互相疊住）或太遠時隱藏；找到的線索 2.5 秒後收起標籤
-  function tidyLabels(t) {
+  // v2：房間裡只留「現在要找的那一個」的名牌，其他線索名牌先收起來，畫面不會疊成一團
+  function tidyLabels(t, tg) {
+    const inR = ROOMS.find(r => player.x >= Math.min(r.x1, r.x2) && player.x <= Math.max(r.x1, r.x2) && player.z >= r.z1 && player.z <= r.z2);
+    const focus = lookedAt && lookedAt.clue ? lookedAt.clue : (tg && tg.ref) || null;
     Object.keys(roomClues).forEach(id => roomClues[id].forEach(o => {
       if (!o.label) return;
       const d = Math.hypot(o.x - player.x, o.z - player.z);
       const doneHide = o.found && (t - (o.foundT || -99)) > 2.5;
-      o.label.visible = !doneHide && d > 1.4 && d < 13;
-      if (o.bubble && !o.found) o.bubble.visible = d > 1.2;
+      const quiet = inR && o.room === inR && !o.found && focus && o !== focus;
+      o.label.visible = !doneHide && !quiet && d > 1.4 && d < 13;
+      if (o.bubble && !o.found) o.bubble.visible = d > 1.2 && !(quiet && lookedAt);
     }));
     Object.keys(missionMarkers).forEach(id => {
       const m = missionMarkers[id]; if (!m || !m.visible) return;
