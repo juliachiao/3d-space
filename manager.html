@@ -5235,7 +5235,7 @@ console.warn( 'Scripts "build/three.js" and "build/three.min.js" are deprecated 
   startBtn.addEventListener('click', () => {
     ensureAudio();
     startBgm();
-    gameStarted = true;
+    gameStarted = true; document.body.classList.add('gs-on');
     lastProgressT = clock.elapsedTime;
     LEVEL.startTime = performance.now();
     if (!tutorialDone()) {
@@ -7508,6 +7508,21 @@ console.warn( 'Scripts "build/three.js" and "build/three.min.js" are deprecated 
     background: rgba(12,17,40,0.72); color: #eef2fb; font: 700 14px "Microsoft JhengHei",sans-serif; cursor: pointer; display: inline-flex; align-items: center; gap: 4px; }
   .hud-pill.on { background: #ffd76a; color: #1b2242; border-color: #ffd76a; }
   @media (max-width: 1180px) { .hud-pill .lbl { display: none; } .hud-pill { padding: 0 10px; } }
+  /* 模式切換按鈕：固定顯示文字、用醒目顏色，和其他小按鈕區分 */
+  #mode-sw-fab { position: fixed; right: 18px; bottom: 18px; z-index: 30; display: none; align-items: center; gap: 10px;
+    padding: 10px 18px 10px 14px; border-radius: 16px; border: 2px solid #fff; background: #ffd76a; color: #1b2242; cursor: pointer;
+    font: 700 16px "Microsoft JhengHei",sans-serif; box-shadow: 0 6px 20px rgba(0,0,0,.35); text-align: left; line-height: 1.25; }
+  #mode-sw-fab .ms-i { font-size: 24px; }
+  #mode-sw-fab small { display: block; font-weight: 400; font-size: 12.5px; color: #4a4020; }
+  #mode-sw-fab:hover { background: #ffe39a; }
+  body.gs-on:not(.pm-on) #mode-sw-fab { display: inline-flex; }
+  body.mobile #mode-sw-fab { right: 12px; bottom: calc(env(safe-area-inset-bottom, 0px) + 12px); padding: 8px 12px; font-size: 14px; }
+  body.mobile #mode-sw-fab small { display: none; }
+  #cm .cm-tool.cm-3d { background: #2f3a66; color: #fff; border-color: #2f3a66; }
+  #cm .cm-tool.cm-3d:hover { background: #3d4b82; color: #fff; }
+  .ms-pulse { animation: msPulse 1.4s ease-in-out 0s 5; }
+  @keyframes msPulse { 0%,100% { box-shadow: 0 0 0 0 rgba(255,183,77,.0); } 50% { box-shadow: 0 0 0 7px rgba(255,183,77,.55); } }
+  @media (max-width: 700px) { .ms-l { display: none; } }
 
   /* ---- 聊天模式畫面 ---- */
   #cm { --cfs: 17px; --ink: #2e3a4e; --ink2: #5f6d82; --line: #d8dfea; --brand: #6c5ce7; --brand-d: #5143c4; --brand-s: #efecff;
@@ -7659,9 +7674,12 @@ console.warn( 'Scripts "build/three.js" and "build/three.min.js" are deprecated 
   // ---- 3D 模式右上角：切換到聊天模式、字體大小 ----
   const hudBtns = document.getElementById('help-btn') ? document.getElementById('help-btn').parentElement : null;
   const modeBtn = document.createElement('button'); modeBtn.type = 'button'; modeBtn.className = 'hud-pill';
-  modeBtn.innerHTML = '💬<span class="lbl"> 改用聊天模式</span>'; modeBtn.title = '不用操作 3D，跟 Aery 聊天就能完成';
+  modeBtn.id = 'mode-sw-fab'; modeBtn.className = '';
+  modeBtn.innerHTML = '<span class="ms-i">💬</span><span>切換到聊天模式<small>不用操作 3D・進度會保留</small></span>'; modeBtn.title = '不用操作 3D，跟 Aery 聊天就能完成（進度會保留）';
   const fontBtn = document.createElement('button'); fontBtn.type = 'button'; fontBtn.className = 'hud-pill'; fontBtns.push(fontBtn);
-  if (hudBtns) { hudBtns.insertBefore(fontBtn, hudBtns.firstChild); hudBtns.insertBefore(modeBtn, hudBtns.firstChild); }
+  if (hudBtns) { hudBtns.insertBefore(fontBtn, hudBtns.firstChild); }
+  document.body.appendChild(modeBtn);
+  ['mousedown', 'mouseup', 'touchstart'].forEach(ev => modeBtn.addEventListener(ev, e => e.stopPropagation(), { passive: true }));
   fontBtn.addEventListener('click', e => { cycleFont(e); showRouteHint('🔠 字體大小：' + FONT_NAMES[fontScale], 'font-' + fontScale); });
   modeBtn.addEventListener('click', e => { e.stopPropagation(); setPlayMode('point'); });
 
@@ -7777,7 +7795,7 @@ console.warn( 'Scripts "build/three.js" and "build/three.min.js" are deprecated 
     '<div class="cm-top"><div class="cm-row"><span class="cm-av-top">' + AERY_SVG + '</span>' +
     '<div class="cm-title"><b>Aery 聊天闖關・' + ROLE_TXT + '</b><span>💬 聊天模式・點下面的按鈕就能回答</span></div>' +
     '<div class="cm-tools"><button type="button" class="cm-tool cm-font"></button><button type="button" class="cm-tool cm-sound">🔊</button>' +
-    '<button type="button" class="cm-tool cm-3d">🎮<span class="lbl"> 改玩 3D</span></button></div></div>' +
+    '<button type="button" class="cm-tool cm-3d" title="改用 3D 探索模式（進度會保留）">🎮 <span class="ms-l">切換到 </span>3D 模式</button></div></div>' +
     '<nav class="cm-steps" aria-label="闖關進度"></nav></div>' +
     '<div class="cm-log" aria-live="polite"><div class="cm-inner"></div></div>' +
     '<div class="cm-dock"><div class="cm-dock-in"><div class="cm-hint"></div><div class="opts"></div></div></div>';
@@ -8180,7 +8198,12 @@ console.warn( 'Scripts "build/three.js" and "build/three.min.js" are deprecated 
       if (gameStarted && !was) { skipTutorialForPoint(); startChat(); }
     } else {
       if (was) stopChat();
-      if (gameStarted) showRouteHint('🎮 3D 探索模式：點一下畫面，用 WASD 和滑鼠移動', 'mode-explore');
+      if (gameStarted) showRouteHint('🎮 3D 探索模式：點一下畫面，用 WASD 和滑鼠移動（右下角可切換到聊天模式）', 'mode-explore');
+    }
+    if (gameStarted) {
+      const sw = pointMode ? cm.querySelector('.cm-3d') : modeBtn;
+      sw.classList.remove('ms-pulse'); void sw.offsetWidth; sw.classList.add('ms-pulse');
+      setTimeout(() => sw.classList.remove('ms-pulse'), 7200);
     }
   }
   // 開始遊戲：聊天模式略過 3D 操作教學與說明會，直接打開聊天畫面
